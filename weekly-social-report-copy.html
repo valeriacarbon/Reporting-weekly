@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Social Report · Multi-brand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F6F2EA;
+    --paper-soft: #EFE9DD;
+    --ink: #14110D;
+    --ink-soft: #4A4439;
+    --ink-mute: #8A8275;
+    --rule: #D9D0BC;
+    --rule-soft: #E8E0CD;
+    --pos: #3F6B3A;
+    --neg: #A33A2A;
+    --flat: #8A8275;
+    --bar-prev: #C9BFA8;
+    --bar-curr: #14110D;
+    --serif: 'Instrument Serif', serif;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== TOOLBAR (lives inside tabs bar) ===== */
+  .toolbar {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .tbtn {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 9px 14px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .tbtn:hover { background: var(--paper); color: var(--ink); }
+  .tbtn.ghost { background: var(--paper); color: var(--ink); border-color: var(--rule); }
+  .tbtn.ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .tbtn.danger:hover { background: var(--neg); color: white; border-color: var(--neg); }
+
+  /* ===== BRAND TABS ===== */
+  .tabs-wrap {
+    background: var(--paper-soft);
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+  .tabs-bar {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    flex: 1;
+    min-width: 0;
+  }
+  .tab {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  /* ===== PAGE ===== */
+  .page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 40px 64px 64px;
+  }
+
+  .brand-page { display: none; }
+  .brand-page.active { display: block; }
+
+  /* ===== BRAND HEADER ===== */
+  .brand-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 28px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  .brand-title {
+    font-family: var(--serif);
+    font-size: 68px;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .brand-title em { font-style: italic; color: var(--ink-soft); }
+  .range-meta {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .range-meta .label {
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 28px 0 14px;
+  }
+  .section-head h2 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .section-head .note {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ===== TOTALS STRIP (compacto) ===== */
+  .totals {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .total-cell {
+    background: var(--paper);
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 12px;
+  }
+  .total-cell .label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .total-cell .nums {
+    text-align: right;
+  }
+  .total-cell .now {
+    font-family: var(--serif);
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .total-cell .prev-line {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    margin-top: 4px;
+  }
+  .total-cell .delta {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 8px;
+  }
+
+  /* ===== PLATFORM SECTION ===== */
+  .platform {
+    margin-top: 22px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .platform-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-soft);
+  }
+  .platform-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .platform-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+
+  /* === COMPARISON ROW (this week vs last week, both visible) === */
+  .cmp-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 78px;
+    gap: 24px;
+    align-items: center;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .cmp-row:last-child { border-bottom: none; }
+
+  .cmp-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+
+  .cmp-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+  .bar-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .bar-track {
+    position: relative;
+    height: 18px;
+    display: flex;
+    align-items: center;
+  }
+  .bar-fill {
+    height: 14px;
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+    justify-content: flex-end;
+    min-width: 56px;
+    transition: width 0.2s;
+  }
+  .bar-fill.curr { background: var(--bar-curr); color: var(--paper); }
+  .bar-fill.prev { background: var(--bar-prev); color: var(--ink); }
+  .bar-fill.zero { background: transparent; color: var(--ink-mute); padding-left: 4px; padding-right: 0; justify-content: flex-start; }
+  .bar-value {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .cmp-delta {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pos { color: var(--pos); }
+  .neg { color: var(--neg); }
+  .flat { color: var(--flat); }
+
+  /* ===== QUICK VIEW ===== */
+  .qv-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 28px;
+  }
+  .qv-title {
+    font-family: var(--serif);
+    font-size: 68px;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .qv-title em { font-style: italic; color: var(--ink-soft); }
+
+  /* portfolio-wide totals (sum across all brands) */
+  .qv-portfolio {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 32px;
+  }
+  .qv-portfolio .cell {
+    background: var(--paper);
+    padding: 20px 22px;
+  }
+  .qv-portfolio .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+  .qv-portfolio .value {
+    font-family: var(--serif);
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .qv-portfolio .delta {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .qv-portfolio .prev {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    margin-top: 4px;
+  }
+
+  /* 2x2 grid of leaderboard charts */
+  .qv-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .qv-chart {
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    padding: 22px 24px 18px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .qv-chart-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .qv-chart-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .qv-chart-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* leaderboard row: brand name | stacked bars (this wk + last wk) | delta */
+  .lb-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 70px;
+    gap: 14px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dotted var(--rule-soft);
+  }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-brand {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lb-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .lb-bar-line {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 10px;
+    align-items: center;
+  }
+  .lb-tag {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    white-space: nowrap;
+  }
+  .lb-bar-track {
+    height: 14px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .lb-bar-fill {
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+    min-width: 38px;
+  }
+  .lb-bar-fill.curr { background: var(--bar-curr); color: var(--paper); }
+  .lb-bar-fill.curr.up { background: var(--pos); color: var(--paper); }
+  .lb-bar-fill.curr.down { background: var(--neg); color: var(--paper); }
+  .lb-bar-fill.prev { background: var(--bar-prev); color: var(--ink); }
+  .lb-bar-fill.zero {
+    background: transparent;
+    color: var(--ink-mute);
+    padding-left: 4px;
+    padding-right: 0;
+    justify-content: flex-start;
+  }
+  .lb-bar-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+  .lb-delta {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* compact platform mix strip (small visual indicator) */
+  .qv-mix-section {
+    margin-top: 32px;
+  }
+  .qv-mix-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .qv-mix-card {
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    padding: 14px 16px 12px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .qv-mix-card .brand-name {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .qv-mix-card .mix-bar {
+    display: flex;
+    height: 10px;
+    background: var(--rule-soft);
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .qv-mix-card .mix-seg {
+    height: 100%;
+  }
+  .qv-mix-card .mix-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+  .qv-mix-card .mix-legend .dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+
+  /* tab variant for quick view (distinct accent) */
+  .tab.quickview {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .tab.quickview.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .tab-divider {
+    width: 1px;
+    background: var(--rule);
+    margin: 4px 8px;
+    align-self: stretch;
+  }
+
+  /* quick-view page visibility */
+  .quickview-page { display: none; }
+  .quickview-page.active { display: block; }
+  .footer {
+    margin-top: 36px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ===== MODAL ===== */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(20, 17, 13, 0.55);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 100;
+    padding: 24px 16px;
+    overflow-y: auto;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: var(--paper);
+    max-width: 1180px;
+    width: 100%;
+    border: 1px solid var(--ink);
+    padding: 32px 36px 28px;
+  }
+  .modal h3 {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .modal .sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .form-row label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .form-row input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    background: white;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .form-row input:focus { outline: 1px solid var(--ink); border-color: var(--ink); }
+
+  .brand-section {
+    margin-bottom: 28px;
+    border: 1px solid var(--rule);
+    padding: 16px 18px 14px;
+    background: var(--paper-soft);
+  }
+  .brand-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    gap: 10px;
+  }
+  .brand-section-head .name-input {
+    font-family: var(--serif);
+    font-size: 22px;
+    border: 1px solid transparent;
+    background: transparent;
+    padding: 4px 6px;
+    color: var(--ink);
+    width: 100%;
+    max-width: 380px;
+  }
+  .brand-section-head .name-input:focus,
+  .brand-section-head .name-input:hover {
+    border-color: var(--rule);
+    background: white;
+  }
+  .table-wrap { overflow-x: auto; }
+  table.edit {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    min-width: 880px;
+  }
+  table.edit thead th {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: left;
+    padding: 6px 6px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--ink);
+  }
+  table.edit thead th.group {
+    text-align: center;
+    padding-bottom: 2px;
+    border-bottom: none;
+  }
+  table.edit td {
+    padding: 4px 6px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  table.edit tbody tr:last-child td { border-bottom: none; }
+  table.edit input[type="number"],
+  table.edit input[type="text"] {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--rule);
+    background: white;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  table.edit input:focus { outline: 1px solid var(--ink); border-color: var(--ink); }
+  table.edit td.plat-cell {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 500;
+    width: 90px;
+  }
+  table.edit td.num-cell { width: 78px; }
+
+  .modal-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .modal-actions .group-left,
+  .modal-actions .group-right {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    @page { size: A4 portrait; margin: 10mm; }
+    html, body {
+      background: white;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      font-size: 10px;
+    }
+    .toolbar, .tabs-wrap { display: none !important; }
+    .page { padding: 0; max-width: 100%; }
+    .brand-page, .quickview-page {
+      display: block !important;
+      page-break-after: always;
+      break-after: page;
+    }
+    .brand-page:last-child {
+      page-break-after: auto;
+      break-after: auto;
+    }
+    .brand-title, .qv-title { font-size: 40px; }
+    .cmp-row { padding: 8px 14px; }
+    .total-cell { padding: 10px 12px; }
+    .total-cell .now { font-size: 22px; }
+    .platform-head { padding: 8px 14px; }
+    .qv-portfolio .cell { padding: 12px 14px; }
+    .qv-portfolio .value { font-size: 30px; }
+    .qv-chart { padding: 14px 16px 12px; }
+    .lb-row { padding: 4px 0; }
+    .footer { display: none; }
+  }
+
+  @media (max-width: 900px) {
+    .page { padding: 32px 20px; }
+    .tabs-bar { padding: 12px 20px; flex-direction: column; align-items: stretch; gap: 12px; }
+    .toolbar { justify-content: flex-end; flex-wrap: wrap; }
+    .brand-title, .qv-title { font-size: 44px; }
+    .totals, .qv-portfolio { grid-template-columns: 1fr 1fr; }
+    .qv-grid { grid-template-columns: 1fr; }
+    .qv-mix-grid { grid-template-columns: 1fr 1fr; }
+    .cmp-row { grid-template-columns: 100px 1fr 60px; gap: 12px; padding: 12px 14px; }
+    .lb-row { grid-template-columns: 90px 1fr 76px; gap: 10px; }
+    .brand-header, .qv-header { grid-template-columns: 1fr; }
+    .range-meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tabs-wrap">
+  <div class="tabs-bar">
+    <div class="tabs" id="tabs"></div>
+    <div class="toolbar">
+      <button class="tbtn" id="btnEdit">Edit data</button>
+      <button class="tbtn ghost" id="btnPrint">Print / PDF</button>
+      <button class="tbtn ghost" id="btnExport">Export JSON</button>
+      <button class="tbtn ghost" id="btnImport">Import JSON</button>
+      <input type="file" id="fileInput" accept="application/json" style="display:none">
+    </div>
+  </div>
+</div>
+
+<div class="page" id="pages"></div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3>Edit report</h3>
+    <div class="sub">Paste your Metricool values · use Tab to move between cells</div>
+
+    <div class="form-row">
+      <div>
+        <label>This week (range)</label>
+        <input type="text" id="inpCurrent" placeholder="e.g. May 15 — 22, 2026">
+      </div>
+      <div>
+        <label>Previous week (range)</label>
+        <input type="text" id="inpPrevious" placeholder="e.g. May 8 — 15, 2026">
+      </div>
+    </div>
+
+    <div id="editBrandsList"></div>
+
+    <div class="modal-actions">
+      <div class="group-left">
+        <button class="tbtn ghost" id="btnShift" title="Move 'current' values to 'previous' and clear 'current'">↻ Shift week</button>
+        <button class="tbtn ghost danger" id="btnReset" title="Reset to default values">Reset</button>
+      </div>
+      <div class="group-right">
+        <button class="tbtn ghost" id="btnCancel">Cancel</button>
+        <button class="tbtn" id="btnSave">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== CONFIG =====
+  const BRANDS = ["Capri Palms", "Berry Falls", "The Kenzie", "The Landings", "The Lamar", "Claxton & Pecan", "Westminster Club", "The Benton"];
+  const PLATFORMS = ["Instagram", "TikTok", "Facebook", "GMB"];
+  const METRICS = [
+    { key: "followers",  label: "Followers"  },
+    { key: "posts",      label: "Posts"      },
+    { key: "engagement", label: "Engagement / Interactions" },
+    { key: "reach",      label: "Views" }
+  ];
+  const STORAGE_KEY = "weeklySocialReport_multibrand_v2";
+
+  function emptyMetrics() {
+    return { followers: null, posts: null, engagement: null, reach: null };
+  }
+  function emptyPlatform() {
+    return { current: emptyMetrics(), previous: emptyMetrics() };
+  }
+  function buildDefaultData() {
+    const d = {
+      currentRange: "May 15 — 22, 2026",
+      previousRange: "May 8 — 15, 2026",
+      brands: {}
+    };
+    BRANDS.forEach(b => {
+      d.brands[b] = {};
+      PLATFORMS.forEach(p => d.brands[b][p] = emptyPlatform());
+    });
+    return d;
+  }
+
+  // ===== STATE =====
+  let data = loadData();
+  let activeView = "__quick__"; // "__quick__" or a brand name
+  let activeBrand = Object.keys(data.brands)[0];
+
+  function loadData() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.brands && Object.keys(parsed.brands).length) return parsed;
+      }
+    } catch (e) {}
+    return buildDefaultData();
+  }
+  function saveData() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+  }
+
+  // ===== HELPERS =====
+  const fmt = n => (n === null || n === undefined || isNaN(n)) ? "—" : Number(n).toLocaleString("en-US");
+  const fmtCompact = n => {
+    if (n === null || n === undefined || isNaN(n)) return "—";
+    n = Number(n);
+    if (Math.abs(n) >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+    if (Math.abs(n) >= 10_000) return Math.round(n / 1000) + "K";
+    if (Math.abs(n) >= 1_000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+    return n.toLocaleString("en-US");
+  };
+  const deltaPct = (curr, prev) => {
+    if (curr == null || prev == null || isNaN(curr) || isNaN(prev)) return null;
+    if (prev === 0) return curr === 0 ? 0 : null;
+    return ((curr - prev) / prev) * 100;
+  };
+  const deltaLabel = (curr, prev) => {
+    const d = deltaPct(curr, prev);
+    if (d === null) return { text: "—", cls: "flat" };
+    if (d === 0) return { text: "0.0%", cls: "flat" };
+    return { text: `${d > 0 ? "↑" : "↓"} ${Math.abs(d).toFixed(1)}%`, cls: d > 0 ? "pos" : "neg" };
+  };
+  function escapeHtml(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  // ===== COMPARISON ROW (this week vs last week, both visible) =====
+  function comparisonRow(label, curr, prev) {
+    const c = (curr == null || isNaN(curr)) ? 0 : Number(curr);
+    const p = (prev == null || isNaN(prev)) ? 0 : Number(prev);
+    const max = Math.max(c, p, 1);
+    const cPct = Math.max(2, (c / max) * 100);
+    const pPct = Math.max(2, (p / max) * 100);
+    const cIsZero = (curr == null || isNaN(curr));
+    const pIsZero = (prev == null || isNaN(prev));
+    const d = deltaLabel(curr, prev);
+
+    return `
+      <div class="cmp-row">
+        <div class="cmp-label">${label}</div>
+        <div class="cmp-bars">
+          <div class="bar-row">
+            <div class="bar-tag">This wk</div>
+            <div class="bar-track">
+              <div class="bar-fill ${cIsZero ? 'zero' : 'curr'}" style="width:${cIsZero ? 'auto' : cPct + '%'}">
+                <span class="bar-value">${fmt(curr)}</span>
+              </div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-tag">Last wk</div>
+            <div class="bar-track">
+              <div class="bar-fill ${pIsZero ? 'zero' : 'prev'}" style="width:${pIsZero ? 'auto' : pPct + '%'}">
+                <span class="bar-value">${fmt(prev)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cmp-delta ${d.cls}">${d.text}</div>
+      </div>
+    `;
+  }
+
+  // ===== RENDER TABS =====
+  function renderTabs() {
+    const tabsEl = document.getElementById("tabs");
+    tabsEl.innerHTML = "";
+
+    // Quick view tab first
+    const qvBtn = document.createElement("button");
+    qvBtn.className = "tab quickview" + (activeView === "__quick__" ? " active" : "");
+    qvBtn.textContent = "Quick view";
+    qvBtn.addEventListener("click", () => {
+      activeView = "__quick__";
+      renderTabs();
+      renderPages();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    tabsEl.appendChild(qvBtn);
+
+    // Divider
+    const divider = document.createElement("div");
+    divider.className = "tab-divider";
+    tabsEl.appendChild(divider);
+
+    // Brand tabs
+    Object.keys(data.brands).forEach(brand => {
+      const btn = document.createElement("button");
+      btn.className = "tab" + (activeView === brand ? " active" : "");
+      btn.textContent = brand;
+      btn.addEventListener("click", () => {
+        activeView = brand;
+        activeBrand = brand;
+        renderTabs();
+        renderPages();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      tabsEl.appendChild(btn);
+    });
+  }
+
+  // ===== RENDER PAGES (Quick view + per-brand) =====
+  function renderPages() {
+    const pagesEl = document.getElementById("pages");
+    pagesEl.innerHTML = "";
+
+    // Quick view always present
+    pagesEl.appendChild(buildQuickView());
+
+    // Then each brand
+    Object.keys(data.brands).forEach(brand => {
+      pagesEl.appendChild(buildBrandPage(brand));
+    });
+  }
+
+  // Back-compat alias
+  function renderBrandPages() { renderPages(); }
+
+  // ===== QUICK VIEW =====
+  // Platform color palette (subtle, paper-friendly)
+  const PLAT_COLORS = {
+    "Instagram": "#A33A2A",   // warm red
+    "TikTok":    "#14110D",   // ink
+    "Facebook":  "#3F6B3A",   // green
+    "GMB":       "#8A8275"    // taupe
+  };
+
+  function brandTotals(brand) {
+    const t = { current: { followers: 0, posts: 0, engagement: 0, reach: 0 }, previous: { followers: 0, posts: 0, engagement: 0, reach: 0 } };
+    const brandData = data.brands[brand] || {};
+    PLATFORMS.forEach(plat => {
+      if (!brandData[plat]) return;
+      METRICS.forEach(m => {
+        const c = Number(brandData[plat].current[m.key]);
+        const p = Number(brandData[plat].previous[m.key]);
+        if (!isNaN(c)) t.current[m.key] += c;
+        if (!isNaN(p)) t.previous[m.key] += p;
+      });
+    });
+    return t;
+  }
+
+  function leaderboardChart(metric) {
+    // Build entries with totals across platforms for every brand
+    const rows = Object.keys(data.brands).map(brand => {
+      const t = brandTotals(brand);
+      return { brand, curr: t.current[metric.key], prev: t.previous[metric.key] };
+    });
+    // Sort descending by current value
+    rows.sort((a, b) => b.curr - a.curr);
+    const maxVal = Math.max(...rows.map(r => Math.max(r.curr || 0, r.prev || 0)), 1);
+
+    const rowsHtml = rows.map(r => {
+      const cPct = Math.max(2, (r.curr / maxVal) * 100);
+      const pPct = Math.max(2, (r.prev / maxVal) * 100);
+      const cIsZero = (r.curr == null || isNaN(r.curr) || r.curr === 0);
+      const pIsZero = (r.prev == null || isNaN(r.prev) || r.prev === 0);
+      const d = deltaLabel(r.curr, r.prev);
+      const dCls = (r.curr > r.prev) ? "up" : (r.curr < r.prev) ? "down" : "";
+      return `
+        <div class="lb-row">
+          <div class="lb-brand" title="${escapeHtml(r.brand)}">${escapeHtml(r.brand)}</div>
+          <div class="lb-bars">
+            <div class="lb-bar-line">
+              <span class="lb-tag">This wk</span>
+              <div class="lb-bar-track">
+                <div class="lb-bar-fill ${cIsZero ? 'zero' : 'curr ' + dCls}" style="width:${cIsZero ? 'auto' : cPct + '%'}">
+                  <span class="lb-bar-num">${fmtCompact(r.curr)}</span>
+                </div>
+              </div>
+            </div>
+            <div class="lb-bar-line">
+              <span class="lb-tag">Last wk</span>
+              <div class="lb-bar-track">
+                <div class="lb-bar-fill ${pIsZero ? 'zero' : 'prev'}" style="width:${pIsZero ? 'auto' : pPct + '%'}">
+                  <span class="lb-bar-num">${fmtCompact(r.prev)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="lb-delta ${d.cls}">${d.text}</div>
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="qv-chart">
+        <div class="qv-chart-head">
+          <div class="qv-chart-title">${metric.label}</div>
+          <div class="qv-chart-sub">Ranked · this wk</div>
+        </div>
+        ${rowsHtml}
+      </div>
+    `;
+  }
+
+  function platformMixCard(brand) {
+    // Show engagement distribution across platforms (most telling channel-mix signal)
+    const brandData = data.brands[brand] || {};
+    const segs = PLATFORMS.map(plat => {
+      const v = Number(brandData[plat]?.current?.engagement);
+      return { plat, val: isNaN(v) ? 0 : v };
+    });
+    const total = segs.reduce((s, x) => s + x.val, 0);
+
+    const barHtml = total > 0
+      ? segs.map(s => `<div class="mix-seg" style="width:${(s.val / total) * 100}%; background:${PLAT_COLORS[s.plat]}"></div>`).join("")
+      : `<div class="mix-seg" style="width:100%; background:var(--rule-soft)"></div>`;
+
+    const legendHtml = segs.filter(s => s.val > 0).map(s =>
+      `<span><span class="dot" style="background:${PLAT_COLORS[s.plat]}"></span>${escapeHtml(s.plat)}</span>`
+    ).join("") || `<span style="color:var(--ink-mute)">no engagement / interactions yet</span>`;
+
+    return `
+      <div class="qv-mix-card">
+        <div class="brand-name">${escapeHtml(brand)}</div>
+        <div class="mix-bar">${barHtml}</div>
+        <div class="mix-legend">${legendHtml}</div>
+      </div>
+    `;
+  }
+
+  function buildQuickView() {
+    const wrap = document.createElement("section");
+    wrap.className = "quickview-page" + (activeView === "__quick__" ? " active" : "");
+
+    // Portfolio totals (sum across ALL brands and platforms)
+    const port = { current: { followers: 0, posts: 0, engagement: 0, reach: 0 }, previous: { followers: 0, posts: 0, engagement: 0, reach: 0 } };
+    Object.keys(data.brands).forEach(brand => {
+      const t = brandTotals(brand);
+      METRICS.forEach(m => {
+        port.current[m.key]  += t.current[m.key]  || 0;
+        port.previous[m.key] += t.previous[m.key] || 0;
+      });
+    });
+
+    let html = `
+      <div class="qv-header">
+        <div>
+          <div class="eyebrow">Weekly Social Report · Internal</div>
+          <h1 class="qv-title">Quick <em>view</em></h1>
+        </div>
+        <div class="range-meta">
+          <div><span class="label">This week</span></div>
+          <div>${escapeHtml(data.currentRange)}</div>
+          <div style="margin-top:10px"><span class="label">vs. previous</span></div>
+          <div>${escapeHtml(data.previousRange)}</div>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <h2>Portfolio totals · all brands combined</h2>
+        <span class="note">${Object.keys(data.brands).length} brands · ${PLATFORMS.length} platforms</span>
+      </div>
+      <div class="qv-portfolio">
+        ${METRICS.map(m => {
+          const c = port.current[m.key];
+          const p = port.previous[m.key];
+          const d = deltaLabel(c, p);
+          return `
+            <div class="cell">
+              <div class="label">${m.label}</div>
+              <div class="value">${fmtCompact(c)}</div>
+              <div class="delta ${d.cls}">${d.text}</div>
+              <div class="prev">prev · ${fmtCompact(p)}</div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+
+      <div class="section-head">
+        <h2>Brand ranking · by metric</h2>
+        <span class="note">Sorted high to low · prev (light) vs. this wk (bold)</span>
+      </div>
+      <div class="qv-grid">
+        ${METRICS.map(m => leaderboardChart(m)).join("")}
+      </div>
+
+      <div class="qv-mix-section">
+        <div class="section-head">
+          <h2>Channel mix · engagement / interactions share by platform</h2>
+          <span class="note">Where each brand's engagement / interactions are coming from</span>
+        </div>
+        <div class="qv-mix-grid">
+          ${Object.keys(data.brands).map(b => platformMixCard(b)).join("")}
+        </div>
+      </div>
+
+      <footer class="footer">
+        <span>Source · Metricool</span>
+        <span>Generated ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</span>
+      </footer>
+    `;
+
+    wrap.innerHTML = html;
+    return wrap;
+  }
+
+  function buildBrandPage(brand) {
+    const wrap = document.createElement("section");
+    wrap.className = "brand-page" + (activeView === brand ? " active" : "");
+    wrap.dataset.brand = brand;
+
+    const brandData = data.brands[brand];
+
+    // Totals across platforms (small reference at top)
+    const totals = { current: { followers: 0, posts: 0, engagement: 0, reach: 0 }, previous: { followers: 0, posts: 0, engagement: 0, reach: 0 } };
+    PLATFORMS.forEach(plat => {
+      if (!brandData[plat]) return;
+      METRICS.forEach(m => {
+        const c = Number(brandData[plat].current[m.key]);
+        const p = Number(brandData[plat].previous[m.key]);
+        if (!isNaN(c)) totals.current[m.key] += c;
+        if (!isNaN(p)) totals.previous[m.key] += p;
+      });
+    });
+
+    let html = `
+      <div class="brand-header">
+        <div>
+          <div class="eyebrow">Weekly Social Report · Internal</div>
+          <h1 class="brand-title">${escapeHtml(brand)}</h1>
+        </div>
+        <div class="range-meta">
+          <div><span class="label">This week</span></div>
+          <div>${escapeHtml(data.currentRange)}</div>
+          <div style="margin-top:10px"><span class="label">vs. previous</span></div>
+          <div>${escapeHtml(data.previousRange)}</div>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <h2>Brand totals · all platforms combined</h2>
+        <span class="note">Quick reference</span>
+      </div>
+      <div class="totals">
+        ${METRICS.map(m => {
+          const c = totals.current[m.key];
+          const p = totals.previous[m.key];
+          const d = deltaLabel(c, p);
+          return `
+            <div class="total-cell">
+              <div>
+                <div class="label">${m.label}</div>
+                <div class="prev-line">prev · ${fmtCompact(p)}</div>
+              </div>
+              <div class="nums">
+                <div class="now">${fmtCompact(c)}<span class="delta ${d.cls}">${d.text}</span></div>
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+
+      <div class="section-head">
+        <h2>Performance by platform</h2>
+        <span class="note">This week vs. last week — both values shown</span>
+      </div>
+    `;
+
+    PLATFORMS.forEach(plat => {
+      const pd = brandData[plat] || emptyPlatform();
+      html += `
+        <div class="platform">
+          <div class="platform-head">
+            <div class="platform-name">${escapeHtml(plat)}</div>
+            <div class="platform-tag">${escapeHtml(brand)}</div>
+          </div>
+          ${METRICS.map(m => comparisonRow(m.label, pd.current[m.key], pd.previous[m.key])).join("")}
+        </div>
+      `;
+    });
+
+    html += `
+      <footer class="footer">
+        <span>Source · Metricool</span>
+        <span>Generated ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</span>
+      </footer>
+    `;
+
+    wrap.innerHTML = html;
+    return wrap;
+  }
+
+  // ===== EDIT MODAL =====
+  const modal = document.getElementById("modalBg");
+
+  function openModal() {
+    document.getElementById("inpCurrent").value = data.currentRange || "";
+    document.getElementById("inpPrevious").value = data.previousRange || "";
+    buildEditUI();
+    modal.classList.add("open");
+  }
+  function closeModal() { modal.classList.remove("open"); }
+
+  function buildEditUI() {
+    const wrap = document.getElementById("editBrandsList");
+    wrap.innerHTML = "";
+    Object.keys(data.brands).forEach(brand => {
+      const brandData = data.brands[brand];
+      const section = document.createElement("div");
+      section.className = "brand-section";
+      section.dataset.originalBrand = brand;
+      section.innerHTML = `
+        <div class="brand-section-head">
+          <input type="text" class="name-input" data-field="brandname" value="${escapeHtml(brand)}">
+        </div>
+        <div class="table-wrap">
+          <table class="edit">
+            <thead>
+              <tr>
+                <th rowspan="2">Platform</th>
+                <th class="group" colspan="2">Followers</th>
+                <th class="group" colspan="2">Posts</th>
+                <th class="group" colspan="2">Engagement / Interactions</th>
+                <th class="group" colspan="2">Views</th>
+              </tr>
+              <tr>
+                <th>Current</th><th>Previous</th>
+                <th>Current</th><th>Previous</th>
+                <th>Current</th><th>Previous</th>
+                <th>Current</th><th>Previous</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${PLATFORMS.map(plat => {
+                const pd = brandData[plat] || emptyPlatform();
+                return `
+                  <tr data-platform="${escapeHtml(plat)}">
+                    <td class="plat-cell">${escapeHtml(plat)}</td>
+                    ${METRICS.map(m => `
+                      <td class="num-cell"><input type="number" data-field="cur_${m.key}" value="${pd.current[m.key] ?? ""}"></td>
+                      <td class="num-cell"><input type="number" data-field="prev_${m.key}" value="${pd.previous[m.key] ?? ""}"></td>
+                    `).join("")}
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+      wrap.appendChild(section);
+    });
+  }
+
+  function collectFromUI() {
+    const out = {
+      currentRange: document.getElementById("inpCurrent").value.trim() || data.currentRange,
+      previousRange: document.getElementById("inpPrevious").value.trim() || data.previousRange,
+      brands: {}
+    };
+    document.querySelectorAll("#editBrandsList .brand-section").forEach(section => {
+      const name = section.querySelector('[data-field="brandname"]').value.trim() || section.dataset.originalBrand;
+      out.brands[name] = {};
+      section.querySelectorAll("tbody tr").forEach(tr => {
+        const plat = tr.dataset.platform;
+        const get = f => tr.querySelector(`[data-field="${f}"]`).value;
+        const num = v => v === "" ? null : Number(v);
+        out.brands[name][plat] = {
+          current:  { followers: num(get("cur_followers")),  posts: num(get("cur_posts")),  engagement: num(get("cur_engagement")),  reach: num(get("cur_reach"))  },
+          previous: { followers: num(get("prev_followers")), posts: num(get("prev_posts")), engagement: num(get("prev_engagement")), reach: num(get("prev_reach")) }
+        };
+      });
+    });
+    return out;
+  }
+
+  // ===== EVENT HANDLERS =====
+  document.getElementById("btnEdit").addEventListener("click", openModal);
+  document.getElementById("btnCancel").addEventListener("click", closeModal);
+  modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+
+  document.getElementById("btnSave").addEventListener("click", () => {
+    const collected = collectFromUI();
+    data = collected;
+    if (!data.brands[activeBrand]) activeBrand = Object.keys(data.brands)[0];
+    if (activeView !== "__quick__" && !data.brands[activeView]) activeView = activeBrand;
+    saveData();
+    renderTabs();
+    renderBrandPages();
+    closeModal();
+  });
+
+  document.getElementById("btnShift").addEventListener("click", () => {
+    if (!confirm("Move 'current' values to 'previous' and clear 'current'? Useful when starting a new week.")) return;
+    const collected = collectFromUI();
+    Object.keys(collected.brands).forEach(b => {
+      PLATFORMS.forEach(p => {
+        if (!collected.brands[b][p]) return;
+        collected.brands[b][p].previous = { ...collected.brands[b][p].current };
+        collected.brands[b][p].current = emptyMetrics();
+      });
+    });
+    collected.previousRange = collected.currentRange;
+    collected.currentRange = "";
+    data = collected;
+    saveData();
+    buildEditUI();
+    document.getElementById("inpCurrent").value = "";
+    document.getElementById("inpPrevious").value = data.previousRange;
+  });
+
+  document.getElementById("btnReset").addEventListener("click", () => {
+    if (!confirm("Delete ALL data and return to initial state? This cannot be undone (unless you have an export).")) return;
+    data = buildDefaultData();
+    activeBrand = Object.keys(data.brands)[0];
+    saveData();
+    renderTabs();
+    renderBrandPages();
+    buildEditUI();
+    document.getElementById("inpCurrent").value = data.currentRange;
+    document.getElementById("inpPrevious").value = data.previousRange;
+  });
+
+  document.getElementById("btnPrint").addEventListener("click", () => window.print());
+
+  document.getElementById("btnExport").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const stamp = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `weekly-social-report_${stamp}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("btnImport").addEventListener("click", () => document.getElementById("fileInput").click());
+  document.getElementById("fileInput").addEventListener("change", e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        if (!parsed.brands || typeof parsed.brands !== "object") throw new Error("File doesn't have the expected structure");
+        data = parsed;
+        activeBrand = Object.keys(data.brands)[0];
+        saveData();
+        renderTabs();
+        renderBrandPages();
+        alert("Data imported successfully.");
+      } catch (err) {
+        alert("Couldn't import: " + err.message);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  });
+
+  // ===== INIT =====
+  renderTabs();
+  renderBrandPages();
+</script>
+</body>
+</html>
