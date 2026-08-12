@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Social Portfolio Dashboard</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #17171a;
+    --surface-2: #1e1e22;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --ink-mute: #8a8781;
+    --rule: #2c2c2a;
+    --track: #2c2c2a;
+    --good: #0ca30c;
+    --bad: #e66767;
+    --flat: #898781;
+    --series-sequential: #3987e5;
+      --ch-facebook: #3987e5;
+      --ch-tiktok: #199e70;
+      --ch-google-business: #c98500;
+      --ch-instagram: #d55181;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --page: #f9f9f7;
+    --surface: #ffffff;
+    --surface-2: #f3f2ee;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --ink-mute: #898781;
+    --rule: #e1e0d9;
+    --track: #e1e0d9;
+    --good: #006300;
+    --bad: #e34948;
+    --flat: #898781;
+    --series-sequential: #2a78d6;
+      --ch-facebook: #2a78d6;
+      --ch-tiktok: #1baf7a;
+      --ch-google-business: #eda100;
+      --ch-instagram: #e87ba4;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+  body { padding-bottom: 64px; }
+  a { color: inherit; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  header.top {
+    border-bottom: 1px solid var(--rule);
+    padding: 28px 0 20px;
+    position: sticky; top: 0; z-index: 20;
+    background: var(--page);
+  }
+  .top-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .top-titles h1 { font-size: 22px; margin: 0 0 4px; font-weight: 650; letter-spacing: -0.01em; }
+  .top-titles p { margin: 0; color: var(--ink-mute); font-size: 13px; }
+  .theme-toggle {
+    font-size: 12px; border: 1px solid var(--rule); background: var(--surface);
+    color: var(--ink-2); padding: 7px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--ink); border-color: var(--ink-mute); }
+
+  section { padding: 32px 0; border-bottom: 1px solid var(--rule); }
+  section:last-of-type { border-bottom: none; }
+  section h2 { font-size: 15px; font-weight: 650; margin: 0 0 2px; }
+  section .section-sub { color: var(--ink-mute); font-size: 12.5px; margin: 0 0 18px; max-width: 640px; }
+
+  /* ---- stat tiles ---- */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stat-tile {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-mute); margin-bottom: 8px; }
+  .stat-value { font-size: 26px; font-weight: 650; line-height: 1; margin-bottom: 8px; }
+  .stat-delta { font-size: 12.5px; margin-bottom: 10px; }
+  .chip { font-weight: 600; }
+  .chip.good { color: var(--good); }
+  .stat-spark { display: block; }
+
+  /* ---- channel bar charts ---- */
+  .chbar-row { display: grid; grid-template-columns: 130px 1fr 180px; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .chbar-label { font-size: 13px; color: var(--ink-2); font-weight: 550; }
+  .chbar-track { background: var(--track); border-radius: 6px; height: 20px; overflow: hidden; }
+  .chbar-fill { height: 100%; border-radius: 6px; min-width: 4px; }
+  .chbar-value { font-size: 13px; text-align: right; white-space: nowrap; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  @media (max-width: 780px) { .two-col { grid-template-columns: 1fr; gap: 24px; } }
+  .two-col h3 { font-size: 12.5px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 14px; }
+
+  /* ---- property views ranking chart ---- */
+  .pbar-row { display: grid; grid-template-columns: 220px 1fr 76px 150px; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .pbar-label { font-size: 13px; display: flex; flex-direction: column; gap: 2px; }
+  .pbar-badge { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 650; }
+  .pbar-track { position: relative; background: var(--track); border-radius: 6px; height: 22px; }
+  .pbar-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 6px; min-width: 4px; }
+  .pbar-value { font-size: 12.5px; font-weight: 650; text-align: right; white-space: nowrap; }
+  .pbar-delta { font-size: 12.5px; text-align: right; }
+
+  @media (max-width: 780px) {
+    .pbar-row { grid-template-columns: 110px 1fr 60px 110px; }
+    .chbar-row { grid-template-columns: 110px 1fr 110px; }
+    .pbar-label { font-size: 12px; }
+  }
+
+  /* ---- property cards (small multiples) ---- */
+  .property-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 980px) { .property-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .property-grid { grid-template-columns: 1fr; } }
+  .property-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 16px;
+  }
+  .property-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .property-card-head h3 { font-size: 13.5px; margin: 0; font-weight: 650; }
+  .top-channel-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; border: 1px solid; border-radius: 999px; padding: 2px 8px; }
+
+  .metric-row { display: grid; grid-template-columns: 66px 72px 1fr auto; align-items: center; gap: 8px; padding: 4px 0; }
+  .metric-label { font-size: 11.5px; color: var(--ink-mute); }
+  .metric-bar { display: flex; align-items: center; }
+  .minibar { display: block; }
+  .metric-value { font-size: 12.5px; font-weight: 600; text-align: right; }
+  .metric-delta { font-size: 11px; text-align: right; white-space: nowrap; }
+
+  .note-box {
+    background: var(--surface-2); border: 1px solid var(--rule); border-radius: 8px;
+    padding: 12px 14px; font-size: 12.5px; color: var(--ink-mute); margin-top: 14px;
+  }
+
+  footer.bottom { padding: 24px 0 0; color: var(--ink-mute); font-size: 12px; }
+
+  @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-row">
+    <div class="top-titles">
+      <h1>Weekly Social Portfolio Dashboard</h1>
+      <p>This week: Jul 30 – Aug 6, 2026 · vs last week: Jul 23 – 30, 2026 · all brands combined across Instagram, Facebook, TikTok &amp; Google Business</p>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button">Light mode</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <h2>Portfolio at a glance</h2>
+    <p class="section-sub">Headline totals across every brand, this week vs last week.</p>
+    <div class="stat-grid">
+    <div class="stat-tile">
+      <div class="stat-label">Followers</div>
+      <div class="stat-value">2,010</div>
+      <div class="stat-delta"><span class="chip" style="color:var(--good)">▲ +22 (+1%)</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="98.9" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="100.0" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Posts</div>
+      <div class="stat-value">37</div>
+      <div class="stat-delta"><span class="chip" style="color:var(--bad)">▼ -15 (-29%)</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="100.0" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="71.2" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Engagement</div>
+      <div class="stat-value">553</div>
+      <div class="stat-delta"><span class="chip" style="color:var(--good)">▲ +54 (+11%)</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="90.2" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="100.0" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Views</div>
+      <div class="stat-value">27,476</div>
+      <div class="stat-delta"><span class="chip" style="color:var(--bad)">▼ -6,003 (-18%)</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="100.0" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="82.1" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div></div>
+  </section>
+
+  <section>
+    <div class="two-col">
+      <div>
+        <h3>Followers by channel</h3>
+        
+    <div class="chbar-row">
+      <div class="chbar-label">Facebook</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:100.0%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="chbar-value">1,453 <span class="chip" style="color:var(--good)">▲ +7 (+0%)</span></div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">TikTok</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:23.1%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="chbar-value">336 <span class="chip" style="color:var(--good)">▲ +15 (+5%)</span></div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">Instagram</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:15.2%; background:var(--ch-instagram)"></div>
+      </div>
+      <div class="chbar-value">221 <span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+    </div>
+      </div>
+      <div>
+        <h3>Posts by channel</h3>
+        
+    <div class="chbar-row">
+      <div class="chbar-label">Facebook</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:100.0%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="chbar-value">15 </div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">TikTok</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:73.3%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="chbar-value">11 </div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">Instagram</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:66.7%; background:var(--ch-instagram)"></div>
+      </div>
+      <div class="chbar-value">10 </div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">Google Business</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:6.7%; background:var(--ch-google-business)"></div>
+      </div>
+      <div class="chbar-value">1 </div>
+    </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Views by property</h2>
+    <p class="section-sub">Ranked high to low. Bar color marks each property's top-performing channel this week.</p>
+    
+    <div class="pbar-row">
+      <div class="pbar-label">The Landings at North Ingleside<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:100.0%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">12,453</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--bad)">▼ -4,803 (-28%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Berry Falls<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:52.9%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">6,591</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--bad)">▼ -1,998 (-23%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">The Kenzie<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:19.1%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">2,380</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--bad)">▼ -415 (-15%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Capri Palms<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:15.4%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">1,918</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--bad)">▼ -2,407 (-56%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Ingleside Terrace<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:9.2%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">1,146</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--good)">▲ +1,093 (+2062%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Lakeside/Lakeview<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:5.7%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">714</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--bad)">▼ -403 (-36%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Residences at the Overlook<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:4.8%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">598</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--good)">▲ +582 (+3638%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Westminster Club<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:4.6%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">568</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--bad)">▼ -229 (-29%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">The Lamar Lofts<span class="pbar-badge" style="color:var(--ch-instagram)">Instagram</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:3.6%; background:var(--ch-instagram)"></div>
+      </div>
+      <div class="pbar-value">454</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--good)">▲ +193 (+74%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">The Benton<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:1.6%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">200</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--bad)">▼ -344 (-63%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Hills at Hoover<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:1.6%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">198</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--good)">▲ +120 (+154%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Claxton Pointe &amp; Pecan Ridge<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:1.2%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">110</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--bad)">▼ -1,535 (-93%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Santa Fe<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:1.2%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">92</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--good)">▲ +89 (+2967%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Villa Siena<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:1.2%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">52</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--bad)">▼ -155 (-75%)</span></div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Aztec Villa<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:1.2%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">2</div>
+      <div class="pbar-delta"><span class="chip" style="color:var(--bad)">▼ -1 (-33%)</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>By brand — property detail</h2>
+    <p class="section-sub">Followers, posts, engagement, and views per property, with week-over-week change. Bar length is scaled against the portfolio-wide max for that metric, so you can compare across properties at a glance.</p>
+    <div class="property-grid">
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Landings at North Ingleside</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="26" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">196</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +1 (+1%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">8</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -14 (-64%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">241</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -70 (-23%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">12,453</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -4,803 (-28%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Berry Falls</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">551</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +3 (+1%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="9" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">1</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -1 (-50%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="15" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">50</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +30 (+150%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="38" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">6,591</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -1,998 (-23%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Kenzie</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">553</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +9 (+2%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="9" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">1</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -5 (-83%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="19" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">63</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +28 (+80%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="14" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">2,380</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -415 (-15%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Capri Palms</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">19</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="0" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">0</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="45" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">149</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +80 (+116%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="11" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">1,918</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -2,407 (-56%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Ingleside Terrace</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="5" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">38</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +3 (+9%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="9" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">1</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -1 (-50%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">4</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +3 (+300%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="7" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">1,146</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +1,093 (+2062%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Lakeside/Lakeview</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="9" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">68</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +2 (+3%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="9" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">1</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -3 (-75%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">4</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -77 (-95%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="4" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">714</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -403 (-36%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Residences at the Overlook</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">16</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="18" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">2</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="0" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">0</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -1 (-100%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">598</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +582 (+3638%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Westminster Club</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="21" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">163</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +1 (+1%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="9" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">1</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -3 (-75%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">6</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -15 (-71%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">568</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -229 (-29%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Lamar Lofts</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-instagram); color:var(--ch-instagram)">Instagram</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="15" height="7" rx="3.5" fill="var(--ch-instagram)"/></svg></div>
+          <div class="metric-value">112</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +1 (+1%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="27" height="7" rx="3.5" fill="var(--ch-instagram)"/></svg></div>
+          <div class="metric-value">3</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--ch-instagram)"/></svg></div>
+          <div class="metric-value">32</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -14 (-30%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--ch-instagram)"/></svg></div>
+          <div class="metric-value">454</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +193 (+74%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Benton</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="5" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">41</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="36" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">4</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -5 (-56%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">9</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -10 (-53%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">200</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -344 (-63%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Hills at Hoover</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="6" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">47</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="18" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">2</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +2</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">5</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +5</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">198</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +120 (+154%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Claxton Pointe &amp; Pecan Ridge</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">75</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="0" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">0</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -6 (-100%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="0" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">0</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -1 (-100%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">110</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -1,535 (-93%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Santa Fe</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="7" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">53</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="18" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">2</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +1 (+100%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">1</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +1</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">92</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--good)">▲ +89 (+2967%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Villa Siena</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="7" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">53</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="18" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">2</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="0" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">0</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -2 (-100%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">52</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -155 (-75%)</span></div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Aztec Villa</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">25</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0 (0%)</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="0" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">0</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="0" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">0</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--flat)">• 0</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">2</div>
+          <div class="metric-delta"><span class="chip" style="color:var(--bad)">▼ -1 (-33%)</span></div>
+        </div>
+    </div></div>
+  </section>
+
+  <section>
+    <h2>Google My Business</h2>
+    <p class="section-sub">Specials posts are logged manually since Metricool doesn't track GBP specials.</p>
+    <div class="stat-grid">
+    <div class="stat-tile">
+      <div class="stat-label">Scheduled posts</div>
+      <div class="stat-value">1</div>
+      <div class="stat-delta"><span class="chip good">▲ new</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="0.0" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="100.0" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Specials posts</div>
+      <div class="stat-value">7</div>
+      <div class="stat-delta"><span class="chip good">▲ new</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="0.0" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="100.0" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Post views</div>
+      <div class="stat-value">0</div>
+      <div class="stat-delta"><span class="chip" style="color:var(--flat)">• 0</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="0.0" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="0.0" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Reach</div>
+      <div class="stat-value">291</div>
+      <div class="stat-delta"><span class="chip" style="color:var(--bad)">▼ -440 (-60%)</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="100.0" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="39.8" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Clicks</div>
+      <div class="stat-value">43</div>
+      <div class="stat-delta"><span class="chip" style="color:var(--bad)">▼ -105 (-71%)</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="100.0" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="29.1" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div></div>
+  </section>
+
+  <section>
+    <h2>Facebook Groups — portfolio roll-up</h2>
+    <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat-tile">
+      <div class="stat-label">Groups posted in</div>
+      <div class="stat-value">0</div>
+      <div class="stat-delta"><span class="chip" style="color:var(--flat)">• 0</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="0.0" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="0.0" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Group likes</div>
+      <div class="stat-value">0</div>
+      <div class="stat-delta"><span class="chip" style="color:var(--flat)">• 0</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="0.0" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="0.0" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Group comments</div>
+      <div class="stat-value">0</div>
+      <div class="stat-delta"><span class="chip" style="color:var(--flat)">• 0</span></div>
+      
+      <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <rect x="0" y="10" width="0.0" height="6" rx="3" fill="var(--track)"/>
+        <rect x="0" y="0" width="0.0" height="6" rx="3" fill="var(--series-sequential)"/>
+      </svg>
+    </div></div>
+    <div class="note-box">No Facebook Group activity this week — every metric above is a true zero, not missing data. Group posting is intentionally kept out of the Facebook channel numbers above; group-level likes/comments aren&#x27;t yet exposed by the Metricool API and will populate once connected.</div>
+  </section>
+
+  <footer class="bottom">
+    <p>Transcribed from the Metricool-exported weekly PDF snapshot dated 2026-08-12. Spot-check against Metricool before sending outside the team — this first draft is a design pass on real numbers, not yet a live automated pull.</p>
+    <p>Source: Metricool · Generated by scripts/build_report.py</p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    var stored = localStorage.getItem('wspd-theme');
+    if (stored) { root.setAttribute('data-theme', stored); }
+    function label() {
+      var isLight = root.getAttribute('data-theme') === 'light';
+      btn.textContent = isLight ? 'Dark mode' : 'Light mode';
+    }
+    label();
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('wspd-theme', next);
+      label();
+    });
+  })();
+</script>
+</body>
+</html>
