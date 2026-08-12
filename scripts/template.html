@@ -21,6 +21,24 @@
     --series-sequential: #3987e5;
 {{CHANNEL_CSS_VARS_DARK}}
   }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      color-scheme: light;
+      --page: #f9f9f7;
+      --surface: #ffffff;
+      --surface-2: #f3f2ee;
+      --ink: #0b0b0b;
+      --ink-2: #52514e;
+      --ink-mute: #898781;
+      --rule: #e1e0d9;
+      --track: #e1e0d9;
+      --good: #006300;
+      --bad: #e34948;
+      --flat: #898781;
+      --series-sequential: #2a78d6;
+{{CHANNEL_CSS_VARS_LIGHT}}
+    }
+  }
   :root[data-theme="light"] {
     color-scheme: light;
     --page: #f9f9f7;
@@ -207,13 +225,17 @@
     var btn = document.getElementById('themeToggle');
     var stored = localStorage.getItem('wspd-theme');
     if (stored) { root.setAttribute('data-theme', stored); }
+    function currentIsLight() {
+      var explicit = root.getAttribute('data-theme');
+      if (explicit) { return explicit === 'light'; }
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    }
     function label() {
-      var isLight = root.getAttribute('data-theme') === 'light';
-      btn.textContent = isLight ? 'Dark mode' : 'Light mode';
+      btn.textContent = currentIsLight() ? 'Dark mode' : 'Light mode';
     }
     label();
     btn.addEventListener('click', function () {
-      var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      var next = currentIsLight() ? 'dark' : 'light';
       root.setAttribute('data-theme', next);
       localStorage.setItem('wspd-theme', next);
       label();
