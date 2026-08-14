@@ -79,7 +79,12 @@ fields, not per-post enumeration):
 | facebook | `["FBEV17","FBEV33","FBEV35","FBEV34","FBEV12","FBEV22"]` | followers(LAST), posts(SUM), stories(SUM), interactions(SUM), post views(SUM), reel views(SUM) |
 | instagram | `["IGEV01","IGEV37","IGEV16","IGEV38","IGEV05"]` | followers(LAST), posts(SUM), stories(SUM), interactions(SUM), views(SUM) |
 | tiktok | `["TKEV07","TKEV01","TKEV06","TKEV02"]` | followers(LAST), videos(SUM), interactions(SUM), views(SUM) |
-| googleBusinessProfile | `["GMEV17","GMEV16","GMEV20","GMEV24"]` | posts(SUM), post views(SUM), reach(SUM), clicks(SUM) |
+| googleBusinessProfile | `["GMEV17","GMEV18","GMEV19","GMEV21","GMEV22","GMEV23"]` | posts published(SUM), reachSearch(SUM), reachMaps(SUM), websiteClicks(SUM), callClicks(SUM), directionsClicks(SUM) |
+
+**Do not use GMEV20 (reachTotal) or GMEV24 (totalClicks)** — those combined/formula
+fields return no data for this account even though their component fields
+(GMEV18/19 and GMEV21/22/23) do. Sum the components yourself: `reach = GMEV18 +
+GMEV19`, `clicks = GMEV21 + GMEV22 + GMEV23`.
 
 **The response is a daily time series**, e.g.
 `{"rows":[["24.0",null,null,null,"20260803"], ...]}` — one row per day, last
@@ -144,16 +149,21 @@ posts_by_channel = per network (Facebook/TikTok/Instagram/Google Business),
 facebook_groups = always {0,0,0} with the existing note — Metricool doesn't
   expose Facebook Group data; only change this if that ever becomes available
 
-google_business.scheduled_posts = sum of GBP postsCount across properties, with delta
-google_business.post_views      = sum of GBP postsViews (GMEV16), with delta
-google_business.reach           = sum of GBP reachTotal (GMEV20), with delta
-google_business.clicks          = sum of GBP totalClicks (GMEV24), with delta
+google_business.posts_published = sum of GBP postsCount (GMEV17) across
+  properties, with delta. This is posts PUBLISHED during the week window —
+  not scheduled/future posts, despite the field's Metricool label.
+google_business.reach           = sum of (GMEV18 + GMEV19) across properties, with delta
+google_business.clicks          = sum of (GMEV21 + GMEV22 + GMEV23) across properties, with delta
 google_business.specials_posts  = CANNOT be pulled from Metricool (never has
   been — this was always a manual number in the old report too). Default it
   to {"current": 0, "delta": 0} and say so plainly in generated_note. Do not
   guess a number. If a human has told you this week's real count in the
   conversation, use that instead.
 ```
+
+The GMB section on the dashboard shows exactly 4 tiles, in this order: Specials
+Posts (manual), Posts Published, Reach, Clicks. Post Views is not shown — it
+wasn't a metric anyone was actually using.
 
 ## Step 7 — Write the new data file
 
