@@ -288,7 +288,13 @@ def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_l
     if editable_key:
         edit_attrs = (f' data-editable="1" data-metric="{esc(editable_key)}" '
                       f'data-week="{esc(week_id)}" data-current="{current}" data-prev="{prev}"')
-        edit_btn = '<button class="edit-btn" type="button" title="Edit this number">✎</button>'
+        edit_btn = (
+            '<button class="edit-btn" type="button" title="Edit this number">'
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+            'stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+            '<path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>'
+            '</svg> Edit</button>'
+        )
         edit_form = (
             '<div class="edit-form">'
             f'<input type="number" inputmode="numeric" step="1" value="{current}">'
