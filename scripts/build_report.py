@@ -47,8 +47,11 @@ def pct_delta(current, delta):
     return delta / prev * 100.0
 
 
-def delta_chip(current, delta, is_new=False, suffix=""):
-    """Renders a colored +/- chip with arrow, absolute delta, and % change."""
+def delta_chip(current, delta, is_new=False, suffix="", compare_label=""):
+    """Renders a colored +/- chip with arrow, absolute delta, and % change.
+    compare_label, if given, is folded inside the parens next to the percent
+    (e.g. '+1% vs last wk') instead of appended after -- matches how the
+    original report phrased its KPI tiles."""
     if is_new:
         color_var = "var(--good)"
         return f'<span class="chip good">▲ new{esc(suffix)}</span>'
@@ -59,7 +62,8 @@ def delta_chip(current, delta, is_new=False, suffix=""):
     else:
         arrow, color_var, sign = "•", "var(--flat)", ""
     pct = pct_delta(current, delta)
-    pct_txt = f" ({sign}{pct:.0f}%)" if pct is not None else ""
+    label = f" {esc(compare_label)}" if compare_label else ""
+    pct_txt = f" ({sign}{pct:.0f}%{label})" if pct is not None else (f" ({esc(compare_label)})" if compare_label else "")
     return (f'<span class="chip" style="color:{color_var}">'
             f'{arrow} {sign}{delta:,}{pct_txt}{esc(suffix)}</span>')
 
@@ -263,7 +267,7 @@ def property_card(p, maxes):
     </div>'''
 
 
-def stat_tile(label, current, delta, is_new=False, prev_override=None):
+def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_label=""):
     prev = prev_override if prev_override is not None else current - delta
     peak = max(current, prev, 1)
     bar = f'''
@@ -275,7 +279,7 @@ def stat_tile(label, current, delta, is_new=False, prev_override=None):
     <div class="stat-tile">
       <div class="stat-label">{esc(label)}</div>
       <div class="stat-value">{fmt(current)}</div>
-      <div class="stat-delta">{delta_chip(current, delta, is_new=is_new)}</div>
+      <div class="stat-delta">{delta_chip(current, delta, is_new=is_new, compare_label=compare_label)}</div>
       {bar}
     </div>'''
 
@@ -285,10 +289,10 @@ def build(data_path: Path) -> str:
 
     kpis = data["kpis"]
     kpi_html = "".join([
-        stat_tile("Followers", kpis["followers"]["current"], kpis["followers"]["delta"]),
-        stat_tile("Posts", kpis["posts"]["current"], kpis["posts"]["delta"]),
-        stat_tile("Engagement", kpis["engagement"]["current"], kpis["engagement"]["delta"]),
-        stat_tile("Views", kpis["views"]["current"], kpis["views"]["delta"]),
+        stat_tile("Followers", kpis["followers"]["current"], kpis["followers"]["delta"], compare_label="vs last wk"),
+        stat_tile("Posts", kpis["posts"]["current"], kpis["posts"]["delta"], compare_label="vs last wk"),
+        stat_tile("Engagement", kpis["engagement"]["current"], kpis["engagement"]["delta"], compare_label="vs last wk"),
+        stat_tile("Views", kpis["views"]["current"], kpis["views"]["delta"], compare_label="vs last wk"),
     ])
     wow_chart = wow_totals_chart(kpis, data["week_label"], data["prev_week_label"])
 
