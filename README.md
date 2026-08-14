@@ -1,8 +1,14 @@
 # Weekly Social Portfolio Dashboard
 
 A visual, chart-based redesign of the weekly social report — replacing the
-manual-paste "ledger" style report (`weekly-social-report-copy.html`) with a
-dashboard: KPI tiles, ranked bar charts, and per-property small multiples.
+manual-paste "ledger" style report (`weekly-social-report-copy.html`, now
+deprecated) with a dashboard: KPI tiles, ranked bar charts, and per-property
+small multiples.
+
+**Running the weekly update?** See [`AUTOMATION.md`](AUTOMATION.md) — it's
+the complete, self-contained runbook (brand IDs, Metricool field IDs, week
+math, JSON schema, commit/push steps) for whatever pulls this week's data
+every Friday.
 
 ## Why this design
 
@@ -36,55 +42,29 @@ scripts/build_report.py     reads a data JSON, computes chart geometry, writes i
 index.html                  the generated dashboard — this is what GitHub Pages serves
 ```
 
-## Updating it week to week (current, manual first draft)
+## Updating it week to week
 
-1. Copy `data/week-2026-08-06.json` to a new dated file, fill in the new
-   week's numbers.
+The weekly Friday run follows `AUTOMATION.md` end to end (pull from
+Metricool, roll last week forward, rebuild, push). For a one-off manual
+edit, the mechanics are just:
+
+1. Copy the most recent `data/week-*.json` to a new dated file, edit the
+   numbers.
 2. Run:
    ```
    python3 scripts/build_report.py data/week-YYYY-MM-DD.json
    ```
-3. Commit and push `index.html` (and the new data file).
+3. Commit and push `index.html` (and the new data file) to `main`.
 
-## Where the numbers come from right now
+## Where the numbers come from
 
-This draft mixes two sources, and the footer/generated-note on the page always
-says which:
-
-- **Followers, engagement, views, and the portfolio-level KPIs/channel
-  totals** are transcribed from the Metricool-exported PDF you shared. The
-  followers and views figures reconcile exactly against that PDF's own
-  totals; engagement was close enough to trust for a first draft.
-- **Per-property post counts and their channel breakdown** were pulled live
-  from the Metricool API (`getAnalyticsDataByMetrics`, one call per
-  network/property, counting posts + Reels + Stories) while building this
-  draft — the PDF's small print turned out to have misread several
-  properties' post counts (e.g. it showed The Benton at 4 posts; the live
-  data says 3, all Facebook Stories, zero that week on TikTok). That live
-  pull totals 34 posts across the portfolio, close to but not exactly
-  matching the PDF's reported 37 — the ~3-post gap is most likely posts
-  right at the week's UTC/local-timezone boundary, since the query window
-  used a flat UTC day range rather than each property's own timezone.
-
-**Next step for full accuracy:** wire `scripts/build_report.py` to call
-Metricool directly (brand IDs and field IDs are already documented below)
-using each property's own timezone for the week boundary, for every metric —
-not just posts — so this runs unattended every Friday instead of starting
-from a PDF.
-
-- **GBP specials are still a manual number** — same as your current report,
-  since Metricool doesn't expose Google Business specials counts.
-
-### Metricool reference (for wiring up full automation)
-
-- Brand IDs: call `getBrandSettings` — returns each property's Metricool
-  `id` plus its connected network handles.
-- Post-count field IDs (one call per network, per property, per week):
-  `FBPO01` (Facebook posts), `FBST01` (Facebook Stories), `IGPO01` (Instagram
-  posts), `IGRE01` (Instagram Reels), `IGST01` (Instagram Stories), `TKPO01`
-  (TikTok videos), `GMPO01` (Google Business posts). Each returns one row per
-  published item with its date — count rows in range, don't expect a
-  pre-aggregated total.
+As of the week-2026-08-06 file, the data was a hand-assembled mix (PDF
+transcription + a first live Metricool pull) while the design was being
+nailed down — see the git history on that file if you need the details.
+**Every file from here on is meant to be pulled entirely live from
+Metricool**, following `AUTOMATION.md` — no more PDF transcription, no more
+manual paste-in, except the one number Metricool genuinely doesn't track
+(Google Business Specials Posts, documented in `AUTOMATION.md`).
 
 ## Hosting on GitHub Pages
 
