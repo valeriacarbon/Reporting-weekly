@@ -1,0 +1,52 @@
+{
+  "week_label": "Jul 30 – Aug 6, 2026",
+  "prev_week_label": "Jul 23 – 30, 2026",
+  "generated_note": "Followers, engagement, and views are transcribed from the Metricool-exported weekly PDF snapshot dated 2026-08-12 — spot-check those against Metricool before sending outside the team. The per-property post counts and channel breakdown below were pulled live from the Metricool API (feed posts + Reels + Stories) while building this draft, since the PDF's small print undercounted several properties. That live pull totals 34 posts across the portfolio vs. the PDF's reported 37 — the ~3-post gap is most likely posts right at the week's timezone boundary; exact timezone-aware automation is the next step, tracked in the README.",
+  "kpis": {
+    "followers": {"current": 2010, "delta": 22},
+    "posts": {"current": 37, "delta": -15},
+    "engagement": {"current": 553, "delta": 54},
+    "views": {"current": 27476, "delta": -6003}
+  },
+  "followers_by_channel": [
+    {"channel": "Facebook", "current": 1453, "delta": 7},
+    {"channel": "TikTok", "current": 336, "delta": 15},
+    {"channel": "Instagram", "current": 221, "delta": 0}
+  ],
+  "posts_by_channel": [
+    {"channel": "Facebook", "current": 15},
+    {"channel": "TikTok", "current": 11},
+    {"channel": "Instagram", "current": 10},
+    {"channel": "Google Business", "current": 1}
+  ],
+  "facebook_groups": {
+    "groups_posted_in": {"current": 0, "delta": 0},
+    "group_likes": {"current": 0, "delta": 0},
+    "group_comments": {"current": 0, "delta": 0},
+    "note": "No Facebook Group activity this week — every metric above is a true zero, not missing data. Group posting is intentionally kept out of the Facebook channel numbers above; group-level likes/comments aren't yet exposed by the Metricool API and will populate once connected."
+  },
+  "google_business": {
+    "scheduled_posts": {"current": 1, "delta": 1, "is_new": true},
+    "specials_posts": {"current": 7, "delta": 7, "is_new": true},
+    "post_views": {"current": 0, "delta": 0},
+    "reach": {"current": 291, "delta": -440},
+    "clicks": {"current": 43, "delta": -105}
+  },
+  "properties": [
+    {"name": "The Landings at North Ingleside", "top_channel": "Facebook", "followers": {"current": 196, "delta": 1}, "posts": {"current": 6}, "posts_channels": {"Facebook": 0, "Instagram": 2, "TikTok": 3, "Google Business": 1}, "engagement": {"current": 241, "delta": -70}, "views": {"current": 12453, "delta": -4803}},
+    {"name": "Berry Falls", "top_channel": "Facebook", "followers": {"current": 551, "delta": 3}, "posts": {"current": 2}, "posts_channels": {"Facebook": 0, "Instagram": 1, "TikTok": 1, "Google Business": 0}, "engagement": {"current": 50, "delta": 30}, "views": {"current": 6591, "delta": -1998}},
+    {"name": "The Kenzie", "top_channel": "TikTok", "followers": {"current": 553, "delta": 9}, "posts": {"current": 2}, "posts_channels": {"Facebook": 1, "Instagram": 0, "TikTok": 1, "Google Business": 0}, "engagement": {"current": 63, "delta": 28}, "views": {"current": 2380, "delta": -415}},
+    {"name": "Capri Palms", "top_channel": "TikTok", "followers": {"current": 19, "delta": 0}, "posts": {"current": 1}, "posts_channels": {"TikTok": 1}, "engagement": {"current": 149, "delta": 80}, "views": {"current": 1918, "delta": -2407}},
+    {"name": "Ingleside Terrace", "top_channel": "Facebook", "followers": {"current": 38, "delta": 3}, "posts": {"current": 4}, "posts_channels": {"Facebook": 1, "Instagram": 2, "TikTok": 1, "Google Business": 0}, "engagement": {"current": 4, "delta": 3}, "views": {"current": 1146, "delta": 1093}},
+    {"name": "Lakeside/Lakeview", "top_channel": "TikTok", "followers": {"current": 68, "delta": 2}, "posts": {"current": 1}, "posts_channels": {"Facebook": 0, "Instagram": 0, "TikTok": 1, "Google Business": 0}, "engagement": {"current": 4, "delta": -77}, "views": {"current": 714, "delta": -403}},
+    {"name": "Westminster Club", "top_channel": "Facebook", "followers": {"current": 163, "delta": 1}, "posts": {"current": 3}, "posts_channels": {"Facebook": 1, "Instagram": 1, "TikTok": 1, "Google Business": 0}, "engagement": {"current": 6, "delta": -15}, "views": {"current": 568, "delta": -229}},
+    {"name": "Residences at the Overlook", "top_channel": "Facebook", "followers": {"current": 16, "delta": 0}, "posts": {"current": 2}, "posts_channels": {"Facebook": 1, "Instagram": 1, "TikTok": 0, "Google Business": 0}, "engagement": {"current": 0, "delta": -1}, "views": {"current": 598, "delta": 582}},
+    {"name": "The Lamar Lofts", "top_channel": "Instagram", "followers": {"current": 112, "delta": 1}, "posts": {"current": 2}, "posts_channels": {"Facebook": 0, "Instagram": 1, "TikTok": 1, "Google Business": 0}, "engagement": {"current": 32, "delta": -14}, "views": {"current": 454, "delta": 193}},
+    {"name": "The Benton", "top_channel": "TikTok", "followers": {"current": 41, "delta": 0}, "posts": {"current": 3}, "posts_channels": {"Facebook": 3, "Instagram": 0, "TikTok": 0, "Google Business": 0}, "engagement": {"current": 9, "delta": -10}, "views": {"current": 200, "delta": -344}},
+    {"name": "Hills at Hoover", "top_channel": "Facebook", "followers": {"current": 47, "delta": 0}, "posts": {"current": 2}, "posts_channels": {"Facebook": 1, "Instagram": 1, "TikTok": 0, "Google Business": 0}, "engagement": {"current": 5, "delta": 5}, "views": {"current": 198, "delta": 120}},
+    {"name": "Claxton Pointe & Pecan Ridge", "top_channel": "Facebook", "followers": {"current": 75, "delta": 0}, "posts": {"current": 0}, "posts_channels": {"Facebook": 0, "Instagram": 0, "TikTok": 0, "Google Business": 0}, "engagement": {"current": 0, "delta": -1}, "views": {"current": 110, "delta": -1535}},
+    {"name": "Santa Fe", "top_channel": "TikTok", "followers": {"current": 53, "delta": 0}, "posts": {"current": 3}, "posts_channels": {"Facebook": 1, "Instagram": 1, "TikTok": 1, "Google Business": 0}, "engagement": {"current": 1, "delta": 1}, "views": {"current": 92, "delta": 89}},
+    {"name": "Villa Siena", "top_channel": "Facebook", "followers": {"current": 53, "delta": 0}, "posts": {"current": 3}, "posts_channels": {"Facebook": 1, "Instagram": 1, "TikTok": 1, "Google Business": 0}, "engagement": {"current": 0, "delta": -2}, "views": {"current": 52, "delta": -155}},
+    {"name": "Aztec Villa", "top_channel": "Facebook", "followers": {"current": 25, "delta": 0}, "posts": {"current": 0}, "posts_channels": {"Facebook": 0}, "engagement": {"current": 0, "delta": 0}, "views": {"current": 2, "delta": -1}}
+  ]
+}
