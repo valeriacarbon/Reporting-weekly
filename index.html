@@ -19,6 +19,8 @@
     --bad: #e66767;
     --flat: #898781;
     --series-sequential: #3987e5;
+    --compare-prev: #3a4256;
+    --baseline: #383835;
       --ch-facebook: #3987e5;
       --ch-tiktok: #199e70;
       --ch-google-business: #c98500;
@@ -39,6 +41,8 @@
       --bad: #e34948;
       --flat: #898781;
       --series-sequential: #2a78d6;
+      --compare-prev: #c7cbd6;
+      --baseline: #c3c2b7;
       --ch-facebook: #2a78d6;
       --ch-tiktok: #1baf7a;
       --ch-google-business: #eda100;
@@ -59,6 +63,8 @@
     --bad: #e34948;
     --flat: #898781;
     --series-sequential: #2a78d6;
+    --compare-prev: #c7cbd6;
+    --baseline: #c3c2b7;
       --ch-facebook: #2a78d6;
       --ch-tiktok: #1baf7a;
       --ch-google-business: #eda100;
@@ -117,6 +123,18 @@
   .chbar-track { background: var(--track); border-radius: 6px; height: 20px; overflow: hidden; }
   .chbar-fill { height: 100%; border-radius: 6px; min-width: 4px; }
   .chbar-value { font-size: 13px; text-align: right; white-space: nowrap; }
+
+  /* ---- this-week-vs-last-week log-scale comparison ---- */
+  .wow-chart-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 10px;
+    padding: 20px 20px 8px;
+  }
+  .wow-legend { display: flex; gap: 20px; margin-bottom: 8px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-2); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .wow-axis-label { font-size: 10.5px; fill: var(--ink-mute); font-family: system-ui, sans-serif; }
+  .wow-cat-label { font-size: 12.5px; fill: var(--ink-2); font-weight: 600; font-family: system-ui, sans-serif; }
+  .wow-value-label { font-size: 11px; fill: var(--ink); font-weight: 650; font-family: system-ui, sans-serif; font-variant-numeric: tabular-nums; }
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
   @media (max-width: 780px) { .two-col { grid-template-columns: 1fr; gap: 24px; } }
@@ -236,6 +254,12 @@
         <rect x="0" y="0" width="82.1" height="6" rx="3" fill="var(--series-sequential)"/>
       </svg>
     </div></div>
+  </section>
+
+  <section>
+    <h2>This week vs last week — portfolio totals</h2>
+    <p class="section-sub">All four KPIs in one view. Log scale, since views run in the tens of thousands and posts in the tens — a shared linear axis would flatten the smaller bars to nothing.</p>
+    <div class="wow-chart-card"><div class="wow-legend"><span class="legend-item"><span class="legend-dot" style="background:var(--compare-prev)"></span>Jul 23 – 30, 2026</span><span class="legend-item"><span class="legend-dot" style="background:var(--series-sequential)"></span>Jul 30 – Aug 6, 2026</span></div><svg viewBox="0 0 800 300" width="100%" height="auto" role="img" aria-label="This week vs last week, all portfolio KPIs, log scale"><line x1="64" y1="266.0" x2="784" y2="266.0" stroke="var(--rule)" stroke-width="1"/><text x="56" y="266.0" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">10</text><line x1="64" y1="222.3" x2="784" y2="222.3" stroke="var(--rule)" stroke-width="1"/><text x="56" y="222.3" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">50</text><line x1="64" y1="203.5" x2="784" y2="203.5" stroke="var(--rule)" stroke-width="1"/><text x="56" y="203.5" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">100</text><line x1="64" y1="159.8" x2="784" y2="159.8" stroke="var(--rule)" stroke-width="1"/><text x="56" y="159.8" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">500</text><line x1="64" y1="141.0" x2="784" y2="141.0" stroke="var(--rule)" stroke-width="1"/><text x="56" y="141.0" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">1,000</text><line x1="64" y1="97.3" x2="784" y2="97.3" stroke="var(--rule)" stroke-width="1"/><text x="56" y="97.3" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">5,000</text><line x1="64" y1="78.5" x2="784" y2="78.5" stroke="var(--rule)" stroke-width="1"/><text x="56" y="78.5" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">10,000</text><line x1="64" y1="34.8" x2="784" y2="34.8" stroke="var(--rule)" stroke-width="1"/><text x="56" y="34.8" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">50,000</text><line x1="64" y1="16.0" x2="784" y2="16.0" stroke="var(--rule)" stroke-width="1"/><text x="56" y="16.0" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">100,000</text><rect x="105.0" y="122.3" width="46.0" height="143.7" rx="4" fill="var(--compare-prev)"/><rect x="157.0" y="122.1" width="46.0" height="143.9" rx="4" fill="var(--series-sequential)"/><text x="128.0" y="114.3" text-anchor="middle" class="wow-value-label">1,988</text><text x="180.0" y="114.1" text-anchor="middle" class="wow-value-label">2,010</text><text x="154.0" y="286.0" text-anchor="middle" class="wow-cat-label">Followers</text><rect x="285.0" y="221.2" width="46.0" height="44.8" rx="4" fill="var(--compare-prev)"/><rect x="337.0" y="230.5" width="46.0" height="35.5" rx="4" fill="var(--series-sequential)"/><text x="308.0" y="213.2" text-anchor="middle" class="wow-value-label">52</text><text x="360.0" y="222.5" text-anchor="middle" class="wow-value-label">37</text><text x="334.0" y="286.0" text-anchor="middle" class="wow-cat-label">Posts</text><rect x="465.0" y="159.9" width="46.0" height="106.1" rx="4" fill="var(--compare-prev)"/><rect x="517.0" y="157.1" width="46.0" height="108.9" rx="4" fill="var(--series-sequential)"/><text x="488.0" y="151.9" text-anchor="middle" class="wow-value-label">499</text><text x="540.0" y="149.1" text-anchor="middle" class="wow-value-label">553</text><text x="514.0" y="286.0" text-anchor="middle" class="wow-cat-label">Engagement</text><rect x="645.0" y="45.7" width="46.0" height="220.3" rx="4" fill="var(--compare-prev)"/><rect x="697.0" y="51.1" width="46.0" height="214.9" rx="4" fill="var(--series-sequential)"/><text x="668.0" y="37.7" text-anchor="middle" class="wow-value-label">33,479</text><text x="720.0" y="43.1" text-anchor="middle" class="wow-value-label">27,476</text><text x="694.0" y="286.0" text-anchor="middle" class="wow-cat-label">Views</text><line x1="64" y1="266.0" x2="784" y2="266.0" stroke="var(--baseline)" stroke-width="1.5"/></svg></div>
   </section>
 
   <section>
