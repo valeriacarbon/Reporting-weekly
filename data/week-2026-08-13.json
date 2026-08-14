@@ -1,7 +1,7 @@
 {
   "week_label": "Aug 6 – 13, 2026",
   "prev_week_label": "Jul 30 – Aug 6, 2026",
-  "generated_note": "Pulled live from the Metricool API on 2026-08-14 following AUTOMATION.md (evolution connector, summed/last-value per network). GBP Reach and Clicks (GMEV20/GMEV24) returned no data from the API this run, so those figures are carried forward unchanged from last week rather than shown as a drop to zero — investigate that field gap before trusting a real change there. Specials Posts for this week hasn't been entered yet — click Edit on that tile to add the real count.",
+  "generated_note": "Pulled live from the Metricool API on 2026-08-14 following AUTOMATION.md. GBP Reach and Clicks are summed from the individual reachSearch/reachMaps/websiteClicks/callClicks/directionsClicks fields (GMEV18/19/21/22/23) -- the combined GMEV20/GMEV24 fields return no data for this account even though their components do, which is why last week's report showed those as flat/carried-forward. Specials Posts for this week hasn't been entered yet -- click Edit on that tile to add the real count.",
   "kpis": {
     "followers": {
       "current": 2043,
@@ -84,12 +84,12 @@
       "delta": 0
     },
     "reach": {
-      "current": 291,
-      "delta": 0
+      "current": 5832,
+      "delta": -3744
     },
     "clicks": {
-      "current": 43,
-      "delta": 0
+      "current": 1415,
+      "delta": -1174
     }
   },
   "properties": [
