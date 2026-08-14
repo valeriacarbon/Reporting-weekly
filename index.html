@@ -108,7 +108,7 @@
   .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
   .stat-tile {
     background: var(--surface); border: 1px solid var(--rule); border-radius: 10px;
-    padding: 16px 18px;
+    padding: 16px 18px; position: relative;
   }
   .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-mute); margin-bottom: 8px; }
   .stat-value { font-size: 26px; font-weight: 650; line-height: 1; margin-bottom: 8px; }
@@ -116,6 +116,36 @@
   .chip { font-weight: 600; }
   .chip.good { color: var(--good); }
   .stat-spark { display: block; }
+
+  /* ---- manually-editable tiles (GBP specials, Facebook Groups) ---- */
+  .stat-tile[data-editable] { padding-right: 40px; }
+  .edit-btn {
+    position: absolute; top: 10px; right: 10px; width: 24px; height: 24px;
+    border-radius: 6px; border: 1px solid var(--rule); background: var(--surface-2);
+    color: var(--ink-mute); font-size: 12px; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .edit-btn:hover { color: var(--ink); border-color: var(--ink-mute); }
+  .stat-tile[data-editable].is-editing .stat-value,
+  .stat-tile[data-editable].is-editing .stat-delta,
+  .stat-tile[data-editable].is-editing .stat-spark { display: none; }
+  .edit-form { display: none; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .stat-tile[data-editable].is-editing .edit-form { display: flex; }
+  .edit-form input {
+    width: 72px; font-size: 20px; font-weight: 650; font-family: inherit;
+    background: var(--page); color: var(--ink); border: 1px solid var(--rule);
+    border-radius: 6px; padding: 4px 8px;
+  }
+  .edit-form button {
+    font-size: 11px; font-weight: 600; border-radius: 6px; padding: 5px 9px;
+    border: 1px solid var(--rule); background: var(--surface-2); color: var(--ink-2); cursor: pointer;
+  }
+  .edit-form button.save { background: var(--series-sequential); border-color: var(--series-sequential); color: #fff; }
+  .edited-badge {
+    font-size: 10px; color: var(--ink-mute); text-transform: uppercase;
+    letter-spacing: 0.05em; margin-bottom: 6px; display: none;
+  }
+  .stat-tile.is-edited .edited-badge { display: block; }
 
   /* ---- channel bar charts ---- */
   .chbar-row { display: grid; grid-template-columns: 130px 1fr 180px; align-items: center; gap: 12px; margin-bottom: 10px; }
@@ -215,7 +245,10 @@
     <p class="section-sub">Headline totals across every brand, this week vs last week.</p>
     <div class="stat-grid">
     <div class="stat-tile">
+      
       <div class="stat-label">Followers</div>
+      
+      
       <div class="stat-value">2,010</div>
       <div class="stat-delta"><span class="chip" style="color:var(--good)">▲ +22 (+1% vs last wk)</span></div>
       
@@ -225,7 +258,10 @@
       </svg>
     </div>
     <div class="stat-tile">
+      
       <div class="stat-label">Posts</div>
+      
+      
       <div class="stat-value">37</div>
       <div class="stat-delta"><span class="chip" style="color:var(--bad)">▼ -15 (-29% vs last wk)</span></div>
       
@@ -235,7 +271,10 @@
       </svg>
     </div>
     <div class="stat-tile">
+      
       <div class="stat-label">Engagement</div>
+      
+      
       <div class="stat-value">553</div>
       <div class="stat-delta"><span class="chip" style="color:var(--good)">▲ +54 (+11% vs last wk)</span></div>
       
@@ -245,7 +284,10 @@
       </svg>
     </div>
     <div class="stat-tile">
+      
       <div class="stat-label">Views</div>
+      
+      
       <div class="stat-value">27,476</div>
       <div class="stat-delta"><span class="chip" style="color:var(--bad)">▼ -6,003 (-18% vs last wk)</span></div>
       
@@ -926,7 +968,10 @@
     <p class="section-sub">Specials posts are logged manually since Metricool doesn't track GBP specials.</p>
     <div class="stat-grid">
     <div class="stat-tile">
+      
       <div class="stat-label">Scheduled posts</div>
+      
+      
       <div class="stat-value">1</div>
       <div class="stat-delta"><span class="chip good">▲ new</span></div>
       
@@ -935,8 +980,11 @@
         <rect x="0" y="0" width="100.0" height="6" rx="3" fill="var(--series-sequential)"/>
       </svg>
     </div>
-    <div class="stat-tile">
+    <div class="stat-tile" data-editable="1" data-metric="gbp_specials_posts" data-week="Jul 30 – Aug 6, 2026" data-current="7" data-prev="0">
+      <button class="edit-btn" type="button" title="Edit this number">✎</button>
       <div class="stat-label">Specials posts</div>
+      <div class="edited-badge">Manually edited</div>
+      <div class="edit-form"><input type="number" inputmode="numeric" step="1" value="7"><button type="button" class="save">Save</button><button type="button" class="cancel">Cancel</button></div>
       <div class="stat-value">7</div>
       <div class="stat-delta"><span class="chip good">▲ new</span></div>
       
@@ -946,7 +994,10 @@
       </svg>
     </div>
     <div class="stat-tile">
+      
       <div class="stat-label">Post views</div>
+      
+      
       <div class="stat-value">0</div>
       <div class="stat-delta"><span class="chip" style="color:var(--flat)">• 0</span></div>
       
@@ -956,7 +1007,10 @@
       </svg>
     </div>
     <div class="stat-tile">
+      
       <div class="stat-label">Reach</div>
+      
+      
       <div class="stat-value">291</div>
       <div class="stat-delta"><span class="chip" style="color:var(--bad)">▼ -440 (-60%)</span></div>
       
@@ -966,7 +1020,10 @@
       </svg>
     </div>
     <div class="stat-tile">
+      
       <div class="stat-label">Clicks</div>
+      
+      
       <div class="stat-value">43</div>
       <div class="stat-delta"><span class="chip" style="color:var(--bad)">▼ -105 (-71%)</span></div>
       
@@ -980,8 +1037,11 @@
   <section>
     <h2>Facebook Groups — portfolio roll-up</h2>
     <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
-    <div class="stat-tile">
+    <div class="stat-tile" data-editable="1" data-metric="fbg_groups_posted_in" data-week="Jul 30 – Aug 6, 2026" data-current="0" data-prev="0">
+      <button class="edit-btn" type="button" title="Edit this number">✎</button>
       <div class="stat-label">Groups posted in</div>
+      <div class="edited-badge">Manually edited</div>
+      <div class="edit-form"><input type="number" inputmode="numeric" step="1" value="0"><button type="button" class="save">Save</button><button type="button" class="cancel">Cancel</button></div>
       <div class="stat-value">0</div>
       <div class="stat-delta"><span class="chip" style="color:var(--flat)">• 0</span></div>
       
@@ -990,8 +1050,11 @@
         <rect x="0" y="0" width="0.0" height="6" rx="3" fill="var(--series-sequential)"/>
       </svg>
     </div>
-    <div class="stat-tile">
+    <div class="stat-tile" data-editable="1" data-metric="fbg_group_likes" data-week="Jul 30 – Aug 6, 2026" data-current="0" data-prev="0">
+      <button class="edit-btn" type="button" title="Edit this number">✎</button>
       <div class="stat-label">Group likes</div>
+      <div class="edited-badge">Manually edited</div>
+      <div class="edit-form"><input type="number" inputmode="numeric" step="1" value="0"><button type="button" class="save">Save</button><button type="button" class="cancel">Cancel</button></div>
       <div class="stat-value">0</div>
       <div class="stat-delta"><span class="chip" style="color:var(--flat)">• 0</span></div>
       
@@ -1000,8 +1063,11 @@
         <rect x="0" y="0" width="0.0" height="6" rx="3" fill="var(--series-sequential)"/>
       </svg>
     </div>
-    <div class="stat-tile">
+    <div class="stat-tile" data-editable="1" data-metric="fbg_group_comments" data-week="Jul 30 – Aug 6, 2026" data-current="0" data-prev="0">
+      <button class="edit-btn" type="button" title="Edit this number">✎</button>
       <div class="stat-label">Group comments</div>
+      <div class="edited-badge">Manually edited</div>
+      <div class="edit-form"><input type="number" inputmode="numeric" step="1" value="0"><button type="button" class="save">Save</button><button type="button" class="cancel">Cancel</button></div>
       <div class="stat-value">0</div>
       <div class="stat-delta"><span class="chip" style="color:var(--flat)">• 0</span></div>
       
@@ -1040,6 +1106,78 @@
       root.setAttribute('data-theme', next);
       localStorage.setItem('wspd-theme', next);
       label();
+    });
+  })();
+
+  // Manually-editable tiles (GBP Specials Posts, Facebook Groups) -- Metricool
+  // doesn't track these, so a person types the real number in. This is a
+  // static site with no backend, so edits are saved to this browser's
+  // localStorage only, scoped to this exact metric + week.
+  (function () {
+    function storageKey(tile) {
+      return 'wspd-edit:' + tile.dataset.week + ':' + tile.dataset.metric;
+    }
+    function fmt(n) { return n.toLocaleString('en-US'); }
+    function renderDelta(tile, current, prev) {
+      var delta = current - prev;
+      var chip = tile.querySelector('.stat-delta .chip');
+      var arrow, colorVar, sign;
+      if (delta > 0) { arrow = '▲'; colorVar = 'var(--good)'; sign = '+'; }
+      else if (delta < 0) { arrow = '▼'; colorVar = 'var(--bad)'; sign = ''; }
+      else { arrow = '•'; colorVar = 'var(--flat)'; sign = ''; }
+      var pctTxt = '';
+      if (prev !== 0) {
+        var pct = (delta / prev) * 100;
+        pctTxt = ' (' + sign + Math.round(pct) + '%)';
+      }
+      chip.style.color = colorVar;
+      chip.textContent = arrow + ' ' + sign + fmt(delta) + pctTxt;
+    }
+    function renderSpark(tile, current, prev) {
+      var svg = tile.querySelector('.stat-spark');
+      if (!svg) return;
+      var rects = svg.querySelectorAll('rect');
+      var peak = Math.max(current, prev, 1);
+      rects[0].setAttribute('width', ((prev / peak) * 100).toFixed(1));
+      rects[1].setAttribute('width', ((current / peak) * 100).toFixed(1));
+    }
+    function applyValue(tile, current, prev, persisted) {
+      tile.querySelector('.stat-value').textContent = fmt(current);
+      renderDelta(tile, current, prev);
+      renderSpark(tile, current, prev);
+      tile.classList.toggle('is-edited', !!persisted);
+    }
+    document.querySelectorAll('.stat-tile[data-editable]').forEach(function (tile) {
+      var prev = parseFloat(tile.dataset.prev);
+      var current = parseFloat(tile.dataset.current);
+      var input = tile.querySelector('.edit-form input');
+      var saved = localStorage.getItem(storageKey(tile));
+      if (saved !== null) {
+        current = parseFloat(saved);
+        input.value = current;
+        applyValue(tile, current, prev, true);
+      }
+      tile.querySelector('.edit-btn').addEventListener('click', function () {
+        input.value = current;
+        tile.classList.add('is-editing');
+        input.focus();
+        input.select();
+      });
+      tile.querySelector('.edit-form .cancel').addEventListener('click', function () {
+        tile.classList.remove('is-editing');
+      });
+      tile.querySelector('.edit-form .save').addEventListener('click', function () {
+        var val = parseInt(input.value, 10);
+        if (isNaN(val) || val < 0) { return; }
+        current = val;
+        localStorage.setItem(storageKey(tile), String(current));
+        applyValue(tile, current, prev, true);
+        tile.classList.remove('is-editing');
+      });
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { tile.querySelector('.edit-form .save').click(); }
+        if (e.key === 'Escape') { tile.querySelector('.edit-form .cancel').click(); }
+      });
     });
   })();
 </script>

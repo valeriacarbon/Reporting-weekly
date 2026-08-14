@@ -267,7 +267,13 @@ def property_card(p, maxes):
     </div>'''
 
 
-def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_label=""):
+def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_label="",
+              editable_key=None, week_id=None):
+    """editable_key + week_id turn this tile into a manually-editable one --
+    Metricool doesn't track this metric (GBP specials, Facebook Groups), so a
+    person has to type the real number in. Since the site is static (no
+    backend), the edit is saved to the viewer's own browser (localStorage),
+    scoped to this metric + this week."""
     prev = prev_override if prev_override is not None else current - delta
     peak = max(current, prev, 1)
     bar = f'''
@@ -275,9 +281,28 @@ def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_l
         <rect x="0" y="10" width="{(prev/peak)*100:.1f}" height="6" rx="3" fill="var(--track)"/>
         <rect x="0" y="0" width="{(current/peak)*100:.1f}" height="6" rx="3" fill="var(--series-sequential)"/>
       </svg>'''
+    edit_attrs = ""
+    edit_btn = ""
+    edit_form = ""
+    edited_badge = ""
+    if editable_key:
+        edit_attrs = (f' data-editable="1" data-metric="{esc(editable_key)}" '
+                      f'data-week="{esc(week_id)}" data-current="{current}" data-prev="{prev}"')
+        edit_btn = '<button class="edit-btn" type="button" title="Edit this number">✎</button>'
+        edit_form = (
+            '<div class="edit-form">'
+            f'<input type="number" inputmode="numeric" step="1" value="{current}">'
+            '<button type="button" class="save">Save</button>'
+            '<button type="button" class="cancel">Cancel</button>'
+            '</div>'
+        )
+        edited_badge = '<div class="edited-badge">Manually edited</div>'
     return f'''
-    <div class="stat-tile">
+    <div class="stat-tile"{edit_attrs}>
+      {edit_btn}
       <div class="stat-label">{esc(label)}</div>
+      {edited_badge}
+      {edit_form}
       <div class="stat-value">{fmt(current)}</div>
       <div class="stat-delta">{delta_chip(current, delta, is_new=is_new, compare_label=compare_label)}</div>
       {bar}
@@ -323,17 +348,22 @@ def build(data_path: Path) -> str:
     }
     property_cards = "".join(property_card(p, maxes) for p in props)
 
+    week_id = data["week_label"]
     fg = data["facebook_groups"]
     fg_html = "".join([
-        stat_tile("Groups posted in", fg["groups_posted_in"]["current"], fg["groups_posted_in"]["delta"]),
-        stat_tile("Group likes", fg["group_likes"]["current"], fg["group_likes"]["delta"]),
-        stat_tile("Group comments", fg["group_comments"]["current"], fg["group_comments"]["delta"]),
+        stat_tile("Groups posted in", fg["groups_posted_in"]["current"], fg["groups_posted_in"]["delta"],
+                   editable_key="fbg_groups_posted_in", week_id=week_id),
+        stat_tile("Group likes", fg["group_likes"]["current"], fg["group_likes"]["delta"],
+                   editable_key="fbg_group_likes", week_id=week_id),
+        stat_tile("Group comments", fg["group_comments"]["current"], fg["group_comments"]["delta"],
+                   editable_key="fbg_group_comments", week_id=week_id),
     ])
 
     gmb = data["google_business"]
     gmb_html = "".join([
         stat_tile("Scheduled posts", gmb["scheduled_posts"]["current"], gmb["scheduled_posts"]["delta"], is_new=gmb["scheduled_posts"].get("is_new", False)),
-        stat_tile("Specials posts", gmb["specials_posts"]["current"], gmb["specials_posts"]["delta"], is_new=gmb["specials_posts"].get("is_new", False)),
+        stat_tile("Specials posts", gmb["specials_posts"]["current"], gmb["specials_posts"]["delta"], is_new=gmb["specials_posts"].get("is_new", False),
+                   editable_key="gbp_specials_posts", week_id=week_id),
         stat_tile("Post views", gmb["post_views"]["current"], gmb["post_views"]["delta"]),
         stat_tile("Reach", gmb["reach"]["current"], gmb["reach"]["delta"]),
         stat_tile("Clicks", gmb["clicks"]["current"], gmb["clicks"]["delta"]),
