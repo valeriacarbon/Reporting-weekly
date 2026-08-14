@@ -14,6 +14,7 @@ shape) and re-run this script with that file. It always writes to index.html
 at the repo root, which is what GitHub Pages serves.
 """
 import json
+import math
 import sys
 import html
 from pathlib import Path
@@ -65,6 +66,98 @@ def delta_chip(current, delta, is_new=False, suffix=""):
 
 def fmt(n):
     return f"{n:,}"
+
+
+# Log-scale gridlines: each decade plus its half-decade (10, 50, 100, 500, ...),
+# matching how widely followers/posts/engagement/views differ in magnitude.
+LOG_GRIDLINES = [10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000]
+
+
+def _log_domain(max_value):
+    """Smallest gridline set spanning [10, next-power-of-ten above max_value]."""
+    ceiling = 10
+    while ceiling <= max_value:
+        ceiling *= 10
+    lines = [g for g in LOG_GRIDLINES if 10 <= g <= ceiling]
+    return 10, ceiling, lines
+
+
+def wow_totals_chart(kpis, week_label, prev_week_label):
+    """Grouped bar chart (log scale) comparing this week vs last week across
+    all four portfolio KPIs in one view -- they differ by orders of magnitude
+    (posts in the tens, views in the tens of thousands), so a shared linear
+    axis would flatten the smaller ones to invisible slivers. One hue, two
+    shades (previous vs current), per the dumbbell/before-after form."""
+    metrics = [
+        ("Followers", kpis["followers"]),
+        ("Posts", kpis["posts"]),
+        ("Engagement", kpis["engagement"]),
+        ("Views", kpis["views"]),
+    ]
+    values = []
+    for _, k in metrics:
+        values.append(max(k["current"], 1))
+        values.append(max(k["current"] - k["delta"], 1))
+    domain_min, domain_max, gridlines = _log_domain(max(values))
+
+    W, H = 800, 300
+    left_pad, right_pad, top_pad, bottom_pad = 64, 16, 16, 34
+    plot_w = W - left_pad - right_pad
+    plot_h = H - top_pad - bottom_pad
+    log_min, log_max = math.log10(domain_min), math.log10(domain_max)
+
+    def y_of(value):
+        value = max(value, domain_min)
+        frac = (math.log10(value) - log_min) / (log_max - log_min)
+        return top_pad + plot_h * (1 - frac)
+
+    group_w = plot_w / len(metrics)
+    bar_w = min(46, group_w * 0.28)
+    bar_gap = 6
+
+    parts = [f'<svg viewBox="0 0 {W} {H}" width="100%" height="auto" role="img" '
+             f'aria-label="This week vs last week, all portfolio KPIs, log scale">']
+
+    for g in gridlines:
+        y = y_of(g)
+        parts.append(f'<line x1="{left_pad}" y1="{y:.1f}" x2="{W - right_pad}" y2="{y:.1f}" '
+                      f'stroke="var(--rule)" stroke-width="1"/>')
+        parts.append(f'<text x="{left_pad - 8}" y="{y:.1f}" text-anchor="end" '
+                      f'dominant-baseline="middle" class="wow-axis-label">{fmt(g)}</text>')
+
+    for i, (label, k) in enumerate(metrics):
+        current, prev = k["current"], k["current"] - k["delta"]
+        cx = left_pad + group_w * i + group_w / 2
+        prev_x = cx - bar_gap / 2 - bar_w
+        curr_x = cx + bar_gap / 2
+        prev_y, curr_y = y_of(prev), y_of(current)
+        base_y = top_pad + plot_h
+        parts.append(
+            f'<rect x="{prev_x:.1f}" y="{prev_y:.1f}" width="{bar_w:.1f}" '
+            f'height="{base_y - prev_y:.1f}" rx="4" fill="var(--compare-prev)"/>'
+        )
+        parts.append(
+            f'<rect x="{curr_x:.1f}" y="{curr_y:.1f}" width="{bar_w:.1f}" '
+            f'height="{base_y - curr_y:.1f}" rx="4" fill="var(--series-sequential)"/>'
+        )
+        parts.append(f'<text x="{prev_x + bar_w/2:.1f}" y="{prev_y - 8:.1f}" text-anchor="middle" '
+                      f'class="wow-value-label">{fmt(prev)}</text>')
+        parts.append(f'<text x="{curr_x + bar_w/2:.1f}" y="{curr_y - 8:.1f}" text-anchor="middle" '
+                      f'class="wow-value-label">{fmt(current)}</text>')
+        parts.append(f'<text x="{cx:.1f}" y="{base_y + 20:.1f}" text-anchor="middle" '
+                      f'class="wow-cat-label">{esc(label)}</text>')
+
+    parts.append(f'<line x1="{left_pad}" y1="{top_pad + plot_h:.1f}" x2="{W - right_pad}" '
+                  f'y2="{top_pad + plot_h:.1f}" stroke="var(--baseline)" stroke-width="1.5"/>')
+    parts.append("</svg>")
+
+    legend = (
+        '<div class="wow-legend">'
+        f'<span class="legend-item"><span class="legend-dot" style="background:var(--compare-prev)"></span>{esc(prev_week_label)}</span>'
+        f'<span class="legend-item"><span class="legend-dot" style="background:var(--series-sequential)"></span>{esc(week_label)}</span>'
+        '</div>'
+    )
+    return legend + "".join(parts)
 
 
 def mini_bar(current, max_value, css_var="series-sequential", height=6, width=64):
@@ -197,6 +290,7 @@ def build(data_path: Path) -> str:
         stat_tile("Engagement", kpis["engagement"]["current"], kpis["engagement"]["delta"]),
         stat_tile("Views", kpis["views"]["current"], kpis["views"]["delta"]),
     ])
+    wow_chart = wow_totals_chart(kpis, data["week_label"], data["prev_week_label"])
 
     fbc = data["followers_by_channel"]
     fbc_max = max(c["current"] for c in fbc)
@@ -254,6 +348,7 @@ def build(data_path: Path) -> str:
     out = out.replace("{{PREV_WEEK_LABEL}}", esc(data["prev_week_label"]))
     out = out.replace("{{GENERATED_NOTE}}", esc(data["generated_note"]))
     out = out.replace("{{KPI_TILES}}", kpi_html)
+    out = out.replace("{{WOW_CHART}}", wow_chart)
     out = out.replace("{{FOLLOWERS_CHART}}", followers_chart)
     out = out.replace("{{POSTS_CHART}}", posts_chart)
     out = out.replace("{{VIEWS_CHART}}", views_chart)
