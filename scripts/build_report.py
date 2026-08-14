@@ -367,10 +367,9 @@ def build(data_path: Path) -> str:
 
     gmb = data["google_business"]
     gmb_html = "".join([
-        stat_tile("Scheduled posts", gmb["scheduled_posts"]["current"], gmb["scheduled_posts"]["delta"], is_new=gmb["scheduled_posts"].get("is_new", False)),
         stat_tile("Specials posts", gmb["specials_posts"]["current"], gmb["specials_posts"]["delta"], is_new=gmb["specials_posts"].get("is_new", False),
                    editable_key="gbp_specials_posts", week_id=week_id),
-        stat_tile("Post views", gmb["post_views"]["current"], gmb["post_views"]["delta"]),
+        stat_tile("Posts published", gmb["posts_published"]["current"], gmb["posts_published"]["delta"], is_new=gmb["posts_published"].get("is_new", False)),
         stat_tile("Reach", gmb["reach"]["current"], gmb["reach"]["delta"]),
         stat_tile("Clicks", gmb["clicks"]["current"], gmb["clicks"]["delta"]),
     ])
