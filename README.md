@@ -22,6 +22,10 @@ dashboard: KPI tiles, ranked bar charts, and per-property small multiples.
 - **Dark by default, light mode available** via the toggle in the top right
   (matches the tone of your current report; a full report is legible either
   way).
+- **Per-property posts trace back to a channel.** Each property card breaks
+  its post count out by network (Facebook / Instagram / TikTok / GBP) instead
+  of showing one aggregate number, so you can see at a glance where the
+  week's activity actually happened.
 
 ## Structure
 
@@ -42,19 +46,45 @@ index.html                  the generated dashboard — this is what GitHub Page
    ```
 3. Commit and push `index.html` (and the new data file).
 
-## What this draft does NOT do yet
+## Where the numbers come from right now
 
-- **No live Metricool pull.** This draft uses one week's numbers transcribed
-  from the PDF you shared, so we could nail the visual design first. Wiring
-  `scripts/build_report.py` up to pull directly from Metricool (there's a
-  Metricool MCP/API available) so it runs unattended every Friday is the
-  natural next step, once you've signed off on the look.
+This draft mixes two sources, and the footer/generated-note on the page always
+says which:
+
+- **Followers, engagement, views, and the portfolio-level KPIs/channel
+  totals** are transcribed from the Metricool-exported PDF you shared. The
+  followers and views figures reconcile exactly against that PDF's own
+  totals; engagement was close enough to trust for a first draft.
+- **Per-property post counts and their channel breakdown** were pulled live
+  from the Metricool API (`getAnalyticsDataByMetrics`, one call per
+  network/property, counting posts + Reels + Stories) while building this
+  draft — the PDF's small print turned out to have misread several
+  properties' post counts (e.g. it showed The Benton at 4 posts; the live
+  data says 3, all Facebook Stories, zero that week on TikTok). That live
+  pull totals 34 posts across the portfolio, close to but not exactly
+  matching the PDF's reported 37 — the ~3-post gap is most likely posts
+  right at the week's UTC/local-timezone boundary, since the query window
+  used a flat UTC day range rather than each property's own timezone.
+
+**Next step for full accuracy:** wire `scripts/build_report.py` to call
+Metricool directly (brand IDs and field IDs are already documented below)
+using each property's own timezone for the week boundary, for every metric —
+not just posts — so this runs unattended every Friday instead of starting
+from a PDF.
+
 - **GBP specials are still a manual number** — same as your current report,
   since Metricool doesn't expose Google Business specials counts.
-- A couple of the smaller per-property numbers (posts/engagement, not
-  followers/views) were transcribed from a compressed PDF screenshot and
-  should be spot-checked against Metricool directly before this goes to
-  anyone outside the team — the header/footer note on the page says so too.
+
+### Metricool reference (for wiring up full automation)
+
+- Brand IDs: call `getBrandSettings` — returns each property's Metricool
+  `id` plus its connected network handles.
+- Post-count field IDs (one call per network, per property, per week):
+  `FBPO01` (Facebook posts), `FBST01` (Facebook Stories), `IGPO01` (Instagram
+  posts), `IGRE01` (Instagram Reels), `IGST01` (Instagram Stories), `TKPO01`
+  (TikTok videos), `GMPO01` (Google Business posts). Each returns one row per
+  published item with its date — count rows in range, don't expect a
+  pre-aggregated total.
 
 ## Hosting on GitHub Pages
 

@@ -116,15 +116,34 @@ def property_bar_row(name, current, max_value, delta, top_channel):
     </div>'''
 
 
+POST_CHANNEL_ORDER = ["Facebook", "Instagram", "TikTok", "Google Business"]
+
+
+def post_channel_chips(posts_channels):
+    """Small direct-labeled pills tracing which network each post came from.
+    Only channels the property is connected to (present in the dict) are
+    shown; zero-post channels still show so 'no posts here this week' is
+    explicit, not a gap."""
+    chips = []
+    for channel in POST_CHANNEL_ORDER:
+        if channel not in posts_channels:
+            continue
+        count = posts_channels[channel]
+        color_key = f"ch-{channel.lower().replace(' ', '-')}"
+        label = "GBP" if channel == "Google Business" else channel
+        muted = ' style="opacity:0.45"' if count == 0 else ""
+        chips.append(
+            f'<span class="channel-chip"{muted}>'
+            f'<span class="channel-dot" style="background:var(--{color_key})"></span>'
+            f'{esc(label)} {count}</span>'
+        )
+    return "".join(chips)
+
+
 def property_card(p, maxes):
     color_key = f"ch-{p['top_channel'].lower().replace(' ', '-')}"
     rows = []
-    for key, label, unit in [
-        ("followers", "Followers", ""),
-        ("posts", "Posts", ""),
-        ("engagement", "Engagement", ""),
-        ("views", "Views", ""),
-    ]:
+    for key, label in [("followers", "Followers"), ("engagement", "Engagement"), ("views", "Views")]:
         d = p[key]
         bar = mini_bar(d["current"], maxes[key], color_key, height=7, width=72)
         rows.append(f'''
@@ -134,12 +153,19 @@ def property_card(p, maxes):
           <div class="metric-value">{fmt(d["current"])}</div>
           <div class="metric-delta">{delta_chip(d["current"], d["delta"])}</div>
         </div>''')
+    posts_row = f'''
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">{fmt(p["posts"]["current"])}</div>
+          <div class="channel-chips">{post_channel_chips(p["posts_channels"])}</div>
+        </div>'''
     return f'''
     <div class="property-card">
       <div class="property-card-head">
         <h3>{esc(p["name"])}</h3>
         <span class="top-channel-badge" style="border-color:var(--{color_key}); color:var(--{color_key})">{esc(p["top_channel"])}</span>
       </div>
+      {posts_row}
       {"".join(rows)}
     </div>'''
 
