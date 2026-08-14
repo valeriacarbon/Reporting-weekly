@@ -1,15 +1,15 @@
 {
   "week_label": "Aug 6 – 13, 2026",
   "prev_week_label": "Jul 30 – Aug 6, 2026",
-  "generated_note": "Pulled live from the Metricool API on 2026-08-14 following AUTOMATION.md. GBP Reach and Clicks are summed from the individual reachSearch/reachMaps/websiteClicks/callClicks/directionsClicks fields (GMEV18/19/21/22/23) -- the combined GMEV20/GMEV24 fields return no data for this account even though their components do, which is why last week's report showed those as flat/carried-forward. Specials Posts for this week hasn't been entered yet -- click Edit on that tile to add the real count.",
+  "generated_note": "Pulled live from the Metricool API on 2026-08-14 following AUTOMATION.md. Found and fixed a real bug: Metricool's GBP posts endpoint returned rows dated one day past the requested range end (e.g. 2026-08-14 when the window ended 2026-08-13), and those were being summed in without checking -- that inflated Posts Published from the correct 9 up to 13. Fixed by strictly filtering returned rows to the requested date range before summing; AUTOMATION.md now says to do this for every metric, not just GBP. One property (Hills at Hoover) shows 2 GBP posts in-range (Aug 7 and Aug 13) -- if that's actually 1 real post in Metricool's own UI, Posts Published should be 8, not 9; flagged for a human to confirm. GBP Reach and Clicks are summed from the individual reachSearch/reachMaps/websiteClicks/callClicks/directionsClicks fields (GMEV18/19/21/22/23) -- the combined GMEV20/GMEV24 fields return no data for this account. Specials Posts for this week hasn't been entered yet -- click Edit on that tile to add the real count.",
   "kpis": {
     "followers": {
       "current": 2043,
       "delta": 72
     },
     "posts": {
-      "current": 77,
-      "delta": 14
+      "current": 73,
+      "delta": 10
     },
     "engagement": {
       "current": 4271,
@@ -52,7 +52,7 @@
     },
     {
       "channel": "Google Business",
-      "current": 13
+      "current": 9
     }
   ],
   "facebook_groups": {
@@ -84,8 +84,8 @@
       "delta": -1174
     },
     "posts_published": {
-      "current": 13,
-      "delta": -3
+      "current": 9,
+      "delta": -7
     }
   },
   "properties": [
@@ -194,13 +194,13 @@
         "delta": 11
       },
       "posts": {
-        "current": 11
+        "current": 10
       },
       "posts_channels": {
         "Facebook": 3,
         "Instagram": 3,
         "TikTok": 3,
-        "Google Business": 2
+        "Google Business": 1
       },
       "engagement": {
         "current": 49,
@@ -219,13 +219,13 @@
         "delta": 3
       },
       "posts": {
-        "current": 5
+        "current": 4
       },
       "posts_channels": {
         "Facebook": 1,
         "Instagram": 1,
         "TikTok": 1,
-        "Google Business": 2
+        "Google Business": 1
       },
       "engagement": {
         "current": 15,
@@ -294,13 +294,13 @@
         "delta": 0
       },
       "posts": {
-        "current": 10
+        "current": 9
       },
       "posts_channels": {
         "Facebook": 3,
         "Instagram": 3,
         "TikTok": 3,
-        "Google Business": 1
+        "Google Business": 0
       },
       "engagement": {
         "current": 93,
@@ -369,13 +369,13 @@
         "delta": 0
       },
       "posts": {
-        "current": 4
+        "current": 3
       },
       "posts_channels": {
         "Facebook": 1,
         "Instagram": 1,
         "TikTok": 1,
-        "Google Business": 1
+        "Google Business": 0
       },
       "engagement": {
         "current": 7,

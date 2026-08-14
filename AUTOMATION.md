@@ -95,6 +95,16 @@ column is the date `YYYYMMDD`. It is NOT pre-aggregated. For each field:
   take the value from the row with the latest date that has a non-null
   value (skip trailing nulls if the last day or two haven't synced yet).
 
+**The API can return rows dated up to one day past your requested `to`**
+(confirmed on GBP's postsCount field — a query ending `2026-08-13` came back
+with a row dated `2026-08-14`). Changing the UTC offset on `from`/`to` does
+NOT fix this; the extra row comes back identically either way. Before
+summing, explicitly discard any row whose date falls outside
+`[from_date, to_date]` inclusive — do not trust the API to have already
+bounded it. This bug inflated one week's GBP Posts Published from the
+correct 9 up to 13 before it was caught; assume it can happen on any field,
+not just GBP.
+
 ## Step 4 — Aggregate per property
 
 For each property, using only the networks it has connected:
