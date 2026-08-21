@@ -568,5 +568,124 @@
       "phone_clicks": 11,
       "directions_clicks": 140
     }
-  ]
+  ],
+  "url_tracking": {
+    "views": {
+      "current": 287,
+      "is_new": true
+    },
+    "sessions": {
+      "current": 148,
+      "is_new": true
+    },
+    "engaged_sessions": {
+      "current": 84,
+      "is_new": true
+    },
+    "tours": {
+      "current": 4,
+      "is_new": true
+    },
+    "by_property": [
+      {
+        "name": "The Landings at North Ingleside",
+        "views": 59,
+        "sessions": 29,
+        "engaged_sessions": 17,
+        "tours": 0
+      },
+      {
+        "name": "Berry Falls",
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
+        "tours": 0
+      },
+      {
+        "name": "The Kenzie",
+        "views": 3,
+        "sessions": 3,
+        "engaged_sessions": 1,
+        "tours": 0
+      },
+      {
+        "name": "Ingleside Terrace",
+        "views": 15,
+        "sessions": 5,
+        "engaged_sessions": 4,
+        "tours": 0
+      },
+      {
+        "name": "Lakeside/Lakeview",
+        "views": 13,
+        "sessions": 6,
+        "engaged_sessions": 2,
+        "tours": 0
+      },
+      {
+        "name": "Westminster Club",
+        "views": 1,
+        "sessions": 1,
+        "engaged_sessions": 0,
+        "tours": 0
+      },
+      {
+        "name": "Residences at the Overlook",
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
+        "tours": 0
+      },
+      {
+        "name": "The Lamar Lofts",
+        "views": 98,
+        "sessions": 52,
+        "engaged_sessions": 30,
+        "tours": 2
+      },
+      {
+        "name": "The Benton",
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
+        "tours": 0
+      },
+      {
+        "name": "Hills at Hoover",
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
+        "tours": 0
+      },
+      {
+        "name": "Claxton Pointe & Pecan Ridge",
+        "views": 98,
+        "sessions": 52,
+        "engaged_sessions": 30,
+        "tours": 2
+      },
+      {
+        "name": "Santa Fe",
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
+        "tours": 0
+      },
+      {
+        "name": "Villa Siena",
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
+        "tours": 0
+      },
+      {
+        "name": "Aztec Villa",
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
+        "tours": 0
+      }
+    ],
+    "note": "Traffic from Facebook Group posts (GA4 source: fbgroups / organic), Aug 13–20, 2026. First week tracked this way -- no week-over-week comparison yet. Capri Palms isn't included (no GA4 tracking set up for it yet)."
+  }
 }
