@@ -228,6 +228,19 @@
     padding: 12px 14px; font-size: 12.5px; color: var(--ink-mute); margin-top: 14px;
   }
 
+  .legend {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin: 14px 0 0; padding: 12px 14px;
+    background: var(--surface-2); border: 1px solid var(--rule); border-radius: 8px;
+  }
+  .legend-item dt {
+    font-size: 11px; font-weight: 650; color: var(--ink); text-transform: uppercase;
+    letter-spacing: 0.04em; margin-bottom: 4px;
+  }
+  .legend-item dd { font-size: 12px; color: var(--ink-mute); margin: 0; line-height: 1.4; }
+  @media (max-width: 900px) { .legend { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .legend { grid-template-columns: 1fr; } }
+
   footer.bottom { padding: 24px 0 0; color: var(--ink-mute); font-size: 12px; }
 
   @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -306,6 +319,12 @@
     <h2>URL Tracking</h2>
     <p class="section-sub">Traffic from Facebook Group posts landing on each property's site (Google Analytics).</p>
     <div class="stat-grid">{{URL_TRACKING_TILES}}</div>
+    <dl class="legend">
+      <div class="legend-item"><dt>Views</dt><dd>The number of times the page was loaded/viewed, including repeat views from the same person or session.</dd></div>
+      <div class="legend-item"><dt>Sessions</dt><dd>Total number of visits per person.</dd></div>
+      <div class="legend-item"><dt>Engaged sessions</dt><dd>A session that lasted 10+ seconds, visited more than one page, or triggered a conversion event.</dd></div>
+      <div class="legend-item"><dt>Tours</dt><dd>Tours booked.</dd></div>
+    </dl>
   </section>
 
   <section>
