@@ -267,6 +267,48 @@ def property_card(p, maxes):
     </div>'''
 
 
+def gbp_metric_row(label, value, max_value, is_total=False):
+    if is_total:
+        return f'''
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">{esc(label)}</div>
+          <div class="metric-value gbp-total-value">{fmt(value)}</div>
+        </div>'''
+    bar = mini_bar(value, max_value, "series-sequential", height=7, width=72)
+    return f'''
+        <div class="metric-row">
+          <div class="metric-label">{esc(label)}</div>
+          <div class="metric-bar">{bar}</div>
+          <div class="metric-value">{fmt(value)}</div>
+        </div>'''
+
+
+def gbp_property_card(p, maxes):
+    reach_total = p["reach_search"] + p["reach_maps"]
+    clicks_total = p["website_clicks"] + p["phone_clicks"] + p["directions_clicks"]
+    reach_rows = "".join([
+        gbp_metric_row("Search", p["reach_search"], maxes["reach_search"]),
+        gbp_metric_row("Maps", p["reach_maps"], maxes["reach_maps"]),
+        gbp_metric_row("Total reach", reach_total, maxes["reach_total"], is_total=True),
+    ])
+    click_rows = "".join([
+        gbp_metric_row("Website", p["website_clicks"], maxes["website_clicks"]),
+        gbp_metric_row("Phone", p["phone_clicks"], maxes["phone_clicks"]),
+        gbp_metric_row("Directions", p["directions_clicks"], maxes["directions_clicks"]),
+        gbp_metric_row("Total clicks", clicks_total, maxes["clicks_total"], is_total=True),
+    ])
+    return f'''
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>{esc(p["name"])}</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      {reach_rows}
+      <div class="gbp-group-label">Clicks</div>
+      {click_rows}
+    </div>'''
+
+
 def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_label="",
               editable_key=None, week_id=None):
     """editable_key + week_id turn this tile into a manually-editable one --
@@ -357,7 +399,7 @@ def build(data_path: Path) -> str:
     week_id = data["week_label"]
     fg = data["facebook_groups"]
     fg_html = "".join([
-        stat_tile("Groups posted in", fg["groups_posted_in"]["current"], fg["groups_posted_in"]["delta"],
+        stat_tile("Properties posted this week", fg["groups_posted_in"]["current"], fg["groups_posted_in"]["delta"],
                    editable_key="fbg_groups_posted_in", week_id=week_id),
         stat_tile("Group likes", fg["group_likes"]["current"], fg["group_likes"]["delta"],
                    editable_key="fbg_group_likes", week_id=week_id),
@@ -374,6 +416,22 @@ def build(data_path: Path) -> str:
         stat_tile("Phone clicks", gmb["phone_clicks"]["current"], gmb["phone_clicks"].get("delta", 0), is_new=gmb["phone_clicks"].get("is_new", False)),
         stat_tile("Directions clicks", gmb["directions_clicks"]["current"], gmb["directions_clicks"].get("delta", 0), is_new=gmb["directions_clicks"].get("is_new", False)),
     ])
+
+    gbp_props = data.get("gbp_by_property", [])
+    gbp_maxes = {}
+    if gbp_props:
+        reach_totals = [p["reach_search"] + p["reach_maps"] for p in gbp_props]
+        clicks_totals = [p["website_clicks"] + p["phone_clicks"] + p["directions_clicks"] for p in gbp_props]
+        gbp_maxes = {
+            "reach_search": max(p["reach_search"] for p in gbp_props),
+            "reach_maps": max(p["reach_maps"] for p in gbp_props),
+            "reach_total": max(reach_totals),
+            "website_clicks": max(p["website_clicks"] for p in gbp_props),
+            "phone_clicks": max(p["phone_clicks"] for p in gbp_props),
+            "directions_clicks": max(p["directions_clicks"] for p in gbp_props),
+            "clicks_total": max(clicks_totals),
+        }
+    gbp_property_cards = "".join(gbp_property_card(p, gbp_maxes) for p in gbp_props)
 
     channel_css_vars = "\n".join(
         f'      --ch-{k.lower().replace(" ", "-")}: {v["dark"]};' for k, v in CHANNEL_COLORS.items()
@@ -396,6 +454,7 @@ def build(data_path: Path) -> str:
     out = out.replace("{{FB_GROUPS_TILES}}", fg_html)
     out = out.replace("{{FB_GROUPS_NOTE}}", esc(fg["note"]))
     out = out.replace("{{GMB_TILES}}", gmb_html)
+    out = out.replace("{{GBP_PROPERTY_CARDS}}", gbp_property_cards)
     out = out.replace("{{CHANNEL_CSS_VARS_DARK}}", channel_css_vars)
     out = out.replace("{{CHANNEL_CSS_VARS_LIGHT}}", channel_css_vars_light)
     return out

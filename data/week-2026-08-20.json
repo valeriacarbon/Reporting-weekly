@@ -466,5 +466,111 @@
         "delta": 0
       }
     }
+  ],
+  "gbp_by_property": [
+    {
+      "name": "The Landings at North Ingleside",
+      "reach_search": 523,
+      "reach_maps": 67,
+      "website_clicks": 1,
+      "phone_clicks": 8,
+      "directions_clicks": 32
+    },
+    {
+      "name": "Berry Falls",
+      "reach_search": 467,
+      "reach_maps": 88,
+      "website_clicks": 33,
+      "phone_clicks": 11,
+      "directions_clicks": 37
+    },
+    {
+      "name": "The Kenzie",
+      "reach_search": 149,
+      "reach_maps": 57,
+      "website_clicks": 54,
+      "phone_clicks": 9,
+      "directions_clicks": 8
+    },
+    {
+      "name": "Ingleside Terrace",
+      "reach_search": 162,
+      "reach_maps": 33,
+      "website_clicks": 18,
+      "phone_clicks": 12,
+      "directions_clicks": 14
+    },
+    {
+      "name": "Lakeside/Lakeview",
+      "reach_search": 1161,
+      "reach_maps": 69,
+      "website_clicks": 44,
+      "phone_clicks": 8,
+      "directions_clicks": 37
+    },
+    {
+      "name": "Westminster Club",
+      "reach_search": 128,
+      "reach_maps": 23,
+      "website_clicks": 16,
+      "phone_clicks": 5,
+      "directions_clicks": 11
+    },
+    {
+      "name": "Residences at the Overlook",
+      "reach_search": 170,
+      "reach_maps": 58,
+      "website_clicks": 24,
+      "phone_clicks": 20,
+      "directions_clicks": 16
+    },
+    {
+      "name": "The Lamar Lofts",
+      "reach_search": 214,
+      "reach_maps": 43,
+      "website_clicks": 11,
+      "phone_clicks": 2,
+      "directions_clicks": 13
+    },
+    {
+      "name": "The Benton",
+      "reach_search": 35,
+      "reach_maps": 49,
+      "website_clicks": 15,
+      "phone_clicks": 3,
+      "directions_clicks": 24
+    },
+    {
+      "name": "Hills at Hoover",
+      "reach_search": 489,
+      "reach_maps": 87,
+      "website_clicks": 50,
+      "phone_clicks": 66,
+      "directions_clicks": 42
+    },
+    {
+      "name": "Claxton Pointe & Pecan Ridge",
+      "reach_search": 496,
+      "reach_maps": 29,
+      "website_clicks": 24,
+      "phone_clicks": 12,
+      "directions_clicks": 4
+    },
+    {
+      "name": "Santa Fe",
+      "reach_search": 453,
+      "reach_maps": 224,
+      "website_clicks": 39,
+      "phone_clicks": 25,
+      "directions_clicks": 172
+    },
+    {
+      "name": "Villa Siena",
+      "reach_search": 271,
+      "reach_maps": 193,
+      "website_clicks": 55,
+      "phone_clicks": 11,
+      "directions_clicks": 140
+    }
   ]
 }

@@ -221,6 +221,17 @@
   }
   .channel-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
+  .gbp-group-label {
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--ink-mute); font-weight: 650; margin: 12px 0 4px;
+  }
+  .gbp-group-label:first-of-type { margin-top: 2px; }
+  .gbp-total-row {
+    grid-template-columns: 66px 1fr; padding-top: 4px; margin-top: 2px;
+    border-top: 1px dashed var(--rule);
+  }
+  .gbp-total-value { font-size: 13.5px; font-weight: 700; }
+
   .note-box {
     background: var(--surface-2); border: 1px solid var(--rule); border-radius: 8px;
     padding: 12px 14px; font-size: 12.5px; color: var(--ink-mute); margin-top: 14px;
@@ -1052,12 +1063,564 @@
   </section>
 
   <section>
+    <h2>Google My Business — by brand</h2>
+    <p class="section-sub">Reach and clicks per property. Capri Palms and Aztec Villa aren't on Google Business yet, so they're not shown here.</p>
+    <div class="property-grid">
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Landings at North Ingleside</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="32" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">523</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="22" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">67</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">590</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="9" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">8</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="13" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">32</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">41</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Berry Falls</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="29" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">467</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="28" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">88</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">555</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="43" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">33</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="12" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">11</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="15" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">37</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">81</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Kenzie</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="9" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">149</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="18" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">57</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">206</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="71" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">54</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">9</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">8</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">71</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Ingleside Terrace</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">162</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="11" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">33</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">195</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="24" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">18</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="13" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">12</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="6" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">14</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">44</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Lakeside/Lakeview</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1,161</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="22" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">69</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">1,230</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="58" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">44</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="9" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">8</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="15" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">37</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">89</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Westminster Club</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="8" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">128</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="7" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">23</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">151</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="21" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">16</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="5" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">5</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="5" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">11</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">32</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Residences at the Overlook</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="11" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">170</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="19" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">58</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">228</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="31" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">24</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="22" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">20</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="7" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">16</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">60</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Lamar Lofts</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="13" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">214</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="14" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">43</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">257</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="14" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">11</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">2</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="5" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">13</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">26</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Benton</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">35</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="16" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">49</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">84</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="20" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">15</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">3</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">24</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">42</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Hills at Hoover</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="30" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">489</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="28" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">87</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">576</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="65" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">50</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">66</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="18" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">42</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">158</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Claxton Pointe &amp; Pecan Ridge</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="31" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">496</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="9" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">29</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">525</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="31" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">24</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="13" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">12</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">4</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">40</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Santa Fe</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="28" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">453</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">224</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">677</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="51" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">39</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="27" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">25</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">172</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">236</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Villa Siena</h3>
+      </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="17" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">271</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="62" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">193</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">464</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">55</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="12" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">11</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="59" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">140</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">206</div>
+        </div>
+    </div></div>
+  </section>
+
+  <section>
     <h2>Facebook Groups — portfolio roll-up</h2>
     <p class="section-sub">Group-level activity isn't exposed by the Metricool API — click <strong>Edit</strong> on any tile below to enter this week's counts by hand.</p>
     <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
     <div class="stat-tile" data-editable="1" data-metric="fbg_groups_posted_in" data-week="Aug 13 – 20, 2026" data-current="0" data-prev="0">
       <button class="edit-btn" type="button" title="Edit this number"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Edit</button>
-      <div class="stat-label">Groups posted in</div>
+      <div class="stat-label">Properties posted this week</div>
       <div class="edited-badge">Manually edited</div>
       <div class="edit-form"><input type="number" inputmode="numeric" step="1" value="0"><button type="button" class="save">Save</button><button type="button" class="cancel">Cancel</button></div>
       <div class="stat-value">0</div>
