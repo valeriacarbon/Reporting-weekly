@@ -267,6 +267,26 @@ def property_card(p, maxes):
     </div>'''
 
 
+def url_tracking_card(p, maxes):
+    rows = []
+    for key, label in [("views", "Views"), ("sessions", "Sessions"), ("engaged_sessions", "Engaged"), ("tours", "Tours")]:
+        value = p[key]
+        bar = mini_bar(value, maxes[key], "series-sequential", height=7, width=72)
+        rows.append(f'''
+        <div class="metric-row">
+          <div class="metric-label">{label}</div>
+          <div class="metric-bar">{bar}</div>
+          <div class="metric-value">{fmt(value)}</div>
+        </div>''')
+    return f'''
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>{esc(p["name"])}</h3>
+      </div>
+      {"".join(rows)}
+    </div>'''
+
+
 def gbp_metric_row(label, value, max_value, is_total=False):
     if is_total:
         return f'''
@@ -431,6 +451,25 @@ def build(data_path: Path) -> str:
         }
     gbp_property_cards = "".join(gbp_property_card(p, gbp_maxes) for p in gbp_props)
 
+    url_tracking = data.get("url_tracking")
+    url_tracking_html = ""
+    url_tracking_cards = ""
+    if url_tracking:
+        url_tracking_html = "".join([
+            stat_tile("Views", url_tracking["views"]["current"], 0, is_new=url_tracking["views"].get("is_new", False)),
+            stat_tile("Sessions", url_tracking["sessions"]["current"], 0, is_new=url_tracking["sessions"].get("is_new", False)),
+            stat_tile("Engaged sessions", url_tracking["engaged_sessions"]["current"], 0, is_new=url_tracking["engaged_sessions"].get("is_new", False)),
+            stat_tile("Tours", url_tracking["tours"]["current"], 0, is_new=url_tracking["tours"].get("is_new", False)),
+        ])
+        ut_props = url_tracking.get("by_property", [])
+        ut_maxes = {
+            "views": max((p["views"] for p in ut_props), default=1),
+            "sessions": max((p["sessions"] for p in ut_props), default=1),
+            "engaged_sessions": max((p["engaged_sessions"] for p in ut_props), default=1),
+            "tours": max((p["tours"] for p in ut_props), default=1),
+        }
+        url_tracking_cards = "".join(url_tracking_card(p, ut_maxes) for p in ut_props)
+
     channel_css_vars = "\n".join(
         f'      --ch-{k.lower().replace(" ", "-")}: {v["dark"]};' for k, v in CHANNEL_COLORS.items()
     )
@@ -453,6 +492,9 @@ def build(data_path: Path) -> str:
     out = out.replace("{{FB_GROUPS_NOTE}}", esc(fg["note"]))
     out = out.replace("{{GMB_TILES}}", gmb_html)
     out = out.replace("{{GBP_PROPERTY_CARDS}}", gbp_property_cards)
+    out = out.replace("{{URL_TRACKING_TILES}}", url_tracking_html)
+    out = out.replace("{{URL_TRACKING_CARDS}}", url_tracking_cards)
+    out = out.replace("{{URL_TRACKING_NOTE}}", esc(url_tracking["note"]) if url_tracking else "")
     out = out.replace("{{CHANNEL_CSS_VARS_DARK}}", channel_css_vars)
     out = out.replace("{{CHANNEL_CSS_VARS_LIGHT}}", channel_css_vars_light)
     return out

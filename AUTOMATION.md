@@ -223,8 +223,23 @@ No PR, no approval step — push straight to `main` so GitHub Pages
   deprecated, kept only for historical reference.
 - Do not overwrite or delete older `data/week-*.json` files — each week gets
   its own file.
-- Do not guess Google Business Specials Posts. Default to 0 with the note,
-  never fabricate a number.
 - Do not mix networks in a single `getAnalyticsDataByMetrics` call.
 - Do not treat the daily time-series rows as already-aggregated — always
   sum/pick-last yourself per Step 3.
+
+## URL Tracking (manual for now)
+
+A "URL Tracking" section (portfolio totals + a per-property card grid, both
+below the Facebook Groups section) shows Views / Sessions / Engaged Sessions
+/ Tours from Google Analytics for the `fbgroups / organic` session source —
+i.e. traffic that came from links shared in Facebook Groups. It lives in
+`data/week-*.json` under `url_tracking` (`views`/`sessions`/
+`engaged_sessions`/`tours` at the top, plus `by_property`).
+
+This is **not pullable from Metricool** — it comes from a GA4 report Val
+exports/shares each week. As of the week-2026-08-20 file it was filled in
+by hand from a PDF. Val mentioned wiring this to a Google Drive folder next,
+so a future run may be able to fetch it directly — check whether a Drive
+folder has been shared before defaulting to "ask a human for this week's
+numbers." Until that's set up, if you don't have this week's GA4 numbers,
+leave `url_tracking` unset rather than reusing last week's data or guessing.
