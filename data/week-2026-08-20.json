@@ -1,15 +1,15 @@
 {
   "week_label": "Aug 13 – 20, 2026",
   "prev_week_label": "Aug 6 – 13, 2026",
-  "generated_note": "Automated Friday run (2026-08-21, 7am America/Mexico_City) pulled live from the Metricool API following AUTOMATION.md, with strict date-range filtering applied to every metric this time (the API can return rows dated one day past the requested end -- discarded, per the fix documented last run). Portfolio Views and Engagement look like a steep drop week over week (-86%) -- that's real, not a bug: last week's totals were inflated by The Landings at North Ingleside's one-off viral TikTok video (95,092 views, 3,908 engagement alone); this week it's back to a normal ~900 views for that property. GBP Reach and Clicks came back as true zero for every property this week (not null/missing -- the API returned 0 for reachSearch/reachMaps/website/call/directionsClicks across the board) -- most likely Google's own Business Profile insights haven't populated yet for such a recent window (known reporting lag of several days), not an actual drop to zero; worth re-checking next run before trusting a real trend here. Specials Posts hasn't been entered yet this week -- click Edit on that tile to add the real count.",
+  "generated_note": "Automated Friday run (2026-08-21) pulled live from Metricool, then corrected same-day after Val confirmed GBP data had since synced (Google's Business Profile insights can lag several days -- the 7am pull caught mostly zeros; this re-pull hours later shows real numbers for the same Aug 13-20 window). Google Business is now fully live -- Specials Posts is gone as a manual metric (Metricool does track GBP posts after all) and Reach/Clicks are broken out into the 5 metrics Metricool actually reports: Reach Search (GMEV18), Reach Maps (GMEV19), Website Clicks (GMEV21), Phone Clicks (GMEV22), Directions Clicks (GMEV23) -- no more combined/estimated totals. These 5 are shown without a week-over-week delta this first week since they weren't tracked at this granularity before; next week's run will have a real baseline to diff against. Posts Published also went up (5 -> 12) once the fuller data came in -- 7 properties had a GBP post that hadn't synced yet at 7am. Portfolio Views and Engagement still show a real ~86% week-over-week drop: last week's totals were inflated by The Landings at North Ingleside's one-off viral TikTok video (95,092 views, 3,908 engagement alone), which normalized this week.",
   "kpis": {
     "followers": {
       "current": 2099,
       "delta": 56
     },
     "posts": {
-      "current": 55,
-      "delta": -18
+      "current": 62,
+      "delta": -11
     },
     "engagement": {
       "current": 579,
@@ -52,7 +52,7 @@
     },
     {
       "channel": "Google Business",
-      "current": 5
+      "current": 12
     }
   ],
   "facebook_groups": {
@@ -71,21 +71,29 @@
     "note": "No Facebook Group activity this week — every metric above is a true zero, not missing data. Group posting is intentionally kept out of the Facebook channel numbers above; group-level likes/comments aren't yet exposed by the Metricool API and will populate once connected."
   },
   "google_business": {
-    "specials_posts": {
-      "current": 0,
-      "delta": 0
-    },
-    "reach": {
-      "current": 0,
-      "delta": -5832
-    },
-    "clicks": {
-      "current": 0,
-      "delta": -1415
-    },
     "posts_published": {
-      "current": 5,
-      "delta": -4
+      "current": 12,
+      "delta": 3
+    },
+    "reach_search": {
+      "current": 4718,
+      "is_new": true
+    },
+    "reach_maps": {
+      "current": 1020,
+      "is_new": true
+    },
+    "website_clicks": {
+      "current": 384,
+      "is_new": true
+    },
+    "phone_clicks": {
+      "current": 192,
+      "is_new": true
+    },
+    "directions_clicks": {
+      "current": 550,
+      "is_new": true
     }
   },
   "properties": [
@@ -97,13 +105,13 @@
         "delta": 25
       },
       "posts": {
-        "current": 5
+        "current": 6
       },
       "posts_channels": {
         "Facebook": 1,
         "Instagram": 3,
         "TikTok": 1,
-        "Google Business": 0
+        "Google Business": 1
       },
       "engagement": {
         "current": 15,
@@ -122,13 +130,13 @@
         "delta": 0
       },
       "posts": {
-        "current": 4
+        "current": 5
       },
       "posts_channels": {
         "Facebook": 1,
         "Instagram": 1,
         "TikTok": 2,
-        "Google Business": 0
+        "Google Business": 1
       },
       "engagement": {
         "current": 90,
@@ -147,13 +155,13 @@
         "delta": 3
       },
       "posts": {
-        "current": 3
+        "current": 4
       },
       "posts_channels": {
         "Facebook": 1,
         "Instagram": 1,
         "TikTok": 1,
-        "Google Business": 0
+        "Google Business": 1
       },
       "engagement": {
         "current": 47,
@@ -244,13 +252,13 @@
         "delta": 5
       },
       "posts": {
-        "current": 3
+        "current": 4
       },
       "posts_channels": {
         "Facebook": 1,
         "Instagram": 1,
         "TikTok": 1,
-        "Google Business": 0
+        "Google Business": 1
       },
       "engagement": {
         "current": 46,
@@ -269,13 +277,13 @@
         "delta": 3
       },
       "posts": {
-        "current": 2
+        "current": 3
       },
       "posts_channels": {
         "Facebook": 1,
         "Instagram": 1,
         "TikTok": 0,
-        "Google Business": 0
+        "Google Business": 1
       },
       "engagement": {
         "current": 0,
@@ -394,13 +402,13 @@
         "delta": 0
       },
       "posts": {
-        "current": 3
+        "current": 4
       },
       "posts_channels": {
         "Facebook": 1,
         "Instagram": 1,
         "TikTok": 1,
-        "Google Business": 0
+        "Google Business": 1
       },
       "engagement": {
         "current": 0,
@@ -419,13 +427,13 @@
         "delta": 0
       },
       "posts": {
-        "current": 3
+        "current": 4
       },
       "posts_channels": {
         "Facebook": 1,
         "Instagram": 1,
         "TikTok": 1,
-        "Google Business": 0
+        "Google Business": 1
       },
       "engagement": {
         "current": 0,

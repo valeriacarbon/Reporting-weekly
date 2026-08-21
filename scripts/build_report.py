@@ -367,11 +367,12 @@ def build(data_path: Path) -> str:
 
     gmb = data["google_business"]
     gmb_html = "".join([
-        stat_tile("Specials posts", gmb["specials_posts"]["current"], gmb["specials_posts"]["delta"], is_new=gmb["specials_posts"].get("is_new", False),
-                   editable_key="gbp_specials_posts", week_id=week_id),
         stat_tile("Posts published", gmb["posts_published"]["current"], gmb["posts_published"]["delta"], is_new=gmb["posts_published"].get("is_new", False)),
-        stat_tile("Reach", gmb["reach"]["current"], gmb["reach"]["delta"]),
-        stat_tile("Clicks", gmb["clicks"]["current"], gmb["clicks"]["delta"]),
+        stat_tile("Reach · search", gmb["reach_search"]["current"], gmb["reach_search"].get("delta", 0), is_new=gmb["reach_search"].get("is_new", False)),
+        stat_tile("Reach · maps", gmb["reach_maps"]["current"], gmb["reach_maps"].get("delta", 0), is_new=gmb["reach_maps"].get("is_new", False)),
+        stat_tile("Website clicks", gmb["website_clicks"]["current"], gmb["website_clicks"].get("delta", 0), is_new=gmb["website_clicks"].get("is_new", False)),
+        stat_tile("Phone clicks", gmb["phone_clicks"]["current"], gmb["phone_clicks"].get("delta", 0), is_new=gmb["phone_clicks"].get("is_new", False)),
+        stat_tile("Directions clicks", gmb["directions_clicks"]["current"], gmb["directions_clicks"].get("delta", 0), is_new=gmb["directions_clicks"].get("is_new", False)),
     ])
 
     channel_css_vars = "\n".join(
