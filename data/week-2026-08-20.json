@@ -1,0 +1,462 @@
+{
+  "week_label": "Aug 13 – 20, 2026",
+  "prev_week_label": "Aug 6 – 13, 2026",
+  "generated_note": "Automated Friday run (2026-08-21, 7am America/Mexico_City) pulled live from the Metricool API following AUTOMATION.md, with strict date-range filtering applied to every metric this time (the API can return rows dated one day past the requested end -- discarded, per the fix documented last run). Portfolio Views and Engagement look like a steep drop week over week (-86%) -- that's real, not a bug: last week's totals were inflated by The Landings at North Ingleside's one-off viral TikTok video (95,092 views, 3,908 engagement alone); this week it's back to a normal ~900 views for that property. GBP Reach and Clicks came back as true zero for every property this week (not null/missing -- the API returned 0 for reachSearch/reachMaps/website/call/directionsClicks across the board) -- most likely Google's own Business Profile insights haven't populated yet for such a recent window (known reporting lag of several days), not an actual drop to zero; worth re-checking next run before trusting a real trend here. Specials Posts hasn't been entered yet this week -- click Edit on that tile to add the real count.",
+  "kpis": {
+    "followers": {
+      "current": 2099,
+      "delta": 56
+    },
+    "posts": {
+      "current": 55,
+      "delta": -18
+    },
+    "engagement": {
+      "current": 579,
+      "delta": -3692
+    },
+    "views": {
+      "current": 15716,
+      "delta": -97998
+    }
+  },
+  "followers_by_channel": [
+    {
+      "channel": "Facebook",
+      "current": 1472,
+      "delta": 17
+    },
+    {
+      "channel": "TikTok",
+      "current": 389,
+      "delta": 35
+    },
+    {
+      "channel": "Instagram",
+      "current": 238,
+      "delta": 4
+    }
+  ],
+  "posts_by_channel": [
+    {
+      "channel": "Facebook",
+      "current": 15
+    },
+    {
+      "channel": "TikTok",
+      "current": 18
+    },
+    {
+      "channel": "Instagram",
+      "current": 17
+    },
+    {
+      "channel": "Google Business",
+      "current": 5
+    }
+  ],
+  "facebook_groups": {
+    "groups_posted_in": {
+      "current": 0,
+      "delta": 0
+    },
+    "group_likes": {
+      "current": 0,
+      "delta": 0
+    },
+    "group_comments": {
+      "current": 0,
+      "delta": 0
+    },
+    "note": "No Facebook Group activity this week — every metric above is a true zero, not missing data. Group posting is intentionally kept out of the Facebook channel numbers above; group-level likes/comments aren't yet exposed by the Metricool API and will populate once connected."
+  },
+  "google_business": {
+    "specials_posts": {
+      "current": 0,
+      "delta": 0
+    },
+    "reach": {
+      "current": 0,
+      "delta": -5832
+    },
+    "clicks": {
+      "current": 0,
+      "delta": -1415
+    },
+    "posts_published": {
+      "current": 5,
+      "delta": -4
+    }
+  },
+  "properties": [
+    {
+      "name": "The Landings at North Ingleside",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 266,
+        "delta": 25
+      },
+      "posts": {
+        "current": 5
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 3,
+        "TikTok": 1,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 15,
+        "delta": -3893
+      },
+      "views": {
+        "current": 886,
+        "delta": -94206
+      }
+    },
+    {
+      "name": "Berry Falls",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 554,
+        "delta": 0
+      },
+      "posts": {
+        "current": 4
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 1,
+        "TikTok": 2,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 90,
+        "delta": -29
+      },
+      "views": {
+        "current": 1657,
+        "delta": -2549
+      }
+    },
+    {
+      "name": "The Kenzie",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 557,
+        "delta": 3
+      },
+      "posts": {
+        "current": 3
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 1,
+        "TikTok": 1,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 47,
+        "delta": 22
+      },
+      "views": {
+        "current": 1308,
+        "delta": -747
+      }
+    },
+    {
+      "name": "Capri Palms",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 24,
+        "delta": 4
+      },
+      "posts": {
+        "current": 2
+      },
+      "posts_channels": {
+        "TikTok": 2
+      },
+      "engagement": {
+        "current": 161,
+        "delta": 142
+      },
+      "views": {
+        "current": 2137,
+        "delta": 1974
+      }
+    },
+    {
+      "name": "Ingleside Terrace",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 56,
+        "delta": 7
+      },
+      "posts": {
+        "current": 7
+      },
+      "posts_channels": {
+        "Facebook": 2,
+        "Instagram": 2,
+        "TikTok": 2,
+        "Google Business": 1
+      },
+      "engagement": {
+        "current": 31,
+        "delta": -18
+      },
+      "views": {
+        "current": 1972,
+        "delta": -1866
+      }
+    },
+    {
+      "name": "Lakeside/Lakeview",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 73,
+        "delta": 2
+      },
+      "posts": {
+        "current": 5
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 1,
+        "TikTok": 2,
+        "Google Business": 1
+      },
+      "engagement": {
+        "current": 111,
+        "delta": 96
+      },
+      "views": {
+        "current": 2239,
+        "delta": 1148
+      }
+    },
+    {
+      "name": "Westminster Club",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 173,
+        "delta": 5
+      },
+      "posts": {
+        "current": 3
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 1,
+        "TikTok": 1,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 46,
+        "delta": 19
+      },
+      "views": {
+        "current": 1528,
+        "delta": 482
+      }
+    },
+    {
+      "name": "Residences at the Overlook",
+      "top_channel": "Instagram",
+      "followers": {
+        "current": 20,
+        "delta": 3
+      },
+      "posts": {
+        "current": 2
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 1,
+        "TikTok": 0,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 0,
+        "delta": 0
+      },
+      "views": {
+        "current": 238,
+        "delta": -586
+      }
+    },
+    {
+      "name": "The Lamar Lofts",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 112,
+        "delta": 0
+      },
+      "posts": {
+        "current": 7
+      },
+      "posts_channels": {
+        "Facebook": 2,
+        "Instagram": 2,
+        "TikTok": 2,
+        "Google Business": 1
+      },
+      "engagement": {
+        "current": 53,
+        "delta": -40
+      },
+      "views": {
+        "current": 1906,
+        "delta": -2134
+      }
+    },
+    {
+      "name": "The Benton",
+      "top_channel": "Facebook",
+      "followers": {
+        "current": 42,
+        "delta": 0
+      },
+      "posts": {
+        "current": 0
+      },
+      "posts_channels": {
+        "Facebook": 0,
+        "Instagram": 0,
+        "TikTok": 0,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 0,
+        "delta": -5
+      },
+      "views": {
+        "current": 0,
+        "delta": -650
+      }
+    },
+    {
+      "name": "Hills at Hoover",
+      "top_channel": "Instagram",
+      "followers": {
+        "current": 51,
+        "delta": 4
+      },
+      "posts": {
+        "current": 7
+      },
+      "posts_channels": {
+        "Facebook": 2,
+        "Instagram": 2,
+        "TikTok": 2,
+        "Google Business": 1
+      },
+      "engagement": {
+        "current": 12,
+        "delta": 8
+      },
+      "views": {
+        "current": 454,
+        "delta": 160
+      }
+    },
+    {
+      "name": "Claxton Pointe & Pecan Ridge",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 78,
+        "delta": 3
+      },
+      "posts": {
+        "current": 4
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 1,
+        "TikTok": 1,
+        "Google Business": 1
+      },
+      "engagement": {
+        "current": 13,
+        "delta": 6
+      },
+      "views": {
+        "current": 1260,
+        "delta": 877
+      }
+    },
+    {
+      "name": "Santa Fe",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 14,
+        "delta": 0
+      },
+      "posts": {
+        "current": 3
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 1,
+        "TikTok": 1,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 0,
+        "delta": 0
+      },
+      "views": {
+        "current": 116,
+        "delta": 110
+      }
+    },
+    {
+      "name": "Villa Siena",
+      "top_channel": "Instagram",
+      "followers": {
+        "current": 54,
+        "delta": 0
+      },
+      "posts": {
+        "current": 3
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 1,
+        "TikTok": 1,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 0,
+        "delta": 0
+      },
+      "views": {
+        "current": 15,
+        "delta": -11
+      }
+    },
+    {
+      "name": "Aztec Villa",
+      "top_channel": "Facebook",
+      "followers": {
+        "current": 25,
+        "delta": 0
+      },
+      "posts": {
+        "current": 0
+      },
+      "posts_channels": {
+        "Facebook": 0
+      },
+      "engagement": {
+        "current": 0,
+        "delta": 0
+      },
+      "views": {
+        "current": 0,
+        "delta": 0
+      }
+    }
+  ]
+}
