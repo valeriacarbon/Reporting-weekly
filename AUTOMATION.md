@@ -156,8 +156,10 @@ posts_by_channel = per network (Facebook/TikTok/Instagram/Google Business),
   sum of that network's post count across all properties (no delta needed,
   matches existing shape)
 
-facebook_groups = always {0,0,0} with the existing note — Metricool doesn't
-  expose Facebook Group data; only change this if that ever becomes available
+facebook_groups = {groups_posted_in, interactions} always {0,0} with the
+  existing note — Metricool doesn't expose Facebook Group data; only change
+  this if that ever becomes available. "interactions" is likes+comments+
+  shares combined into one manually-entered number (not tracked separately)
 
 google_business.posts_published    = sum of GBP postsCount (GMEV17) across
   properties, with delta. This is posts PUBLISHED during the week window —
