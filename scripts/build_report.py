@@ -401,10 +401,8 @@ def build(data_path: Path) -> str:
     fg_html = "".join([
         stat_tile("Properties posted this week", fg["groups_posted_in"]["current"], fg["groups_posted_in"]["delta"],
                    editable_key="fbg_groups_posted_in", week_id=week_id),
-        stat_tile("Group likes", fg["group_likes"]["current"], fg["group_likes"]["delta"],
-                   editable_key="fbg_group_likes", week_id=week_id),
-        stat_tile("Group comments", fg["group_comments"]["current"], fg["group_comments"]["delta"],
-                   editable_key="fbg_group_comments", week_id=week_id),
+        stat_tile("Interactions (likes, comments, shares)", fg["interactions"]["current"], fg["interactions"]["delta"],
+                   editable_key="fbg_interactions", week_id=week_id),
     ])
 
     gmb = data["google_business"]
