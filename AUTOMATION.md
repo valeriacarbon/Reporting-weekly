@@ -159,21 +159,34 @@ posts_by_channel = per network (Facebook/TikTok/Instagram/Google Business),
 facebook_groups = always {0,0,0} with the existing note — Metricool doesn't
   expose Facebook Group data; only change this if that ever becomes available
 
-google_business.posts_published = sum of GBP postsCount (GMEV17) across
+google_business.posts_published    = sum of GBP postsCount (GMEV17) across
   properties, with delta. This is posts PUBLISHED during the week window —
   not scheduled/future posts, despite the field's Metricool label.
-google_business.reach           = sum of (GMEV18 + GMEV19) across properties, with delta
-google_business.clicks          = sum of (GMEV21 + GMEV22 + GMEV23) across properties, with delta
-google_business.specials_posts  = CANNOT be pulled from Metricool (never has
-  been — this was always a manual number in the old report too). Default it
-  to {"current": 0, "delta": 0} and say so plainly in generated_note. Do not
-  guess a number. If a human has told you this week's real count in the
-  conversation, use that instead.
+google_business.reach_search       = sum of GMEV18 across properties, with delta
+google_business.reach_maps         = sum of GMEV19 across properties, with delta
+google_business.website_clicks     = sum of GMEV21 across properties, with delta
+google_business.phone_clicks       = sum of GMEV22 across properties, with delta
+google_business.directions_clicks  = sum of GMEV23 across properties, with delta
 ```
 
-The GMB section on the dashboard shows exactly 4 tiles, in this order: Specials
-Posts (manual), Posts Published, Reach, Clicks. Post Views is not shown — it
-wasn't a metric anyone was actually using.
+There is no `google_business.specials_posts` anymore — Metricool does track
+Google Business posts after all (it was wrongly treated as a manual-only
+metric for a couple of weeks); everything GBP now comes straight from the
+API, no manual entry needed.
+
+**GBP data can lag by several days** — a query run the morning right after
+the week ends may come back with true zeros for reach/clicks (not null,
+actual `"0.0"` values) simply because Google's own Business Profile
+insights haven't synced into Metricool yet. If a run's GBP numbers all
+come back suspiciously flat, say so in generated_note and don't treat it
+as a real crash — but don't invent a delta-free "not available" placeholder
+either; write the real (possibly zero) numbers you got, since the next
+run will naturally correct itself once the data catches up.
+
+The GMB section on the dashboard shows exactly 6 tiles, in this order:
+Posts Published, Reach · Search, Reach · Maps, Website Clicks, Phone
+Clicks, Directions Clicks — laid out 3 per row. Post Views and the old
+combined Reach/Clicks/Specials Posts tiles are gone.
 
 ## Step 7 — Write the new data file
 
