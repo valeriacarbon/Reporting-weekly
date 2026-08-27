@@ -306,6 +306,10 @@ def gbp_metric_row(label, value, max_value, is_total=False):
 def gbp_property_card(p, maxes):
     reach_total = p["reach_search"] + p["reach_maps"]
     clicks_total = p["website_clicks"] + p["phone_clicks"] + p["directions_clicks"]
+    posts_rows = "".join([
+        gbp_metric_row("Published", p["posts_published"], maxes["posts_published"]),
+        gbp_metric_row("Views", p["post_views"], maxes["post_views"]),
+    ])
     reach_rows = "".join([
         gbp_metric_row("Search", p["reach_search"], maxes["reach_search"]),
         gbp_metric_row("Maps", p["reach_maps"], maxes["reach_maps"]),
@@ -322,6 +326,8 @@ def gbp_property_card(p, maxes):
       <div class="property-card-head">
         <h3>{esc(p["name"])}</h3>
       </div>
+      <div class="gbp-group-label">Posts</div>
+      {posts_rows}
       <div class="gbp-group-label">Reach</div>
       {reach_rows}
       <div class="gbp-group-label">Clicks</div>
@@ -474,6 +480,7 @@ def build(data_path: Path) -> str:
     gmb = data["google_business"]
     gmb_html = "".join([
         stat_tile("Posts published", gmb["posts_published"]["current"], gmb["posts_published"]["delta"], is_new=gmb["posts_published"].get("is_new", False)),
+        stat_tile("Post views", gmb["post_views"]["current"], gmb["post_views"].get("delta", 0), is_new=gmb["post_views"].get("is_new", False)),
         stat_tile("Reach · search", gmb["reach_search"]["current"], gmb["reach_search"].get("delta", 0), is_new=gmb["reach_search"].get("is_new", False)),
         stat_tile("Reach · maps", gmb["reach_maps"]["current"], gmb["reach_maps"].get("delta", 0), is_new=gmb["reach_maps"].get("is_new", False)),
         stat_tile("Website clicks", gmb["website_clicks"]["current"], gmb["website_clicks"].get("delta", 0), is_new=gmb["website_clicks"].get("is_new", False)),
@@ -487,6 +494,8 @@ def build(data_path: Path) -> str:
         reach_totals = [p["reach_search"] + p["reach_maps"] for p in gbp_props]
         clicks_totals = [p["website_clicks"] + p["phone_clicks"] + p["directions_clicks"] for p in gbp_props]
         gbp_maxes = {
+            "posts_published": max(p["posts_published"] for p in gbp_props),
+            "post_views": max(p["post_views"] for p in gbp_props),
             "reach_search": max(p["reach_search"] for p in gbp_props),
             "reach_maps": max(p["reach_maps"] for p in gbp_props),
             "reach_total": max(reach_totals),

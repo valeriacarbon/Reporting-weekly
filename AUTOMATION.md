@@ -79,7 +79,7 @@ fields, not per-post enumeration):
 | facebook | `["FBEV17","FBEV33","FBEV35","FBEV34","FBEV12","FBEV22"]` | followers(LAST), posts(SUM), stories(SUM), interactions(SUM), post views(SUM), reel views(SUM) |
 | instagram | `["IGEV01","IGEV37","IGEV16","IGEV38","IGEV05"]` | followers(LAST), posts(SUM), stories(SUM), interactions(SUM), views(SUM) |
 | tiktok | `["TKEV07","TKEV01","TKEV06","TKEV02"]` | followers(LAST), videos(SUM), interactions(SUM), views(SUM) |
-| googleBusinessProfile | `["GMEV17","GMEV18","GMEV19","GMEV21","GMEV22","GMEV23"]` | posts published(SUM), reachSearch(SUM), reachMaps(SUM), websiteClicks(SUM), callClicks(SUM), directionsClicks(SUM) |
+| googleBusinessProfile | `["GMEV17","GMEV16","GMEV18","GMEV19","GMEV21","GMEV22","GMEV23"]` | posts published(SUM), post views(SUM), reachSearch(SUM), reachMaps(SUM), websiteClicks(SUM), callClicks(SUM), directionsClicks(SUM) |
 
 **Do not use GMEV20 (reachTotal) or GMEV24 (totalClicks)** — those combined/formula
 fields return no data for this account even though their component fields
@@ -168,12 +168,28 @@ facebook_groups = {groups_posted_in, groups_and_posts, interactions} always
 google_business.posts_published    = sum of GBP postsCount (GMEV17) across
   properties, with delta. This is posts PUBLISHED during the week window —
   not scheduled/future posts, despite the field's Metricool label.
+google_business.post_views         = sum of GBP postsViews (GMEV16) across
+  properties, with delta. This is the ONLY metric that measures how the
+  GBP posts themselves performed (not the listing/profile overall) — see
+  the "GBP posts vs. profile" note below before assuming Reach/Clicks have
+  anything to do with posting activity.
 google_business.reach_search       = sum of GMEV18 across properties, with delta
 google_business.reach_maps         = sum of GMEV19 across properties, with delta
 google_business.website_clicks     = sum of GMEV21 across properties, with delta
 google_business.phone_clicks       = sum of GMEV22 across properties, with delta
 google_business.directions_clicks  = sum of GMEV23 across properties, with delta
 ```
+
+`gbp_by_property` is a separate array (used by the "Google My Business —
+by brand" per-property cards) with one entry per GBP-connected property
+(everyone except Capri Palms and Aztec Villa, which aren't on GBP):
+`{name, posts_published, post_views, reach_search, reach_maps,
+website_clicks, phone_clicks, directions_clicks}` — no delta per field,
+just this week's raw numbers (the cards show magnitude bars, not
+week-over-week chips). `posts_published` here should always match that
+property's `posts_channels["Google Business"]` value in the `properties`
+array — same number, just duplicated onto this array so the GBP card
+doesn't have to cross-reference `properties`.
 
 There is no `google_business.specials_posts` anymore — Metricool does track
 Google Business posts after all (it was wrongly treated as a manual-only
@@ -189,10 +205,47 @@ as a real crash — but don't invent a delta-free "not available" placeholder
 either; write the real (possibly zero) numbers you got, since the next
 run will naturally correct itself once the data catches up.
 
-The GMB section on the dashboard shows exactly 6 tiles, in this order:
-Posts Published, Reach · Search, Reach · Maps, Website Clicks, Phone
-Clicks, Directions Clicks — laid out 3 per row. Post Views and the old
-combined Reach/Clicks/Specials Posts tiles are gone.
+The GMB section on the dashboard shows exactly 7 tiles, in this order:
+Posts Published, Post Views, Reach · Search, Reach · Maps, Website Clicks,
+Phone Clicks, Directions Clicks — laid out 4 per row. The old combined
+Reach/Clicks/Specials Posts tiles are gone.
+
+### GBP posts vs. the underlying business profile
+
+Google Business Profile has two conceptually separate things going on, and
+it's easy to mix them up:
+
+- **Posts** — small content updates you publish directly to the listing
+  (like a mini social post). **Post Views (GMEV16)** is the only number
+  that measures how those specific posts performed. It's a genuine
+  post-performance signal, same role as Engagement/Views for
+  Facebook/Instagram/TikTok.
+- **The profile/listing itself** — the free card Google shows in Search
+  and Maps (photos, hours, star rating, buttons). **Reach Search, Reach
+  Maps, Website Clicks, Phone Clicks, and Directions Clicks all measure
+  this listing, not the posts.** Someone can see/click the listing in a
+  week with zero posts published, and posting a lot doesn't directly move
+  these numbers — they're driven by whether people search for the
+  property or find it on Maps at all.
+
+**All of these are organic, not paid.** Google Business Profile Insights
+(what Metricool reads via GMEV*) only ever reports the free/organic
+listing — there is no "GBP ads" product to conflate it with. Separately,
+checked `getBrandSettings` across all 15 properties as of 2026-08:
+**no property has a Google Ads account connected in Metricool at all**
+(only Lakeside/Lakeview has a Facebook Ads account connected, which is
+irrelevant to GBP and isn't pulled into any Facebook number here anyway,
+since Step 3 only ever queries the `evolution` connector, not `ads`). So
+even setting aside that GBP Insights is inherently organic-only, there's
+currently no paid channel in the picture that could be inflating these
+numbers.
+
+As of the week-2026-08-20 pull, Post Views (GMEV16) came back `0` for
+every one of the 13 GBP-connected properties — a suspiciously flat
+portfolio-wide zero, the same pattern GBP reach/clicks showed before they
+synced hours later (see the reporting-lag note above). Treat it the same
+way: write the real number, don't fabricate a placeholder, and check
+whether it's populated on the next run before assuming something's wrong.
 
 ## Step 7 — Write the new data file
 
