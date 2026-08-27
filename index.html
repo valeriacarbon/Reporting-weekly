@@ -159,6 +159,24 @@
   }
   .stat-tile.is-edited .edited-badge { display: block; }
 
+  /* ---- combo tile (paired counts in one card, e.g. groups + posts) ---- */
+  .stat-tile[data-editable-combo] { padding-top: 40px; }
+  .combo-value {
+    font-size: 22px; font-weight: 650; line-height: 1; margin-bottom: 8px;
+    display: flex; align-items: baseline; gap: 5px; flex-wrap: wrap;
+  }
+  .combo-label { font-size: 12px; font-weight: 500; color: var(--ink-mute); }
+  .combo-sep { color: var(--ink-mute); margin: 0 3px; }
+  .combo-deltas { display: flex; gap: 14px; font-size: 12.5px; margin-bottom: 10px; }
+  .stat-tile[data-editable-combo].is-editing .combo-value,
+  .stat-tile[data-editable-combo].is-editing .combo-deltas { display: none; }
+  .combo-edit-form { flex-direction: column; align-items: stretch; gap: 8px; }
+  .stat-tile[data-editable-combo].is-editing .combo-edit-form { display: flex; }
+  .combo-field { display: flex; align-items: center; gap: 8px; }
+  .combo-field label { font-size: 12px; color: var(--ink-2); width: 46px; flex-shrink: 0; }
+  .combo-field input { flex: 1; width: auto; }
+  .combo-actions { display: flex; gap: 8px; }
+
   /* ---- channel bar charts ---- */
   .chbar-row { display: grid; grid-template-columns: 130px 1fr 180px; align-items: center; gap: 12px; margin-bottom: 10px; }
   .chbar-label { font-size: 13px; color: var(--ink-2); font-weight: 550; }
@@ -1663,7 +1681,7 @@
   <section>
     <h2>Facebook Groups — portfolio roll-up</h2>
     <p class="section-sub">Group-level activity isn't exposed by the Metricool API — click <strong>Edit</strong> on any tile below to enter this week's counts by hand.</p>
-    <div class="stat-grid" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
     <div class="stat-tile" data-editable="1" data-metric="fbg_groups_posted_in" data-week="Aug 13 – 20, 2026" data-current="0" data-prev="0">
       <button class="edit-btn" type="button" title="Edit this number"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Edit</button>
       <div class="stat-label">Properties posted this week</div>
@@ -1676,6 +1694,26 @@
         <rect x="0" y="10" width="0.0" height="6" rx="3" fill="var(--track)"/>
         <rect x="0" y="0" width="0.0" height="6" rx="3" fill="var(--series-sequential)"/>
       </svg>
+    </div>
+    <div class="stat-tile combo-tile" data-editable-combo="1" data-metric="fbg_groups_and_posts" data-week="Aug 13 – 20, 2026" data-groups-current="0" data-groups-prev="0" data-posts-current="0" data-posts-prev="0">
+      <button class="edit-btn" type="button" title="Edit these numbers"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Edit</button>
+      <div class="stat-label">Groups Posted In / Posts</div>
+      <div class="edited-badge">Manually edited</div>
+      
+    <div class="edit-form combo-edit-form">
+      <div class="combo-field"><label>Groups</label><input type="number" inputmode="numeric" step="1" class="combo-groups-input" value="0"></div>
+      <div class="combo-field"><label>Posts</label><input type="number" inputmode="numeric" step="1" class="combo-posts-input" value="0"></div>
+      <div class="combo-actions"><button type="button" class="save">Save</button><button type="button" class="cancel">Cancel</button></div>
+    </div>
+      <div class="combo-value">
+        <span class="combo-num groups-num">0</span><span class="combo-label">groups</span>
+        <span class="combo-sep">/</span>
+        <span class="combo-num posts-num">0</span><span class="combo-label">posts</span>
+      </div>
+      <div class="combo-deltas">
+        <span class="groups-delta"><span class="chip" style="color:var(--flat)">• 0</span></span>
+        <span class="posts-delta"><span class="chip" style="color:var(--flat)">• 0</span></span>
+      </div>
     </div>
     <div class="stat-tile" data-editable="1" data-metric="fbg_interactions" data-week="Aug 13 – 20, 2026" data-current="0" data-prev="0">
       <button class="edit-btn" type="button" title="Edit this number"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Edit</button>
@@ -2230,6 +2268,89 @@
       input.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') { tile.querySelector('.edit-form .save').click(); }
         if (e.key === 'Escape') { tile.querySelector('.edit-form .cancel').click(); }
+      });
+    });
+  })();
+
+  // Combo tiles (paired counts in one card, e.g. Facebook Groups / Posts) --
+  // same manual-edit idea as above but two numbers saved together as one
+  // JSON value under a single localStorage key.
+  (function () {
+    function storageKey(tile) {
+      return 'wspd-edit-combo:' + tile.dataset.week + ':' + tile.dataset.metric;
+    }
+    function fmt(n) { return n.toLocaleString('en-US'); }
+    function renderDelta(el, current, prev) {
+      var delta = current - prev;
+      var arrow, colorVar, sign;
+      if (delta > 0) { arrow = '▲'; colorVar = 'var(--good)'; sign = '+'; }
+      else if (delta < 0) { arrow = '▼'; colorVar = 'var(--bad)'; sign = ''; }
+      else { arrow = '•'; colorVar = 'var(--flat)'; sign = ''; }
+      var pctTxt = '';
+      if (prev !== 0) {
+        var pct = (delta / prev) * 100;
+        pctTxt = ' (' + sign + Math.round(pct) + '%)';
+      }
+      el.style.color = colorVar;
+      el.textContent = arrow + ' ' + sign + fmt(delta) + pctTxt;
+    }
+    document.querySelectorAll('.stat-tile[data-editable-combo]').forEach(function (tile) {
+      var groupsPrev = parseFloat(tile.dataset.groupsPrev);
+      var postsPrev = parseFloat(tile.dataset.postsPrev);
+      var groups = parseFloat(tile.dataset.groupsCurrent);
+      var posts = parseFloat(tile.dataset.postsCurrent);
+      var groupsInput = tile.querySelector('.combo-groups-input');
+      var postsInput = tile.querySelector('.combo-posts-input');
+      var groupsNum = tile.querySelector('.groups-num');
+      var postsNum = tile.querySelector('.posts-num');
+      var groupsDelta = tile.querySelector('.groups-delta .chip');
+      var postsDelta = tile.querySelector('.posts-delta .chip');
+
+      function apply(persisted) {
+        groupsNum.textContent = fmt(groups);
+        postsNum.textContent = fmt(posts);
+        renderDelta(groupsDelta, groups, groupsPrev);
+        renderDelta(postsDelta, posts, postsPrev);
+        tile.classList.toggle('is-edited', !!persisted);
+      }
+
+      var saved = localStorage.getItem(storageKey(tile));
+      if (saved !== null) {
+        try {
+          var parsed = JSON.parse(saved);
+          groups = parsed.groups;
+          posts = parsed.posts;
+          groupsInput.value = groups;
+          postsInput.value = posts;
+          apply(true);
+        } catch (e) { /* ignore corrupt saved value */ }
+      }
+
+      tile.querySelector('.edit-btn').addEventListener('click', function () {
+        groupsInput.value = groups;
+        postsInput.value = posts;
+        tile.classList.add('is-editing');
+        groupsInput.focus();
+        groupsInput.select();
+      });
+      tile.querySelector('.combo-edit-form .cancel').addEventListener('click', function () {
+        tile.classList.remove('is-editing');
+      });
+      tile.querySelector('.combo-edit-form .save').addEventListener('click', function () {
+        var g = parseInt(groupsInput.value, 10);
+        var p = parseInt(postsInput.value, 10);
+        if (isNaN(g) || g < 0 || isNaN(p) || p < 0) { return; }
+        groups = g;
+        posts = p;
+        localStorage.setItem(storageKey(tile), JSON.stringify({ groups: groups, posts: posts }));
+        apply(true);
+        tile.classList.remove('is-editing');
+      });
+      [groupsInput, postsInput].forEach(function (input) {
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') { tile.querySelector('.combo-edit-form .save').click(); }
+          if (e.key === 'Escape') { tile.querySelector('.combo-edit-form .cancel').click(); }
+        });
       });
     });
   })();

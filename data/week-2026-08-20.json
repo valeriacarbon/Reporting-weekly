@@ -61,6 +61,16 @@
       "delta": 0
     },
     "note": "No Facebook Group activity this week — every metric above is a true zero, not missing data. Group posting is intentionally kept out of the Facebook channel numbers above; group-level interactions (likes, comments, shares) aren't yet exposed by the Metricool API and will populate once connected.",
+    "groups_and_posts": {
+      "groups": {
+        "current": 0,
+        "delta": 0
+      },
+      "posts": {
+        "current": 0,
+        "delta": 0
+      }
+    },
     "interactions": {
       "current": 0,
       "delta": 0
