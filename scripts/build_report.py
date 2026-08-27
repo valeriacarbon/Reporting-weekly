@@ -377,6 +377,48 @@ def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_l
     </div>'''
 
 
+def combo_stat_tile(label, groups_current, groups_delta, posts_current, posts_delta,
+                     editable_key, week_id):
+    """One card holding two paired counts (e.g. groups posted in + total posts
+    across them) instead of splitting them into two separate stat tiles.
+    Manually edited like the other Facebook Group tiles -- two number inputs
+    saved together under one localStorage key."""
+    groups_prev = groups_current - groups_delta
+    posts_prev = posts_current - posts_delta
+    edit_attrs = (f' data-editable-combo="1" data-metric="{esc(editable_key)}" data-week="{esc(week_id)}" '
+                  f'data-groups-current="{groups_current}" data-groups-prev="{groups_prev}" '
+                  f'data-posts-current="{posts_current}" data-posts-prev="{posts_prev}"')
+    edit_btn = (
+        '<button class="edit-btn" type="button" title="Edit these numbers">'
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        'stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+        '<path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>'
+        '</svg> Edit</button>'
+    )
+    edit_form = f'''
+    <div class="edit-form combo-edit-form">
+      <div class="combo-field"><label>Groups</label><input type="number" inputmode="numeric" step="1" class="combo-groups-input" value="{groups_current}"></div>
+      <div class="combo-field"><label>Posts</label><input type="number" inputmode="numeric" step="1" class="combo-posts-input" value="{posts_current}"></div>
+      <div class="combo-actions"><button type="button" class="save">Save</button><button type="button" class="cancel">Cancel</button></div>
+    </div>'''
+    return f'''
+    <div class="stat-tile combo-tile"{edit_attrs}>
+      {edit_btn}
+      <div class="stat-label">{esc(label)}</div>
+      <div class="edited-badge">Manually edited</div>
+      {edit_form}
+      <div class="combo-value">
+        <span class="combo-num groups-num">{fmt(groups_current)}</span><span class="combo-label">groups</span>
+        <span class="combo-sep">/</span>
+        <span class="combo-num posts-num">{fmt(posts_current)}</span><span class="combo-label">posts</span>
+      </div>
+      <div class="combo-deltas">
+        <span class="groups-delta">{delta_chip(groups_current, groups_delta)}</span>
+        <span class="posts-delta">{delta_chip(posts_current, posts_delta)}</span>
+      </div>
+    </div>'''
+
+
 def build(data_path: Path) -> str:
     data = json.loads(data_path.read_text())
 
@@ -418,9 +460,13 @@ def build(data_path: Path) -> str:
 
     week_id = data["week_label"]
     fg = data["facebook_groups"]
+    gp = fg["groups_and_posts"]
     fg_html = "".join([
         stat_tile("Properties posted this week", fg["groups_posted_in"]["current"], fg["groups_posted_in"]["delta"],
                    editable_key="fbg_groups_posted_in", week_id=week_id),
+        combo_stat_tile("Groups Posted In / Posts", gp["groups"]["current"], gp["groups"]["delta"],
+                        gp["posts"]["current"], gp["posts"]["delta"],
+                        editable_key="fbg_groups_and_posts", week_id=week_id),
         stat_tile("Interactions (likes, comments, shares)", fg["interactions"]["current"], fg["interactions"]["delta"],
                    editable_key="fbg_interactions", week_id=week_id),
     ])
