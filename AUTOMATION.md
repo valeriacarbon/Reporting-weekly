@@ -205,10 +205,18 @@ as a real crash — but don't invent a delta-free "not available" placeholder
 either; write the real (possibly zero) numbers you got, since the next
 run will naturally correct itself once the data catches up.
 
-The GMB section on the dashboard shows exactly 7 tiles, in this order:
-Posts Published, Post Views, Reach · Search, Reach · Maps, Website Clicks,
-Phone Clicks, Directions Clicks — laid out 4 per row. The old combined
+The GMB section on the dashboard shows exactly 6 tiles, in this order:
+Posts Published, Reach · Search, Reach · Maps, Website Clicks, Phone
+Clicks, Directions Clicks — laid out 3 per row. The old combined
 Reach/Clicks/Specials Posts tiles are gone.
+
+**Post Views is temporarily hidden (as of 2026-08-28), not deleted.**
+Keep computing and writing `google_business.post_views` and each
+`gbp_by_property[].post_views` in the data file every week per the
+formula below, but `build_report.py` no longer renders a tile for it,
+and `gbp_property_card` no longer shows a Views row under Posts — see
+"Post Views investigation" below for why. Don't remove the field from
+the data schema; this is a display-only pause until that's resolved.
 
 ### GBP posts vs. the underlying business profile
 
@@ -240,12 +248,35 @@ even setting aside that GBP Insights is inherently organic-only, there's
 currently no paid channel in the picture that could be inflating these
 numbers.
 
-As of the week-2026-08-20 pull, Post Views (GMEV16) came back `0` for
-every one of the 13 GBP-connected properties — a suspiciously flat
-portfolio-wide zero, the same pattern GBP reach/clicks showed before they
-synced hours later (see the reporting-lag note above). Treat it the same
-way: write the real number, don't fabricate a placeholder, and check
-whether it's populated on the next run before assuming something's wrong.
+### Post Views investigation (unresolved as of 2026-08-28)
+
+Post Views (GMEV16) came back `0` for every GBP-connected property on
+both the week-2026-08-20 and week-2026-08-27 pulls. Initially treated as
+the same reporting lag as Reach/Clicks (see above), but on the
+Aug 20-27 run that lag theory was ruled out:
+
+- Reach/Clicks for that same week DID eventually sync to real nonzero
+  numbers on a same-day re-pull -- proving lag was real for those fields.
+- Post Views stayed null/0 even after that re-pull, and even querying
+  2 months back on the `evolution` connector (GMEV16) for a property
+  with confirmed real posts.
+- Went to the individual-post level (`posts` connector: GMPO01 date,
+  GMPO12 `views`, GMPO13 `viewsCount`) for every post at every one of
+  the 13 GBP properties, including posts a full week old with plenty of
+  time to accumulate views -- every single one came back `null` (not
+  `0` -- genuinely absent), for both fields, with no exceptions.
+
+Val says Metricool's own reports (the ones she views/exports directly)
+do show a views number for GBP posts, so the data likely exists in
+Metricool somewhere -- just not under `GMEV16`/`GMPO12`/`GMPO13` via
+`getAnalyticsDataByMetrics`, or not under a metric labeled "views" at
+all (possibly she's seeing Reach relabeled, or a report screen this
+tool doesn't have a field ID for). **Before re-attempting**: get a
+screenshot or export of the exact Metricool report she's reading it
+from, so the metric name shown there can be matched against
+`getAnalyticsAvailableMetrics` output rather than guessing field IDs
+again. Until that's resolved, the dashboard doesn't display Post Views
+at all (see above) rather than showing a misleading 0.
 
 ## Step 7 — Write the new data file
 
