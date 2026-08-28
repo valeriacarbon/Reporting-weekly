@@ -510,10 +510,10 @@ def build(data_path: Path) -> str:
     url_tracking_section = ""
     if url_tracking:
         url_tracking_html = "".join([
-            stat_tile("Views", url_tracking["views"]["current"], 0, is_new=url_tracking["views"].get("is_new", False)),
-            stat_tile("Sessions", url_tracking["sessions"]["current"], 0, is_new=url_tracking["sessions"].get("is_new", False)),
-            stat_tile("Engaged sessions", url_tracking["engaged_sessions"]["current"], 0, is_new=url_tracking["engaged_sessions"].get("is_new", False)),
-            stat_tile("Tours", url_tracking["tours"]["current"], 0, is_new=url_tracking["tours"].get("is_new", False)),
+            stat_tile("Views", url_tracking["views"]["current"], url_tracking["views"].get("delta", 0), is_new=url_tracking["views"].get("is_new", False), compare_label="vs last wk"),
+            stat_tile("Sessions", url_tracking["sessions"]["current"], url_tracking["sessions"].get("delta", 0), is_new=url_tracking["sessions"].get("is_new", False), compare_label="vs last wk"),
+            stat_tile("Engaged sessions", url_tracking["engaged_sessions"]["current"], url_tracking["engaged_sessions"].get("delta", 0), is_new=url_tracking["engaged_sessions"].get("is_new", False), compare_label="vs last wk"),
+            stat_tile("Tours", url_tracking["tours"]["current"], url_tracking["tours"].get("delta", 0), is_new=url_tracking["tours"].get("is_new", False), compare_label="vs last wk"),
         ])
         ut_props = url_tracking.get("by_property", [])
         ut_maxes = {
