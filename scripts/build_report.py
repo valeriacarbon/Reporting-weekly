@@ -507,8 +507,7 @@ def build(data_path: Path) -> str:
     gbp_property_cards = "".join(gbp_property_card(p, gbp_maxes) for p in gbp_props)
 
     url_tracking = data.get("url_tracking")
-    url_tracking_html = ""
-    url_tracking_cards = ""
+    url_tracking_section = ""
     if url_tracking:
         url_tracking_html = "".join([
             stat_tile("Views", url_tracking["views"]["current"], 0, is_new=url_tracking["views"].get("is_new", False)),
@@ -524,6 +523,25 @@ def build(data_path: Path) -> str:
             "tours": max((p["tours"] for p in ut_props), default=1),
         }
         url_tracking_cards = "".join(url_tracking_card(p, ut_maxes) for p in ut_props)
+        url_tracking_section = f'''
+  <section>
+    <h2>URL Tracking</h2>
+    <p class="section-sub">Traffic from Facebook Group posts landing on each property's site (Google Analytics).</p>
+    <div class="stat-grid">{url_tracking_html}</div>
+    <dl class="legend">
+      <div class="legend-item"><dt>Views</dt><dd>The number of times the page was loaded/viewed, including repeat views from the same person or session.</dd></div>
+      <div class="legend-item"><dt>Sessions</dt><dd>Total number of visits per person.</dd></div>
+      <div class="legend-item"><dt>Engaged sessions</dt><dd>A session that lasted 10+ seconds, visited more than one page, or triggered a conversion event.</dd></div>
+      <div class="legend-item"><dt>Tours</dt><dd>Tours booked.</dd></div>
+    </dl>
+  </section>
+
+  <section>
+    <h2>URL Tracking — by brand</h2>
+    <p class="section-sub">Quick view per property.</p>
+    <div class="property-grid">{url_tracking_cards}</div>
+    <div class="note-box">{esc(url_tracking["note"])}</div>
+  </section>'''
 
     channel_css_vars = "\n".join(
         f'      --ch-{k.lower().replace(" ", "-")}: {v["dark"]};' for k, v in CHANNEL_COLORS.items()
@@ -547,9 +565,7 @@ def build(data_path: Path) -> str:
     out = out.replace("{{FB_GROUPS_NOTE}}", esc(fg["note"]))
     out = out.replace("{{GMB_TILES}}", gmb_html)
     out = out.replace("{{GBP_PROPERTY_CARDS}}", gbp_property_cards)
-    out = out.replace("{{URL_TRACKING_TILES}}", url_tracking_html)
-    out = out.replace("{{URL_TRACKING_CARDS}}", url_tracking_cards)
-    out = out.replace("{{URL_TRACKING_NOTE}}", esc(url_tracking["note"]) if url_tracking else "")
+    out = out.replace("{{URL_TRACKING_SECTION}}", url_tracking_section)
     out = out.replace("{{CHANNEL_CSS_VARS_DARK}}", channel_css_vars)
     out = out.replace("{{CHANNEL_CSS_VARS_LIGHT}}", channel_css_vars_light)
     return out

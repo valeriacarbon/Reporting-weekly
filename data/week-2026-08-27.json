@@ -1,0 +1,612 @@
+{
+  "week_label": "Aug 20 \u2013 27, 2026",
+  "prev_week_label": "Aug 13 \u2013 20, 2026",
+  "generated_note": "Automated Friday run (2026-08-28) pulled live from Metricool per AUTOMATION.md, window Aug 20-27, 2026. Facebook/Instagram/TikTok data came back fully synced with no out-of-range rows to filter. Google Business Profile hit the same reporting-sync lag documented on the Aug 13-20 run, but far more severe this time: 11 of the 13 GBP-connected properties returned a literal all-zero row for the entire week (Metricool has not synced a single day of GBP data for them yet), and only The Landings at North Ingleside and Hills at Hoover had partial data -- through Aug 24 only, Aug 25-27 missing entirely. Wrote the real (mostly zero) numbers per AUTOMATION.md's instruction rather than inventing a placeholder or reusing last week's figures. This makes every GBP delta below a large, misleading-looking drop (e.g. Reach Search -4,258) that is NOT a real portfolio decline -- it's the lag. A same-day recheck is scheduled for ~6 hours from this run to re-pull GBP and patch this file if the data has since synced, same as what happened by hand on the Aug 13-20 run. Facebook Groups metrics stay at 0/0 (Metricool still doesn't expose this data; unchanged from last week -- edit via the dashboard's Edit buttons if you have real counts). URL Tracking is omitted this week -- no GA4 export was provided, and AUTOMATION.md says not to guess or reuse last week's numbers when that happens; it'll return once you share the next GA4 pull or the Drive folder is wired up.",
+  "kpis": {
+    "followers": {
+      "current": 2152,
+      "delta": 53
+    },
+    "posts": {
+      "current": 50,
+      "delta": -12
+    },
+    "engagement": {
+      "current": 504,
+      "delta": -75
+    },
+    "views": {
+      "current": 17493,
+      "delta": 1777
+    }
+  },
+  "followers_by_channel": [
+    {
+      "channel": "Facebook",
+      "current": 1486,
+      "delta": 14
+    },
+    {
+      "channel": "TikTok",
+      "current": 425,
+      "delta": 36
+    },
+    {
+      "channel": "Instagram",
+      "current": 241,
+      "delta": 3
+    }
+  ],
+  "posts_by_channel": [
+    {
+      "channel": "Facebook",
+      "current": 13
+    },
+    {
+      "channel": "TikTok",
+      "current": 19
+    },
+    {
+      "channel": "Instagram",
+      "current": 15
+    },
+    {
+      "channel": "Google Business",
+      "current": 3
+    }
+  ],
+  "facebook_groups": {
+    "groups_posted_in": {
+      "current": 0,
+      "delta": 0
+    },
+    "note": "No Facebook Group activity this week \u2014 every metric above is a true zero, not missing data. Group posting is intentionally kept out of the Facebook channel numbers above; group-level interactions (likes, comments, shares) aren't yet exposed by the Metricool API and will populate once connected.",
+    "groups_and_posts": {
+      "groups": {
+        "current": 0,
+        "delta": 0
+      },
+      "posts": {
+        "current": 0,
+        "delta": 0
+      }
+    },
+    "interactions": {
+      "current": 0,
+      "delta": 0
+    }
+  },
+  "google_business": {
+    "posts_published": {
+      "current": 3,
+      "delta": -9
+    },
+    "post_views": {
+      "current": 0,
+      "delta": 0
+    },
+    "reach_search": {
+      "current": 460,
+      "delta": -4258
+    },
+    "reach_maps": {
+      "current": 142,
+      "delta": -878
+    },
+    "website_clicks": {
+      "current": 42,
+      "delta": -342
+    },
+    "phone_clicks": {
+      "current": 32,
+      "delta": -160
+    },
+    "directions_clicks": {
+      "current": 75,
+      "delta": -475
+    }
+  },
+  "properties": [
+    {
+      "name": "The Landings at North Ingleside",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 290,
+        "delta": 24
+      },
+      "posts": {
+        "current": 7
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 3,
+        "TikTok": 2,
+        "Google Business": 1
+      },
+      "engagement": {
+        "current": 25,
+        "delta": 10
+      },
+      "views": {
+        "current": 1062,
+        "delta": 176
+      }
+    },
+    {
+      "name": "Berry Falls",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 562,
+        "delta": 8
+      },
+      "posts": {
+        "current": 6
+      },
+      "posts_channels": {
+        "Facebook": 2,
+        "Instagram": 2,
+        "TikTok": 2,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 39,
+        "delta": -51
+      },
+      "views": {
+        "current": 2153,
+        "delta": 496
+      }
+    },
+    {
+      "name": "The Kenzie",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 556,
+        "delta": -1
+      },
+      "posts": {
+        "current": 3
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 1,
+        "TikTok": 1,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 43,
+        "delta": -4
+      },
+      "views": {
+        "current": 1232,
+        "delta": -76
+      }
+    },
+    {
+      "name": "Capri Palms",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 24,
+        "delta": 0
+      },
+      "posts": {
+        "current": 0
+      },
+      "posts_channels": {
+        "TikTok": 0
+      },
+      "engagement": {
+        "current": 0,
+        "delta": -161
+      },
+      "views": {
+        "current": 0,
+        "delta": -2137
+      }
+    },
+    {
+      "name": "Ingleside Terrace",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 59,
+        "delta": 3
+      },
+      "posts": {
+        "current": 9
+      },
+      "posts_channels": {
+        "Facebook": 3,
+        "Instagram": 3,
+        "TikTok": 3,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 37,
+        "delta": 6
+      },
+      "views": {
+        "current": 1899,
+        "delta": -73
+      }
+    },
+    {
+      "name": "Lakeside/Lakeview",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 75,
+        "delta": 2
+      },
+      "posts": {
+        "current": 5
+      },
+      "posts_channels": {
+        "Facebook": 1,
+        "Instagram": 1,
+        "TikTok": 3,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 96,
+        "delta": -15
+      },
+      "views": {
+        "current": 1821,
+        "delta": -418
+      }
+    },
+    {
+      "name": "Westminster Club",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 178,
+        "delta": 5
+      },
+      "posts": {
+        "current": 1
+      },
+      "posts_channels": {
+        "Facebook": 0,
+        "Instagram": 0,
+        "TikTok": 1,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 53,
+        "delta": 7
+      },
+      "views": {
+        "current": 963,
+        "delta": -565
+      }
+    },
+    {
+      "name": "Residences at the Overlook",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 22,
+        "delta": 2
+      },
+      "posts": {
+        "current": 6
+      },
+      "posts_channels": {
+        "Facebook": 2,
+        "Instagram": 2,
+        "TikTok": 2,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 76,
+        "delta": 76
+      },
+      "views": {
+        "current": 1912,
+        "delta": 1674
+      }
+    },
+    {
+      "name": "The Lamar Lofts",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 115,
+        "delta": 3
+      },
+      "posts": {
+        "current": 10
+      },
+      "posts_channels": {
+        "Facebook": 3,
+        "Instagram": 3,
+        "TikTok": 4,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 134,
+        "delta": 81
+      },
+      "views": {
+        "current": 4650,
+        "delta": 2744
+      }
+    },
+    {
+      "name": "The Benton",
+      "top_channel": "Instagram",
+      "followers": {
+        "current": 43,
+        "delta": 1
+      },
+      "posts": {
+        "current": 0
+      },
+      "posts_channels": {
+        "Facebook": 0,
+        "Instagram": 0,
+        "TikTok": 0,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 0,
+        "delta": 0
+      },
+      "views": {
+        "current": 4,
+        "delta": 4
+      }
+    },
+    {
+      "name": "Hills at Hoover",
+      "top_channel": "Instagram",
+      "followers": {
+        "current": 51,
+        "delta": 0
+      },
+      "posts": {
+        "current": 3
+      },
+      "posts_channels": {
+        "Facebook": 0,
+        "Instagram": 0,
+        "TikTok": 1,
+        "Google Business": 2
+      },
+      "engagement": {
+        "current": 1,
+        "delta": -11
+      },
+      "views": {
+        "current": 1023,
+        "delta": 569
+      }
+    },
+    {
+      "name": "Claxton Pointe & Pecan Ridge",
+      "top_channel": "Instagram",
+      "followers": {
+        "current": 80,
+        "delta": 2
+      },
+      "posts": {
+        "current": 0
+      },
+      "posts_channels": {
+        "Facebook": 0,
+        "Instagram": 0,
+        "TikTok": 0,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 0,
+        "delta": -13
+      },
+      "views": {
+        "current": 768,
+        "delta": -492
+      }
+    },
+    {
+      "name": "Santa Fe",
+      "top_channel": "Instagram",
+      "followers": {
+        "current": 16,
+        "delta": 2
+      },
+      "posts": {
+        "current": 0
+      },
+      "posts_channels": {
+        "Facebook": 0,
+        "Instagram": 0,
+        "TikTok": 0,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 0,
+        "delta": 0
+      },
+      "views": {
+        "current": 2,
+        "delta": -114
+      }
+    },
+    {
+      "name": "Villa Siena",
+      "top_channel": "Instagram",
+      "followers": {
+        "current": 56,
+        "delta": 2
+      },
+      "posts": {
+        "current": 0
+      },
+      "posts_channels": {
+        "Facebook": 0,
+        "Instagram": 0,
+        "TikTok": 0,
+        "Google Business": 0
+      },
+      "engagement": {
+        "current": 0,
+        "delta": 0
+      },
+      "views": {
+        "current": 4,
+        "delta": -11
+      }
+    },
+    {
+      "name": "Aztec Villa",
+      "top_channel": "Facebook",
+      "followers": {
+        "current": 25,
+        "delta": 0
+      },
+      "posts": {
+        "current": 0
+      },
+      "posts_channels": {
+        "Facebook": 0
+      },
+      "engagement": {
+        "current": 0,
+        "delta": 0
+      },
+      "views": {
+        "current": 0,
+        "delta": 0
+      }
+    }
+  ],
+  "gbp_by_property": [
+    {
+      "name": "The Landings at North Ingleside",
+      "reach_search": 211,
+      "reach_maps": 51,
+      "website_clicks": 0,
+      "phone_clicks": 4,
+      "directions_clicks": 33,
+      "posts_published": 1,
+      "post_views": 0
+    },
+    {
+      "name": "Berry Falls",
+      "reach_search": 0,
+      "reach_maps": 0,
+      "website_clicks": 0,
+      "phone_clicks": 0,
+      "directions_clicks": 0,
+      "posts_published": 0,
+      "post_views": 0
+    },
+    {
+      "name": "The Kenzie",
+      "reach_search": 0,
+      "reach_maps": 0,
+      "website_clicks": 0,
+      "phone_clicks": 0,
+      "directions_clicks": 0,
+      "posts_published": 0,
+      "post_views": 0
+    },
+    {
+      "name": "Ingleside Terrace",
+      "reach_search": 0,
+      "reach_maps": 0,
+      "website_clicks": 0,
+      "phone_clicks": 0,
+      "directions_clicks": 0,
+      "posts_published": 0,
+      "post_views": 0
+    },
+    {
+      "name": "Lakeside/Lakeview",
+      "reach_search": 0,
+      "reach_maps": 0,
+      "website_clicks": 0,
+      "phone_clicks": 0,
+      "directions_clicks": 0,
+      "posts_published": 0,
+      "post_views": 0
+    },
+    {
+      "name": "Westminster Club",
+      "reach_search": 0,
+      "reach_maps": 0,
+      "website_clicks": 0,
+      "phone_clicks": 0,
+      "directions_clicks": 0,
+      "posts_published": 0,
+      "post_views": 0
+    },
+    {
+      "name": "Residences at the Overlook",
+      "reach_search": 0,
+      "reach_maps": 0,
+      "website_clicks": 0,
+      "phone_clicks": 0,
+      "directions_clicks": 0,
+      "posts_published": 0,
+      "post_views": 0
+    },
+    {
+      "name": "The Lamar Lofts",
+      "reach_search": 0,
+      "reach_maps": 0,
+      "website_clicks": 0,
+      "phone_clicks": 0,
+      "directions_clicks": 0,
+      "posts_published": 0,
+      "post_views": 0
+    },
+    {
+      "name": "The Benton",
+      "reach_search": 0,
+      "reach_maps": 0,
+      "website_clicks": 0,
+      "phone_clicks": 0,
+      "directions_clicks": 0,
+      "posts_published": 0,
+      "post_views": 0
+    },
+    {
+      "name": "Hills at Hoover",
+      "reach_search": 249,
+      "reach_maps": 91,
+      "website_clicks": 42,
+      "phone_clicks": 28,
+      "directions_clicks": 42,
+      "posts_published": 2,
+      "post_views": 0
+    },
+    {
+      "name": "Claxton Pointe & Pecan Ridge",
+      "reach_search": 0,
+      "reach_maps": 0,
+      "website_clicks": 0,
+      "phone_clicks": 0,
+      "directions_clicks": 0,
+      "posts_published": 0,
+      "post_views": 0
+    },
+    {
+      "name": "Santa Fe",
+      "reach_search": 0,
+      "reach_maps": 0,
+      "website_clicks": 0,
+      "phone_clicks": 0,
+      "directions_clicks": 0,
+      "posts_published": 0,
+      "post_views": 0
+    },
+    {
+      "name": "Villa Siena",
+      "reach_search": 0,
+      "reach_maps": 0,
+      "website_clicks": 0,
+      "phone_clicks": 0,
+      "directions_clicks": 0,
+      "posts_published": 0,
+      "post_views": 0
+    }
+  ]
+}
