@@ -30,11 +30,43 @@ immediately before the Friday this runs, in **America/Mexico_City (UTC-6,
 fixed, no DST)**:
 
 - `to` = yesterday (Thursday) — use `<that-date>T23:59:59-06:00`
-- `from` = 7 days before that (the previous Thursday) — use
-  `<that-date>T00:00:00-06:00`
+- `from` = **6** days before that — use `<that-date>T00:00:00-06:00`
+- `week_label` still shows both Thursdays (e.g. `"Aug 27 – Sep 3, 2026"`)
+  for continuity with every previous week's label — only the underlying
+  query/sum window is 6 days back, not 7.
 
-Example: running Friday Aug 14, 2026 → `from = 2026-08-06T00:00:00-06:00`,
-`to = 2026-08-13T23:59:59-06:00`, week_label = `"Aug 6 – 13, 2026"`.
+Example: running Friday Sep 4, 2026 → `from = 2026-08-28T00:00:00-06:00`,
+`to = 2026-09-03T23:59:59-06:00`, week_label = `"Aug 27 – Sep 3, 2026"`
+(the label's start date, Aug 27, is one calendar day *before* `from` --
+that's intentional, see below).
+
+**Why 6, not 7 (fixed 2026-09-04):** the original formula used 7 days back
+with both endpoints inclusive (`T00:00:00` on the start Thursday through
+`T23:59:59` on the end Thursday), which is an 8-calendar-day span, not 7 --
+and critically, it meant one week's `to`-Thursday and the next week's
+`from`-Thursday were the *same calendar day*, so anything posted that day
+got counted in both weeks' totals. Caught this on the Aug 27-Sep 3 run:
+Metricool's GBP evolution connector showed stray `postsCount=1` readings
+that traced back to posts already counted in the *previous* week's file.
+Using 6 days back instead makes `from` land the day *after* the previous
+week's `to`, closing the gap with zero overlap. Weeks before 2026-09-04
+were not retroactively corrected -- the impact is at most one day's
+activity inside a 7-8 day window, and isn't worth restating every past file
+for.
+
+**Cross-check GBP post counts against the individual posts listing, not
+just the evolution SUM field.** The evolution connector's `postsCount`
+(GMEV17) has shown a systematic **off-by-one-day** mislabeling on top of
+the above -- e.g. a real post created Aug 24 showed up as `postsCount=1`
+on Aug 25 in the evolution rows. Combined with the day-boundary issue just
+fixed, this means a stray nonzero `postsCount` right at the start of a
+window is often really a previous week's post bleeding through, not a new
+one. Before writing `posts_published`/`posts_channels["Google Business"]`,
+pull `["GMPO01","GMPO10","GMPO11"]` (date, text, type -- the individual
+`posts` connector, not `evolution`) for each GBP property with the window
+widened by a day on each side, and count only the posts whose actual
+`GMPO01` date falls inside this week's `[from_date, to_date]`. Trust that
+over the evolution field's SUM.
 
 (Properties themselves sit in Eastern/Central/Mexico City time, not all
 UTC-6 — this can miscount a post right at the week's edge by a day. That's a
