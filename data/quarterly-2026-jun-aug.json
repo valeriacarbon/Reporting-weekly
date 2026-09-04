@@ -1,0 +1,510 @@
+{
+  "quarter_label": "Jun 1 \u2013 Aug 31, 2026",
+  "generated_note": "Built on 2026-09-04 from a direct Metricool pull covering the full quarter (Jun 1 - Aug 31, 2026), not assembled from the weekly snapshot files -- same field IDs and aggregation rules as the weekly automation (see AUTOMATION.md), just a wider date window. Totals only, no week/quarter-over-quarter comparison (there's no clean prior-quarter baseline to compare against yet). IMPORTANT: 7 properties connected to Metricool partway through the quarter (Ingleside Terrace on Jun 23; Hills at Hoover, Residences at the Overlook, Santa Fe, Villa Siena, and Aztec Villa on Jul 15; Capri Palms on Jul 20) -- their totals only cover activity from that connection date forward, not the full 3 months, and are flagged individually below. The Landings at North Ingleside's Views/Engagement are dominated by one viral TikTok video in mid-July (~233K combined views across two days) -- a real number, not an error. Google Business Post Views is omitted here too, same as the weekly report, pending resolution of which Metricool metric actually maps to what Val sees in her own reports. Facebook Groups and URL Tracking are both omitted -- Facebook Groups has no historical manually-entered data to sum across the quarter, and URL Tracking (GA4) has only been tracked for 2 of the ~13 weeks in this quarter, too partial to represent as a quarter total. This page is built manually on request only -- it does not update with the Friday weekly automation.",
+  "kpis": {
+    "followers": 2168,
+    "posts": 839,
+    "engagement": 32143,
+    "views": 422041
+  },
+  "followers_by_channel": [
+    {
+      "channel": "Facebook",
+      "current": 1488
+    },
+    {
+      "channel": "TikTok",
+      "current": 436
+    },
+    {
+      "channel": "Instagram",
+      "current": 244
+    }
+  ],
+  "posts_by_channel": [
+    {
+      "channel": "Facebook",
+      "current": 335
+    },
+    {
+      "channel": "TikTok",
+      "current": 161
+    },
+    {
+      "channel": "Instagram",
+      "current": 233
+    },
+    {
+      "channel": "Google Business",
+      "current": 110
+    }
+  ],
+  "google_business": {
+    "posts_published": 110,
+    "reach_search": 59000,
+    "reach_maps": 19785,
+    "website_clicks": 9339,
+    "phone_clicks": 4032,
+    "directions_clicks": 8680
+  },
+  "properties": [
+    {
+      "name": "The Landings at North Ingleside",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 292
+      },
+      "posts": {
+        "current": 79
+      },
+      "posts_channels": {
+        "Facebook": 27,
+        "Instagram": 26,
+        "TikTok": 20,
+        "Google Business": 6
+      },
+      "engagement": {
+        "current": 26460
+      },
+      "views": {
+        "current": 268565
+      },
+      "partial_quarter_since": null
+    },
+    {
+      "name": "Berry Falls",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 563
+      },
+      "posts": {
+        "current": 69
+      },
+      "posts_channels": {
+        "Facebook": 27,
+        "Instagram": 14,
+        "TikTok": 20,
+        "Google Business": 8
+      },
+      "engagement": {
+        "current": 600
+      },
+      "views": {
+        "current": 17558
+      },
+      "partial_quarter_since": null
+    },
+    {
+      "name": "The Kenzie",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 560
+      },
+      "posts": {
+        "current": 63
+      },
+      "posts_channels": {
+        "Facebook": 19,
+        "Instagram": 19,
+        "TikTok": 19,
+        "Google Business": 6
+      },
+      "engagement": {
+        "current": 781
+      },
+      "views": {
+        "current": 30968
+      },
+      "partial_quarter_since": null
+    },
+    {
+      "name": "Capri Palms",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 24
+      },
+      "posts": {
+        "current": 10
+      },
+      "posts_channels": {
+        "TikTok": 10
+      },
+      "engagement": {
+        "current": 864
+      },
+      "views": {
+        "current": 15254
+      },
+      "partial_quarter_since": "Jul 20"
+    },
+    {
+      "name": "Ingleside Terrace",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 60
+      },
+      "posts": {
+        "current": 55
+      },
+      "posts_channels": {
+        "Facebook": 22,
+        "Instagram": 20,
+        "TikTok": 8,
+        "Google Business": 5
+      },
+      "engagement": {
+        "current": 114
+      },
+      "views": {
+        "current": 9019
+      },
+      "partial_quarter_since": "Jun 23"
+    },
+    {
+      "name": "Lakeside/Lakeview",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 76
+      },
+      "posts": {
+        "current": 113
+      },
+      "posts_channels": {
+        "Facebook": 43,
+        "Instagram": 42,
+        "TikTok": 21,
+        "Google Business": 7
+      },
+      "engagement": {
+        "current": 757
+      },
+      "views": {
+        "current": 15221
+      },
+      "partial_quarter_since": null
+    },
+    {
+      "name": "Westminster Club",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 181
+      },
+      "posts": {
+        "current": 74
+      },
+      "posts_channels": {
+        "Facebook": 25,
+        "Instagram": 24,
+        "TikTok": 17,
+        "Google Business": 8
+      },
+      "engagement": {
+        "current": 868
+      },
+      "views": {
+        "current": 17766
+      },
+      "partial_quarter_since": null
+    },
+    {
+      "name": "Residences at the Overlook",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 24
+      },
+      "posts": {
+        "current": 21
+      },
+      "posts_channels": {
+        "Facebook": 9,
+        "Instagram": 6,
+        "TikTok": 3,
+        "Google Business": 3
+      },
+      "engagement": {
+        "current": 119
+      },
+      "views": {
+        "current": 3664
+      },
+      "partial_quarter_since": "Jul 15"
+    },
+    {
+      "name": "The Lamar Lofts",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 115
+      },
+      "posts": {
+        "current": 79
+      },
+      "posts_channels": {
+        "Facebook": 28,
+        "Instagram": 29,
+        "TikTok": 17,
+        "Google Business": 5
+      },
+      "engagement": {
+        "current": 780
+      },
+      "views": {
+        "current": 20706
+      },
+      "partial_quarter_since": null
+    },
+    {
+      "name": "The Benton",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 43
+      },
+      "posts": {
+        "current": 73
+      },
+      "posts_channels": {
+        "Facebook": 37,
+        "Instagram": 19,
+        "TikTok": 11,
+        "Google Business": 6
+      },
+      "engagement": {
+        "current": 246
+      },
+      "views": {
+        "current": 8607
+      },
+      "partial_quarter_since": null
+    },
+    {
+      "name": "Hills at Hoover",
+      "top_channel": "Facebook",
+      "followers": {
+        "current": 54
+      },
+      "posts": {
+        "current": 67
+      },
+      "posts_channels": {
+        "Facebook": 47,
+        "Instagram": 5,
+        "TikTok": 4,
+        "Google Business": 11
+      },
+      "engagement": {
+        "current": 37
+      },
+      "views": {
+        "current": 4141
+      },
+      "partial_quarter_since": "Jul 15"
+    },
+    {
+      "name": "Claxton Pointe & Pecan Ridge",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 79
+      },
+      "posts": {
+        "current": 60
+      },
+      "posts_channels": {
+        "Facebook": 24,
+        "Instagram": 23,
+        "TikTok": 6,
+        "Google Business": 7
+      },
+      "engagement": {
+        "current": 511
+      },
+      "views": {
+        "current": 9562
+      },
+      "partial_quarter_since": null
+    },
+    {
+      "name": "Santa Fe",
+      "top_channel": "TikTok",
+      "followers": {
+        "current": 16
+      },
+      "posts": {
+        "current": 20
+      },
+      "posts_channels": {
+        "Facebook": 4,
+        "Instagram": 3,
+        "TikTok": 3,
+        "Google Business": 10
+      },
+      "engagement": {
+        "current": 1
+      },
+      "views": {
+        "current": 279
+      },
+      "partial_quarter_since": "Jul 15"
+    },
+    {
+      "name": "Villa Siena",
+      "top_channel": "Facebook",
+      "followers": {
+        "current": 56
+      },
+      "posts": {
+        "current": 56
+      },
+      "posts_channels": {
+        "Facebook": 23,
+        "Instagram": 3,
+        "TikTok": 2,
+        "Google Business": 28
+      },
+      "engagement": {
+        "current": 5
+      },
+      "views": {
+        "current": 731
+      },
+      "partial_quarter_since": "Jul 15"
+    },
+    {
+      "name": "Aztec Villa",
+      "top_channel": "Facebook",
+      "followers": {
+        "current": 25
+      },
+      "posts": {
+        "current": 0
+      },
+      "posts_channels": {
+        "Facebook": 0
+      },
+      "engagement": {
+        "current": 0
+      },
+      "views": {
+        "current": 0
+      },
+      "partial_quarter_since": "Jul 15"
+    }
+  ],
+  "gbp_by_property": [
+    {
+      "name": "The Landings at North Ingleside",
+      "reach_search": 5882,
+      "reach_maps": 1093,
+      "website_clicks": 475,
+      "phone_clicks": 195,
+      "directions_clicks": 382,
+      "posts_published": 6
+    },
+    {
+      "name": "Berry Falls",
+      "reach_search": 6681,
+      "reach_maps": 1283,
+      "website_clicks": 704,
+      "phone_clicks": 229,
+      "directions_clicks": 519,
+      "posts_published": 8
+    },
+    {
+      "name": "The Kenzie",
+      "reach_search": 2077,
+      "reach_maps": 1056,
+      "website_clicks": 1082,
+      "phone_clicks": 237,
+      "directions_clicks": 502,
+      "posts_published": 6
+    },
+    {
+      "name": "Ingleside Terrace",
+      "reach_search": 1738,
+      "reach_maps": 388,
+      "website_clicks": 401,
+      "phone_clicks": 171,
+      "directions_clicks": 170,
+      "posts_published": 5
+    },
+    {
+      "name": "Lakeside/Lakeview",
+      "reach_search": 12928,
+      "reach_maps": 1176,
+      "website_clicks": 678,
+      "phone_clicks": 213,
+      "directions_clicks": 332,
+      "posts_published": 7
+    },
+    {
+      "name": "Westminster Club",
+      "reach_search": 2155,
+      "reach_maps": 606,
+      "website_clicks": 417,
+      "phone_clicks": 162,
+      "directions_clicks": 336,
+      "posts_published": 8
+    },
+    {
+      "name": "Residences at the Overlook",
+      "reach_search": 2990,
+      "reach_maps": 704,
+      "website_clicks": 651,
+      "phone_clicks": 570,
+      "directions_clicks": 319,
+      "posts_published": 3
+    },
+    {
+      "name": "The Lamar Lofts",
+      "reach_search": 2920,
+      "reach_maps": 817,
+      "website_clicks": 239,
+      "phone_clicks": 32,
+      "directions_clicks": 201,
+      "posts_published": 5
+    },
+    {
+      "name": "The Benton",
+      "reach_search": 528,
+      "reach_maps": 852,
+      "website_clicks": 362,
+      "phone_clicks": 75,
+      "directions_clicks": 334,
+      "posts_published": 6
+    },
+    {
+      "name": "Hills at Hoover",
+      "reach_search": 6058,
+      "reach_maps": 1470,
+      "website_clicks": 1397,
+      "phone_clicks": 860,
+      "directions_clicks": 654,
+      "posts_published": 11
+    },
+    {
+      "name": "Claxton Pointe & Pecan Ridge",
+      "reach_search": 5343,
+      "reach_maps": 635,
+      "website_clicks": 578,
+      "phone_clicks": 351,
+      "directions_clicks": 273,
+      "posts_published": 7
+    },
+    {
+      "name": "Santa Fe",
+      "reach_search": 5431,
+      "reach_maps": 4554,
+      "website_clicks": 1002,
+      "phone_clicks": 474,
+      "directions_clicks": 2286,
+      "posts_published": 10
+    },
+    {
+      "name": "Villa Siena",
+      "reach_search": 4269,
+      "reach_maps": 5151,
+      "website_clicks": 1353,
+      "phone_clicks": 463,
+      "directions_clicks": 2372,
+      "posts_published": 28
+    }
+  ]
+}
