@@ -1,7 +1,7 @@
 {
   "week_label": "Aug 27 \u2013 Sep 3, 2026",
   "prev_week_label": "Aug 20 \u2013 27, 2026",
-  "generated_note": "Automated Friday run (2026-09-04) pulled live from Metricool per AUTOMATION.md, window Aug 27-Sep 3, 2026. IMPORTANT METHODOLOGY FIX this run: discovered AUTOMATION.md's week-window formula (from = to-date minus 7 days, both using T00:00:00/T23:59:59 on the same calendar day) makes consecutive weeks share their boundary Thursday in full -- e.g. last week's window (Aug 20-27) and this week's naive window (Aug 27-Sep 3) both fully include Aug 27, so anything posted that day would be double-counted across both weekly files. Caught this because Metricool's GBP evolution connector flagged stray postsCount=1 readings on Aug 27/28 for Lakeside, Benton, Ingleside Terrace and Hills at Hoover -- cross-checked against the individual GBP posts listing and confirmed every one of those was a post already counted in last week's file (Aug 26/27 posts), not a new one. Fixed by excluding Aug 27 entirely from this week's tally across every network for every property (valid days: Aug 28-Sep 3). AUTOMATION.md's Step 1 formula is being corrected in this same commit so future runs use 6 days back instead of 7, closing this overlap permanently -- see the new note there. Historical weeks before this one were NOT retroactively corrected (impact is at most one day's worth of activity inside a 7-8 day window; out of scope to redo every past file for that). GBP Reach/Clicks hit the same reporting-sync lag documented the last two runs -- all zero for every property this morning. GBP Posts Published is a verified real 0 this week (not a lag artifact): the individual posts listing shows zero posts dated Aug 28-Sep 3 for all 13 GBP-connected properties, once the Aug 27 double-count above is excluded. Facebook Groups metrics stay at 0/0 (still manual-only, unchanged). URL Tracking omitted this week -- no GA4 export received yet.",
+  "generated_note": "Automated Friday run (2026-09-04) pulled live from Metricool per AUTOMATION.md, window Aug 27-Sep 3, 2026. IMPORTANT METHODOLOGY FIX this run: discovered AUTOMATION.md's week-window formula (from = to-date minus 7 days, both using T00:00:00/T23:59:59 on the same calendar day) makes consecutive weeks share their boundary Thursday in full -- e.g. last week's window (Aug 20-27) and this week's naive window (Aug 27-Sep 3) both fully include Aug 27, so anything posted that day would be double-counted across both weekly files. Caught this because Metricool's GBP evolution connector flagged stray postsCount=1 readings on Aug 27/28 for Lakeside, Benton, Ingleside Terrace and Hills at Hoover -- cross-checked against the individual GBP posts listing and confirmed every one of those was a post already counted in last week's file (Aug 26/27 posts), not a new one. Fixed by excluding Aug 27 entirely from this week's tally across every network for every property (valid days: Aug 28-Sep 3). AUTOMATION.md's Step 1 formula is being corrected in this same commit so future runs use 6 days back instead of 7, closing this overlap permanently -- see the new note there. Historical weeks before this one were NOT retroactively corrected (impact is at most one day's worth of activity inside a 7-8 day window; out of scope to redo every past file for that). GBP Reach/Clicks hit the same reporting-sync lag documented the last two runs -- all zero for every property this morning. GBP Posts Published is a verified real 0 this week (not a lag artifact): the individual posts listing shows zero posts dated Aug 28-Sep 3 for all 13 GBP-connected properties, once the Aug 27 double-count above is excluded. Facebook Groups metrics stay at 0/0 (still manual-only, unchanged). URL Tracking omitted this week -- no GA4 export received yet. URL Tracking added in a follow-up once Val shared this week's GA4 export -- portfolio Views/Sessions/Engaged Sessions/Tours: 215/105/72/2, up from last week's 92/45/25/0.",
   "kpis": {
     "followers": {
       "current": 2179,
@@ -610,5 +610,124 @@
         "delta": 0
       }
     }
-  ]
+  ],
+  "url_tracking": {
+    "views": {
+      "current": 215,
+      "delta": 123
+    },
+    "sessions": {
+      "current": 105,
+      "delta": 60
+    },
+    "engaged_sessions": {
+      "current": 72,
+      "delta": 47
+    },
+    "tours": {
+      "current": 2,
+      "delta": 2
+    },
+    "by_property": [
+      {
+        "name": "The Landings at North Ingleside",
+        "views": 52,
+        "sessions": 23,
+        "engaged_sessions": 19,
+        "tours": 2
+      },
+      {
+        "name": "Berry Falls",
+        "views": 26,
+        "sessions": 10,
+        "engaged_sessions": 5,
+        "tours": 0
+      },
+      {
+        "name": "The Kenzie",
+        "views": 2,
+        "sessions": 1,
+        "engaged_sessions": 1,
+        "tours": 0
+      },
+      {
+        "name": "Ingleside Terrace",
+        "views": 17,
+        "sessions": 6,
+        "engaged_sessions": 5,
+        "tours": 0
+      },
+      {
+        "name": "Lakeside/Lakeview",
+        "views": 17,
+        "sessions": 9,
+        "engaged_sessions": 7,
+        "tours": 0
+      },
+      {
+        "name": "Westminster Club",
+        "views": 3,
+        "sessions": 1,
+        "engaged_sessions": 1,
+        "tours": 0
+      },
+      {
+        "name": "Residences at the Overlook",
+        "views": 13,
+        "sessions": 8,
+        "engaged_sessions": 4,
+        "tours": 0
+      },
+      {
+        "name": "The Lamar Lofts",
+        "views": 26,
+        "sessions": 14,
+        "engaged_sessions": 9,
+        "tours": 0
+      },
+      {
+        "name": "The Benton",
+        "views": 11,
+        "sessions": 7,
+        "engaged_sessions": 3,
+        "tours": 0
+      },
+      {
+        "name": "Hills at Hoover",
+        "views": 10,
+        "sessions": 6,
+        "engaged_sessions": 5,
+        "tours": 0
+      },
+      {
+        "name": "Claxton Pointe & Pecan Ridge",
+        "views": 26,
+        "sessions": 14,
+        "engaged_sessions": 9,
+        "tours": 0
+      },
+      {
+        "name": "Santa Fe",
+        "views": 8,
+        "sessions": 4,
+        "engaged_sessions": 3,
+        "tours": 0
+      },
+      {
+        "name": "Villa Siena",
+        "views": 4,
+        "sessions": 2,
+        "engaged_sessions": 1,
+        "tours": 0
+      },
+      {
+        "name": "Aztec Villa",
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
+        "tours": 0
+      }
+    ],
+    "note": "Traffic from Facebook Group posts (GA4 source: fbgroups / organic), Aug 27\u2013Sep 3, 2026 (GA4 export window shown was Aug 27\u2013Sep 4). Capri Palms isn't included (no GA4 tracking set up for it yet)."
+  }
 }
