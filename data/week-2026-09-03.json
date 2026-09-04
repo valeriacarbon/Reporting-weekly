@@ -729,5 +729,28 @@
       }
     ],
     "note": "Traffic from Facebook Group posts (GA4 source: fbgroups / organic), Aug 27\u2013Sep 3, 2026 (GA4 export window shown was Aug 27\u2013Sep 4). Capri Palms isn't included (no GA4 tracking set up for it yet)."
+  },
+  "gmb_url_tracking": {
+    "views": {"current": 4262, "delta": 0, "is_new": true},
+    "sessions": {"current": 1648, "delta": 0, "is_new": true},
+    "engaged_sessions": {"current": 1053, "delta": 0, "is_new": true},
+    "key_events": {"current": 0, "delta": 0, "is_new": true},
+    "by_property": [
+      {"name": "The Landings at North Ingleside", "views": 62, "sessions": 34, "engaged_sessions": 7, "key_events": 0},
+      {"name": "Berry Falls", "views": 8, "sessions": 3, "engaged_sessions": 2, "key_events": 0},
+      {"name": "The Kenzie", "views": 79, "sessions": 37, "engaged_sessions": 9, "key_events": 0},
+      {"name": "Ingleside Terrace", "views": 89, "sessions": 49, "engaged_sessions": 14, "key_events": 0},
+      {"name": "Lakeside/Lakeview", "views": 38, "sessions": 31, "engaged_sessions": 2, "key_events": 0},
+      {"name": "Westminster Club", "views": 0, "sessions": 0, "engaged_sessions": 0, "key_events": 0},
+      {"name": "Residences at the Overlook", "views": 4, "sessions": 3, "engaged_sessions": 1, "key_events": 0},
+      {"name": "The Lamar Lofts", "views": 49, "sessions": 28, "engaged_sessions": 3, "key_events": 0},
+      {"name": "The Benton", "views": 4, "sessions": 3, "engaged_sessions": 1, "key_events": 0},
+      {"name": "Hills at Hoover", "views": 1540, "sessions": 580, "engaged_sessions": 405, "key_events": 0},
+      {"name": "Claxton Pointe & Pecan Ridge", "views": 49, "sessions": 28, "engaged_sessions": 3, "key_events": 0},
+      {"name": "Santa Fe", "views": 1030, "sessions": 387, "engaged_sessions": 266, "key_events": 0},
+      {"name": "Villa Siena", "views": 1306, "sessions": 463, "engaged_sessions": 338, "key_events": 0},
+      {"name": "Aztec Villa", "views": 4, "sessions": 2, "engaged_sessions": 2, "key_events": 0}
+    ],
+    "note": "Traffic that landed on each property's site from its Google Business Profile (GA4 source: GMB / GMB), Aug 27\u2013Sep 3, 2026. First week this metric has been tracked, so there's no week-over-week comparison yet. Capri Palms isn't included (no GA4 tracking set up for it yet)."
   }
 }
