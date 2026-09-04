@@ -110,6 +110,14 @@
   .pdf-btn:hover { opacity: 0.88; }
   .pdf-btn svg { flex-shrink: 0; }
 
+  .page-nav { display: flex; gap: 6px; margin-top: 14px; }
+  .page-nav a {
+    font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 999px;
+    text-decoration: none; color: var(--ink-2); border: 1px solid var(--rule); background: var(--surface);
+  }
+  .page-nav a.active { background: var(--series-sequential); border-color: var(--series-sequential); color: #fff; }
+  .page-nav a:hover:not(.active) { color: var(--ink); border-color: var(--ink-mute); }
+
   section { padding: 32px 0; border-bottom: 1px solid var(--rule); }
   section:last-of-type { border-bottom: none; }
   section h2 { font-size: 15px; font-weight: 650; margin: 0 0 2px; }
@@ -288,7 +296,7 @@
       --rule: #d8d6cd; --track: #e1e0d9;
     }
     body { padding-bottom: 0; }
-    .pdf-btn, .theme-toggle, .edit-btn { display: none !important; }
+    .pdf-btn, .theme-toggle, .edit-btn, .page-nav { display: none !important; }
     header.top { position: static; }
     .wrap { max-width: 100%; }
     section { break-inside: avoid; padding: 20px 0; }
@@ -314,6 +322,12 @@
       </button>
       <button class="theme-toggle" id="themeToggle" type="button">Light mode</button>
     </div>
+  </div>
+  <div class="wrap">
+    <nav class="page-nav">
+      <a href="index.html" class="active">Weekly Report</a>
+      <a href="quarterly.html">Quarterly Report</a>
+    </nav>
   </div>
 </header>
 

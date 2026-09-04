@@ -1,0 +1,1605 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Quarterly Social Portfolio Report</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #17171a;
+    --surface-2: #1e1e22;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --ink-mute: #8a8781;
+    --rule: #2c2c2a;
+    --track: #2c2c2a;
+    --good: #0ca30c;
+    --bad: #e66767;
+    --flat: #898781;
+    --series-sequential: #3987e5;
+    --compare-prev: #3a4256;
+    --baseline: #383835;
+      --ch-facebook: #3987e5;
+      --ch-tiktok: #199e70;
+      --ch-google-business: #c98500;
+      --ch-instagram: #d55181;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      color-scheme: light;
+      --page: #f9f9f7;
+      --surface: #ffffff;
+      --surface-2: #f3f2ee;
+      --ink: #0b0b0b;
+      --ink-2: #52514e;
+      --ink-mute: #898781;
+      --rule: #e1e0d9;
+      --track: #e1e0d9;
+      --good: #006300;
+      --bad: #e34948;
+      --flat: #898781;
+      --series-sequential: #2a78d6;
+      --compare-prev: #c7cbd6;
+      --baseline: #c3c2b7;
+      --ch-facebook: #2a78d6;
+      --ch-tiktok: #1baf7a;
+      --ch-google-business: #eda100;
+      --ch-instagram: #e87ba4;
+    }
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --page: #f9f9f7;
+    --surface: #ffffff;
+    --surface-2: #f3f2ee;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --ink-mute: #898781;
+    --rule: #e1e0d9;
+    --track: #e1e0d9;
+    --good: #006300;
+    --bad: #e34948;
+    --flat: #898781;
+    --series-sequential: #2a78d6;
+    --compare-prev: #c7cbd6;
+    --baseline: #c3c2b7;
+      --ch-facebook: #2a78d6;
+      --ch-tiktok: #1baf7a;
+      --ch-google-business: #eda100;
+      --ch-instagram: #e87ba4;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+  body { padding-bottom: 64px; }
+  a { color: inherit; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  header.top {
+    border-bottom: 1px solid var(--rule);
+    padding: 28px 0 20px;
+    position: sticky; top: 0; z-index: 20;
+    background: var(--page);
+  }
+  .top-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .top-titles h1 { font-size: 22px; margin: 0 0 4px; font-weight: 650; letter-spacing: -0.01em; }
+  .top-titles p { margin: 0; color: var(--ink-mute); font-size: 13px; }
+  .top-actions { display: flex; align-items: center; gap: 8px; }
+  .theme-toggle {
+    font-size: 12px; border: 1px solid var(--rule); background: var(--surface);
+    color: var(--ink-2); padding: 7px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--ink); border-color: var(--ink-mute); }
+  .pdf-btn {
+    font-size: 12px; font-weight: 600; border: 1px solid var(--series-sequential);
+    background: var(--series-sequential); color: #fff; padding: 7px 14px;
+    border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .pdf-btn:hover { opacity: 0.88; }
+  .pdf-btn svg { flex-shrink: 0; }
+
+  .page-nav { display: flex; gap: 6px; margin-top: 14px; }
+  .page-nav a {
+    font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 999px;
+    text-decoration: none; color: var(--ink-2); border: 1px solid var(--rule); background: var(--surface);
+  }
+  .page-nav a.active { background: var(--series-sequential); border-color: var(--series-sequential); color: #fff; }
+  .page-nav a:hover:not(.active) { color: var(--ink); border-color: var(--ink-mute); }
+
+  section { padding: 32px 0; border-bottom: 1px solid var(--rule); }
+  section:last-of-type { border-bottom: none; }
+  section h2 { font-size: 15px; font-weight: 650; margin: 0 0 2px; }
+  section .section-sub { color: var(--ink-mute); font-size: 12.5px; margin: 0 0 18px; max-width: 640px; }
+
+  /* ---- stat tiles ---- */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stat-tile {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 10px;
+    padding: 16px 18px; position: relative;
+  }
+  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-mute); margin-bottom: 8px; }
+  .stat-value { font-size: 26px; font-weight: 650; line-height: 1; }
+
+  /* ---- channel bar charts ---- */
+  .chbar-row { display: grid; grid-template-columns: 130px 1fr 100px; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .chbar-label { font-size: 13px; color: var(--ink-2); font-weight: 550; }
+  .chbar-track { background: var(--track); border-radius: 6px; height: 20px; overflow: hidden; }
+  .chbar-fill { height: 100%; border-radius: 6px; min-width: 4px; }
+  .chbar-value { font-size: 13px; text-align: right; white-space: nowrap; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  @media (max-width: 780px) { .two-col { grid-template-columns: 1fr; gap: 24px; } }
+  .two-col h3 { font-size: 12.5px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 14px; }
+
+  /* ---- property views ranking chart ---- */
+  .pbar-row { display: grid; grid-template-columns: 220px 1fr 90px; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .pbar-label { font-size: 13px; display: flex; flex-direction: column; gap: 2px; }
+  .pbar-badge { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 650; }
+  .pbar-track { position: relative; background: var(--track); border-radius: 6px; height: 22px; }
+  .pbar-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 6px; min-width: 4px; }
+  .pbar-value { font-size: 12.5px; font-weight: 650; text-align: right; white-space: nowrap; }
+
+  @media (max-width: 780px) {
+    .pbar-row { grid-template-columns: 110px 1fr 70px; }
+    .chbar-row { grid-template-columns: 110px 1fr 80px; }
+    .pbar-label { font-size: 12px; }
+  }
+
+  /* ---- property cards (small multiples) ---- */
+  .property-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 980px) { .property-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .property-grid { grid-template-columns: 1fr; } }
+  .property-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 16px;
+  }
+  .property-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; }
+  .property-card-head h3 { font-size: 13.5px; margin: 0; font-weight: 650; }
+  .top-channel-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; border: 1px solid; border-radius: 999px; padding: 2px 8px; flex-shrink: 0; }
+  .partial-badge {
+    font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.03em; font-weight: 650;
+    color: var(--ink-mute); background: var(--surface-2); border: 1px dashed var(--rule);
+    border-radius: 6px; padding: 4px 8px; margin-bottom: 10px;
+  }
+
+  .metric-row { display: grid; grid-template-columns: 66px 72px 1fr auto; align-items: center; gap: 8px; padding: 4px 0; }
+  .metric-label { font-size: 11.5px; color: var(--ink-mute); }
+  .metric-bar { display: flex; align-items: center; }
+  .minibar { display: block; }
+  .metric-value { font-size: 12.5px; font-weight: 600; text-align: right; }
+
+  .posts-row {
+    grid-template-columns: 66px auto 1fr;
+    padding-bottom: 8px; margin-bottom: 6px; border-bottom: 1px dashed var(--rule);
+  }
+  .posts-total { font-size: 13.5px; }
+  .channel-chips { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+  .channel-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10.5px; font-weight: 600; color: var(--ink-2);
+    background: var(--surface-2); border: 1px solid var(--rule);
+    border-radius: 999px; padding: 2px 7px 2px 5px; white-space: nowrap;
+  }
+  .channel-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  .gbp-group-label {
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--ink-mute); font-weight: 650; margin: 12px 0 4px;
+  }
+  .gbp-group-label:first-of-type { margin-top: 2px; }
+  .gbp-total-row {
+    grid-template-columns: 66px 1fr; padding-top: 4px; margin-top: 2px;
+    border-top: 1px dashed var(--rule);
+  }
+  .gbp-total-value { font-size: 13.5px; font-weight: 700; }
+
+  .note-box {
+    background: var(--surface-2); border: 1px solid var(--rule); border-radius: 8px;
+    padding: 12px 14px; font-size: 12.5px; color: var(--ink-mute); margin-top: 14px;
+  }
+
+  footer.bottom { padding: 24px 0 0; color: var(--ink-mute); font-size: 12px; }
+
+  @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  @media print {
+    :root {
+      color-scheme: light;
+      --page: #ffffff; --surface: #ffffff; --surface-2: #f3f2ee;
+      --ink: #0b0b0b; --ink-2: #52514e; --ink-mute: #6b6a64;
+      --rule: #d8d6cd; --track: #e1e0d9;
+    }
+    body { padding-bottom: 0; }
+    .pdf-btn, .theme-toggle, .page-nav { display: none !important; }
+    header.top { position: static; }
+    .wrap { max-width: 100%; }
+    section { break-inside: avoid; padding: 20px 0; }
+    .stat-tile, .property-card { break-inside: avoid; }
+    .property-grid, .stat-grid { break-inside: auto; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-row">
+    <div class="top-titles">
+      <h1>Quarterly Social Portfolio Report</h1>
+      <p>Jun 1 – Aug 31, 2026 · totals across every brand · all brands combined across Instagram, Facebook, TikTok &amp; Google Business</p>
+    </div>
+    <div class="top-actions">
+      <button class="pdf-btn" id="downloadPdf" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5"/>
+          <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+        </svg>
+        Download as PDF
+      </button>
+      <button class="theme-toggle" id="themeToggle" type="button">Light mode</button>
+    </div>
+  </div>
+  <div class="wrap">
+    <nav class="page-nav">
+      <a href="index.html">Weekly Report</a>
+      <a href="quarterly.html" class="active">Quarterly Report</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <h2>Portfolio at a glance</h2>
+    <p class="section-sub">Headline totals across every brand for the quarter. Followers is the latest count as of Aug 31; Posts/Engagement/Views are summed across the quarter.</p>
+    <div class="stat-grid">
+    <div class="stat-tile">
+      <div class="stat-label">Followers</div>
+      <div class="stat-value">2,168</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Posts</div>
+      <div class="stat-value">839</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Engagement</div>
+      <div class="stat-value">32,143</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Views</div>
+      <div class="stat-value">422,041</div>
+    </div></div>
+  </section>
+
+  <section>
+    <div class="two-col">
+      <div>
+        <h3>Followers by channel</h3>
+        
+    <div class="chbar-row">
+      <div class="chbar-label">Facebook</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:100.0%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="chbar-value">1,488 </div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">TikTok</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:29.3%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="chbar-value">436 </div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">Instagram</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:16.4%; background:var(--ch-instagram)"></div>
+      </div>
+      <div class="chbar-value">244 </div>
+    </div>
+      </div>
+      <div>
+        <h3>Posts by channel</h3>
+        
+    <div class="chbar-row">
+      <div class="chbar-label">Facebook</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:100.0%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="chbar-value">335 </div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">TikTok</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:48.1%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="chbar-value">161 </div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">Instagram</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:69.6%; background:var(--ch-instagram)"></div>
+      </div>
+      <div class="chbar-value">233 </div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">Google Business</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:32.8%; background:var(--ch-google-business)"></div>
+      </div>
+      <div class="chbar-value">110 </div>
+    </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Views by property</h2>
+    <p class="section-sub">Ranked high to low, quarter total. Bar color marks each property's top-performing channel this quarter.</p>
+    
+    <div class="pbar-row">
+      <div class="pbar-label">The Landings at North Ingleside<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:100.0%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">268,565</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">The Kenzie<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:11.5%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">30,968</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">The Lamar Lofts<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:7.7%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">20,706</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Westminster Club<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:6.6%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">17,766</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Berry Falls<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:6.5%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">17,558</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Capri Palms<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:5.7%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">15,254</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Lakeside/Lakeview<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:5.7%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">15,221</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Claxton Pointe &amp; Pecan Ridge<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:3.6%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">9,562</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Ingleside Terrace<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:3.4%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">9,019</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">The Benton<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:3.2%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">8,607</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Hills at Hoover<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:1.5%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">4,141</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Residences at the Overlook<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:1.4%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">3,664</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Villa Siena<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:1.2%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">731</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Santa Fe<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:1.2%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="pbar-value">279</div>
+    </div>
+    <div class="pbar-row">
+      <div class="pbar-label">Aztec Villa<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:1.2%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="pbar-value">0</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>By brand — property detail</h2>
+    <p class="section-sub">Posts are broken out by channel so you can trace where each one came from. Followers, engagement, and views are scaled against the portfolio-wide max for that metric.</p>
+    <div class="property-grid">
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Landings at North Ingleside</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">79</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 27</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 26</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 20</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 6</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="37" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">292</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">26,460</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">268,565</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Kenzie</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">63</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 19</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 19</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 19</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 6</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">560</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">781</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="8" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">30,968</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Lamar Lofts</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">79</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 28</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 29</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 17</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 5</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="15" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">115</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">780</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="6" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">20,706</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Westminster Club</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">74</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 25</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 24</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 17</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 8</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="23" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">181</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">868</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="5" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">17,766</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Berry Falls</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">69</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 27</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 14</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 20</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 8</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">563</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">600</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="5" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">17,558</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Capri Palms</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      <div class="partial-badge">On Metricool since Jul 20 — partial quarter</div>
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">10</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 10</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">24</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">864</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="4" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">15,254</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Lakeside/Lakeview</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">113</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 43</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 42</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 21</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 7</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">76</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">757</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="4" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">15,221</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Claxton Pointe &amp; Pecan Ridge</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">60</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 24</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 23</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 6</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 7</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">79</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">511</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">9,562</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Ingleside Terrace</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      <div class="partial-badge">On Metricool since Jun 23 — partial quarter</div>
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">55</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 22</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 20</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 8</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 5</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="8" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">60</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">114</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">9,019</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Benton</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">73</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 37</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 19</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 11</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 6</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="5" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">43</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">246</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">8,607</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Hills at Hoover</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      <div class="partial-badge">On Metricool since Jul 15 — partial quarter</div>
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">67</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 47</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 5</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 4</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 11</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="7" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">54</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">37</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">4,141</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Residences at the Overlook</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      <div class="partial-badge">On Metricool since Jul 15 — partial quarter</div>
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">21</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 9</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 6</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 3</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 3</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">24</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">119</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">3,664</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Villa Siena</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      <div class="partial-badge">On Metricool since Jul 15 — partial quarter</div>
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">56</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 23</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 3</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 2</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 28</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="7" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">56</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">5</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">731</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Santa Fe</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-tiktok); color:var(--ch-tiktok)">TikTok</span>
+      </div>
+      <div class="partial-badge">On Metricool since Jul 15 — partial quarter</div>
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">20</div>
+          <div class="channel-chips"><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 4</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-instagram)"></span>Instagram 3</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-tiktok)"></span>TikTok 3</span><span class="channel-chip"><span class="channel-dot" style="background:var(--ch-google-business)"></span>GBP 10</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">16</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">1</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="2" height="7" rx="3.5" fill="var(--ch-tiktok)"/></svg></div>
+          <div class="metric-value">279</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Aztec Villa</h3>
+        <span class="top-channel-badge" style="border-color:var(--ch-facebook); color:var(--ch-facebook)">Facebook</span>
+      </div>
+      <div class="partial-badge">On Metricool since Jul 15 — partial quarter</div>
+      
+        <div class="metric-row posts-row">
+          <div class="metric-label">Posts</div>
+          <div class="metric-value posts-total">0</div>
+          <div class="channel-chips"><span class="channel-chip" style="opacity:0.45"><span class="channel-dot" style="background:var(--ch-facebook)"></span>Facebook 0</span></div>
+        </div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Followers</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">25</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="0" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">0</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Views</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="0" height="7" rx="3.5" fill="var(--ch-facebook)"/></svg></div>
+          <div class="metric-value">0</div>
+        </div>
+    </div></div>
+  </section>
+
+  <section>
+    <h2>Google My Business</h2>
+    <p class="section-sub">Reach and clicks broken out by the source Metricool tracks them at, summed across the quarter.</p>
+    <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat-tile">
+      <div class="stat-label">Posts published</div>
+      <div class="stat-value">110</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Reach · search</div>
+      <div class="stat-value">59,000</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Reach · maps</div>
+      <div class="stat-value">19,785</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Website clicks</div>
+      <div class="stat-value">9,339</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Phone clicks</div>
+      <div class="stat-value">4,032</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-label">Directions clicks</div>
+      <div class="stat-value">8,680</div>
+    </div></div>
+  </section>
+
+  <section>
+    <h2>Google My Business — by brand</h2>
+    <p class="section-sub">Reach and clicks per property. Capri Palms and Aztec Villa aren't on Google Business, so they're not shown here.</p>
+    <div class="property-grid">
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Landings at North Ingleside</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="15" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">6</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="33" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">5,882</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="15" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1,093</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">6,975</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="24" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">475</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="16" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">195</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="12" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">382</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">1,052</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Berry Falls</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="21" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">8</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="37" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">6,681</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="18" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1,283</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">7,964</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="36" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">704</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="19" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">229</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="16" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">519</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">1,452</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Kenzie</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="15" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">6</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="12" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">2,077</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="15" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1,056</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">3,133</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="56" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1,082</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="20" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">237</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="15" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">502</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">1,821</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Ingleside Terrace</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="13" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">5</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1,738</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="5" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">388</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">2,126</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="21" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">401</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="14" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">171</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="5" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">170</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">742</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Lakeside/Lakeview</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="18" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">7</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">12,928</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="16" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1,176</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">14,104</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="35" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">678</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="18" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">213</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">332</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">1,223</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Westminster Club</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="21" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">8</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="12" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">2,155</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="8" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">606</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">2,761</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="21" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">417</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="14" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">162</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">336</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">915</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Residences at the Overlook</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="8" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">3</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="17" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">2,990</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">704</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">3,694</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="34" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">651</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="48" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">570</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">319</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">1,540</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Lamar Lofts</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="13" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">5</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="16" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">2,920</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="11" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">817</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">3,737</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="12" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">239</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">32</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="6" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">201</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">472</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>The Benton</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="15" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">6</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="3" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">528</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="12" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">852</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">1,380</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="19" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">362</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="6" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">75</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="10" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">334</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">771</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Hills at Hoover</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="28" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">11</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="34" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">6,058</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="21" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1,470</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">7,528</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1,397</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">860</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="20" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">654</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">2,911</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Claxton Pointe &amp; Pecan Ridge</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="18" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">7</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="30" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">5,343</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="9" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">635</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">5,978</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="30" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">578</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="29" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">351</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="8" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">273</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">1,202</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Santa Fe</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="26" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">10</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="30" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">5,431</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="64" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">4,554</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">9,985</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="52" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1,002</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="40" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">474</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="69" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">2,286</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">3,762</div>
+        </div>
+    </div>
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>Villa Siena</h3>
+      </div>
+      <div class="gbp-group-label">Posts</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Published</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">28</div>
+        </div>
+      <div class="gbp-group-label">Reach</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Search</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="24" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">4,269</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Maps</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">5,151</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total reach</div>
+          <div class="metric-value gbp-total-value">9,420</div>
+        </div>
+      <div class="gbp-group-label">Clicks</div>
+      
+        <div class="metric-row">
+          <div class="metric-label">Website</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="70" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">1,353</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Phone</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="39" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">463</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Directions</div>
+          <div class="metric-bar"><svg class="minibar" width="72" height="7" viewBox="0 0 72 7" role="img" aria-hidden="true"><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--track)"/><rect x="0" y="0" width="72" height="7" rx="3.5" fill="var(--series-sequential)"/></svg></div>
+          <div class="metric-value">2,372</div>
+        </div>
+        <div class="metric-row gbp-total-row">
+          <div class="metric-label">Total clicks</div>
+          <div class="metric-value gbp-total-value">4,188</div>
+        </div>
+    </div></div>
+  </section>
+
+  <footer class="bottom">
+    <p>Built on 2026-09-04 from a direct Metricool pull covering the full quarter (Jun 1 - Aug 31, 2026), not assembled from the weekly snapshot files -- same field IDs and aggregation rules as the weekly automation (see AUTOMATION.md), just a wider date window. Totals only, no week/quarter-over-quarter comparison (there&#x27;s no clean prior-quarter baseline to compare against yet). IMPORTANT: 7 properties connected to Metricool partway through the quarter (Ingleside Terrace on Jun 23; Hills at Hoover, Residences at the Overlook, Santa Fe, Villa Siena, and Aztec Villa on Jul 15; Capri Palms on Jul 20) -- their totals only cover activity from that connection date forward, not the full 3 months, and are flagged individually below. The Landings at North Ingleside&#x27;s Views/Engagement are dominated by one viral TikTok video in mid-July (~233K combined views across two days) -- a real number, not an error. Google Business Post Views is omitted here too, same as the weekly report, pending resolution of which Metricool metric actually maps to what Val sees in her own reports. Facebook Groups and URL Tracking are both omitted -- Facebook Groups has no historical manually-entered data to sum across the quarter, and URL Tracking (GA4) has only been tracked for 2 of the ~13 weeks in this quarter, too partial to represent as a quarter total. This page is built manually on request only -- it does not update with the Friday weekly automation.</p>
+    <p>Source: Metricool · Generated by scripts/build_quarterly_report.py · Not part of the Friday weekly automation — updated only on request.</p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    var stored = localStorage.getItem('wspd-theme');
+    if (stored) { root.setAttribute('data-theme', stored); }
+    function currentIsLight() {
+      var explicit = root.getAttribute('data-theme');
+      if (explicit) { return explicit === 'light'; }
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    }
+    function label() {
+      btn.textContent = currentIsLight() ? 'Dark mode' : 'Light mode';
+    }
+    label();
+    btn.addEventListener('click', function () {
+      var next = currentIsLight() ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('wspd-theme', next);
+      label();
+    });
+  })();
+
+  document.getElementById('downloadPdf').addEventListener('click', function () {
+    window.print();
+  });
+</script>
+</body>
+</html>

@@ -363,3 +363,33 @@ so a future run may be able to fetch it directly — check whether a Drive
 folder has been shared before defaulting to "ask a human for this week's
 numbers." Until that's set up, if you don't have this week's GA4 numbers,
 leave `url_tracking` unset rather than reusing last week's data or guessing.
+
+## Quarterly Report (`quarterly.html`) — separate, manual-only, do NOT touch here
+
+There is a second page, `quarterly.html`, linked from a nav tab in the
+header of both pages. It reuses the weekly report's visual system
+(`scripts/template_quarterly.html`, same CSS/colors as `template.html`) but
+shows **quarter totals with no delta/comparison** — built by
+`scripts/build_quarterly_report.py` from a `data/quarterly-<label>.json`
+file (e.g. `data/quarterly-2026-jun-aug.json`, covering Jun 1 – Aug 31,
+2026).
+
+**This page is explicitly NOT part of the Friday weekly automation.** Val
+asked for it to stay static between requests — do not regenerate or edit
+`quarterly.html` (or its data file) as part of a routine weekly run. Only
+touch it if a message explicitly asks for the quarterly report to be
+rebuilt or extended to a new period.
+
+If you ever are asked to rebuild it: pull fresh from Metricool directly for
+the full requested date range (same field IDs/aggregation rules as Steps
+3–4 above, followers = LAST in range, everything else = SUM in range) —
+don't try to assemble it from the weekly `data/week-*.json` snapshots, since
+those don't cover the whole history and weekly windows can overlap by a day
+(see the Step 1 fix above). Check `getBrandSettings` for each property's
+`joinDate`/`firstConnectionDate` and flag any property whose Metricool
+connection started partway through the requested period — their totals
+will understate the true period since there's no data before that date.
+Facebook Groups and URL Tracking are omitted from this page entirely (no
+historical data to sum for the former; too few weeks of GA4 data for the
+latter to represent a period total) — don't add placeholder zeros for
+them, just leave those sections out like the current version does.
