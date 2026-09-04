@@ -287,6 +287,26 @@ def url_tracking_card(p, maxes):
     </div>'''
 
 
+def gmb_url_tracking_card(p, maxes):
+    rows = []
+    for key, label in [("views", "Views"), ("sessions", "Sessions"), ("engaged_sessions", "Engaged"), ("key_events", "Key events")]:
+        value = p[key]
+        bar = mini_bar(value, maxes[key], "series-sequential", height=7, width=72)
+        rows.append(f'''
+        <div class="metric-row">
+          <div class="metric-label">{label}</div>
+          <div class="metric-bar">{bar}</div>
+          <div class="metric-value">{fmt(value)}</div>
+        </div>''')
+    return f'''
+    <div class="property-card">
+      <div class="property-card-head">
+        <h3>{esc(p["name"])}</h3>
+      </div>
+      {"".join(rows)}
+    </div>'''
+
+
 def gbp_metric_row(label, value, max_value, is_total=False):
     if is_total:
         return f'''
@@ -503,6 +523,43 @@ def build(data_path: Path) -> str:
         }
     gbp_property_cards = "".join(gbp_property_card(p, gbp_maxes) for p in gbp_props)
 
+    gmb_url_tracking = data.get("gmb_url_tracking")
+    gmb_url_tracking_section = ""
+    if gmb_url_tracking:
+        gmb_ut_html = "".join([
+            stat_tile("Views", gmb_url_tracking["views"]["current"], gmb_url_tracking["views"].get("delta", 0), is_new=gmb_url_tracking["views"].get("is_new", False), compare_label="vs last wk"),
+            stat_tile("Sessions", gmb_url_tracking["sessions"]["current"], gmb_url_tracking["sessions"].get("delta", 0), is_new=gmb_url_tracking["sessions"].get("is_new", False), compare_label="vs last wk"),
+            stat_tile("Engaged sessions", gmb_url_tracking["engaged_sessions"]["current"], gmb_url_tracking["engaged_sessions"].get("delta", 0), is_new=gmb_url_tracking["engaged_sessions"].get("is_new", False), compare_label="vs last wk"),
+            stat_tile("Key events", gmb_url_tracking["key_events"]["current"], gmb_url_tracking["key_events"].get("delta", 0), is_new=gmb_url_tracking["key_events"].get("is_new", False), compare_label="vs last wk"),
+        ])
+        gut_props = gmb_url_tracking.get("by_property", [])
+        gut_maxes = {
+            "views": max((p["views"] for p in gut_props), default=1),
+            "sessions": max((p["sessions"] for p in gut_props), default=1),
+            "engaged_sessions": max((p["engaged_sessions"] for p in gut_props), default=1),
+            "key_events": max((p["key_events"] for p in gut_props), default=1),
+        }
+        gmb_ut_cards = "".join(gmb_url_tracking_card(p, gut_maxes) for p in gut_props)
+        gmb_url_tracking_section = f'''
+  <section>
+    <h2>Google My Business — URL Tracking</h2>
+    <p class="section-sub">Traffic that lands on each property's site from its Google Business Profile (Google Analytics, source: GMB / GMB).</p>
+    <div class="stat-grid">{gmb_ut_html}</div>
+    <dl class="legend">
+      <div class="legend-item"><dt>Views</dt><dd>The number of times the page was loaded/viewed, including repeat views from the same person or session.</dd></div>
+      <div class="legend-item"><dt>Sessions</dt><dd>Total number of visits per person.</dd></div>
+      <div class="legend-item"><dt>Engaged sessions</dt><dd>A session that lasted 10+ seconds, visited more than one page, or triggered a conversion event.</dd></div>
+      <div class="legend-item"><dt>Key events</dt><dd>Conversion events tracked on the site (e.g. tour requests).</dd></div>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Google My Business — URL Tracking by brand</h2>
+    <p class="section-sub">Quick view per property.</p>
+    <div class="property-grid">{gmb_ut_cards}</div>
+    <div class="note-box">{esc(gmb_url_tracking["note"])}</div>
+  </section>'''
+
     url_tracking = data.get("url_tracking")
     url_tracking_section = ""
     if url_tracking:
@@ -562,6 +619,7 @@ def build(data_path: Path) -> str:
     out = out.replace("{{FB_GROUPS_NOTE}}", esc(fg["note"]))
     out = out.replace("{{GMB_TILES}}", gmb_html)
     out = out.replace("{{GBP_PROPERTY_CARDS}}", gbp_property_cards)
+    out = out.replace("{{GMB_URL_TRACKING_SECTION}}", gmb_url_tracking_section)
     out = out.replace("{{URL_TRACKING_SECTION}}", url_tracking_section)
     out = out.replace("{{CHANNEL_CSS_VARS_DARK}}", channel_css_vars)
     out = out.replace("{{CHANNEL_CSS_VARS_LIGHT}}", channel_css_vars_light)
