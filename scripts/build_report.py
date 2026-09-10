@@ -354,8 +354,32 @@ def gbp_property_card(p, maxes):
     </div>'''
 
 
+def channel_delta_chips(fbc):
+    """Small per-channel net-gain chips shown directly on the Followers KPI
+    tile -- so the split by network (TikTok, Facebook, Instagram, GBP) is
+    visible at a glance instead of only further down the report."""
+    chips = []
+    for c in fbc:
+        channel = c["channel"]
+        delta = c["delta"]
+        color_key = f"ch-{channel.lower().replace(' ', '-')}"
+        label = "GBP" if channel == "Google Business" else channel
+        if delta > 0:
+            arrow, color_var, sign = "▲", "var(--good)", "+"
+        elif delta < 0:
+            arrow, color_var, sign = "▼", "var(--bad)", ""
+        else:
+            arrow, color_var, sign = "•", "var(--flat)", ""
+        chips.append(
+            f'<span class="channel-chip">'
+            f'<span class="channel-dot" style="background:var(--{color_key})"></span>'
+            f'{esc(label)} <span style="color:{color_var}">{arrow} {sign}{delta:,}</span></span>'
+        )
+    return "".join(chips)
+
+
 def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_label="",
-              editable_key=None, week_id=None):
+              editable_key=None, week_id=None, channel_breakdown_html=""):
     """editable_key + week_id turn this tile into a manually-editable one --
     Metricool doesn't track this metric (GBP specials, Facebook Groups), so a
     person has to type the real number in. Since the site is static (no
@@ -390,6 +414,10 @@ def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_l
             '</div>'
         )
         edited_badge = '<div class="edited-badge">Manually edited</div>'
+    breakdown_html = (
+        f'<div class="stat-channel-breakdown">{channel_breakdown_html}</div>'
+        if channel_breakdown_html else ""
+    )
     return f'''
     <div class="stat-tile"{edit_attrs}>
       {edit_btn}
@@ -398,6 +426,7 @@ def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_l
       {edit_form}
       <div class="stat-value">{fmt(current)}</div>
       <div class="stat-delta">{delta_chip(current, delta, is_new=is_new, compare_label=compare_label)}</div>
+      {breakdown_html}
       {bar}
     </div>'''
 
@@ -448,15 +477,16 @@ def build(data_path: Path) -> str:
     data = json.loads(data_path.read_text())
 
     kpis = data["kpis"]
+    fbc = data["followers_by_channel"]
     kpi_html = "".join([
-        stat_tile("Followers", kpis["followers"]["current"], kpis["followers"]["delta"], compare_label="vs last wk"),
+        stat_tile("Followers", kpis["followers"]["current"], kpis["followers"]["delta"], compare_label="vs last wk",
+                   channel_breakdown_html=channel_delta_chips(fbc)),
         stat_tile("Posts", kpis["posts"]["current"], kpis["posts"]["delta"], compare_label="vs last wk"),
         stat_tile("Engagement", kpis["engagement"]["current"], kpis["engagement"]["delta"], compare_label="vs last wk"),
         stat_tile("Views", kpis["views"]["current"], kpis["views"]["delta"], compare_label="vs last wk"),
     ])
     wow_chart = wow_totals_chart(kpis, data["week_label"], data["prev_week_label"])
 
-    fbc = data["followers_by_channel"]
     fbc_max = max(c["current"] for c in fbc)
     followers_chart = "".join(
         channel_bar_row(c["channel"], c["current"], fbc_max, c["delta"]) for c in fbc
