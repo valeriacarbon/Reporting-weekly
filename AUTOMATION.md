@@ -361,8 +361,25 @@ exports/shares each week. As of the week-2026-08-20 file it was filled in
 by hand from a PDF. Val mentioned wiring this to a Google Drive folder next,
 so a future run may be able to fetch it directly — check whether a Drive
 folder has been shared before defaulting to "ask a human for this week's
-numbers." Until that's set up, if you don't have this week's GA4 numbers,
-leave `url_tracking` unset rather than reusing last week's data or guessing.
+numbers."
+
+There is a second, near-identical section, `gmb_url_tracking` (added
+2026-09-08), showing the same shape of GA4 data but for traffic sourced
+from the property's Google Business Profile (GA4 source `GMB / GMB`)
+instead of Facebook Group links. Same manual-PDF situation, same "not
+pullable from Metricool" caveat.
+
+**If you don't have this week's GA4 numbers for either section, carry
+forward last week's numbers unchanged (delta 0) rather than omitting the
+key entirely.** (Fixed 2026-09-11 — a run had left both keys out of that
+week's file when no new export had arrived, which made the whole card
+structure vanish from the dashboard for a week; Val had never asked for
+that and had to notice and flag it herself. Don't guess a *new* number,
+but don't make an existing section disappear either — copy the previous
+file's `views`/`sessions`/`engaged_sessions`/`tours`(or `key_events`) and
+`by_property` verbatim, zero out the deltas, and update the section's
+`note` to say plainly that no new export was received this week and the
+numbers shown are carried forward unchanged.)
 
 ## Quarterly Report (`quarterly.html`) — separate, manual-only, do NOT touch here
 
