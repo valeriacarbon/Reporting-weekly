@@ -54,19 +54,41 @@ were not retroactively corrected -- the impact is at most one day's
 activity inside a 7-8 day window, and isn't worth restating every past file
 for.
 
-**Cross-check GBP post counts against the individual posts listing, not
-just the evolution SUM field.** The evolution connector's `postsCount`
-(GMEV17) has shown a systematic **off-by-one-day** mislabeling on top of
-the above -- e.g. a real post created Aug 24 showed up as `postsCount=1`
-on Aug 25 in the evolution rows. Combined with the day-boundary issue just
-fixed, this means a stray nonzero `postsCount` right at the start of a
-window is often really a previous week's post bleeding through, not a new
-one. Before writing `posts_published`/`posts_channels["Google Business"]`,
-pull `["GMPO01","GMPO10","GMPO11"]` (date, text, type -- the individual
-`posts` connector, not `evolution`) for each GBP property with the window
-widened by a day on each side, and count only the posts whose actual
-`GMPO01` date falls inside this week's `[from_date, to_date]`. Trust that
-over the evolution field's SUM.
+**Cross-check GBP post counts against the real publishing calendar
+(`getScheduledPosts`), not the posts analytics connector (`GMPO01`) and
+not just the evolution SUM field.** Both analytics-side sources have
+proven unreliable for dates, in *opposite* directions:
+
+- The evolution connector's `postsCount` (GMEV17) has shown a systematic
+  **+1-day** mislabeling -- e.g. a real post created Aug 24 showed up as
+  `postsCount=1` on Aug 25 in the evolution rows.
+- The individual posts connector (`GMPO01`/`GMPO10`/`GMPO11`) has shown
+  the **opposite, a -1-day** mislabeling -- confirmed 2026-09-12: 12 of 13
+  GBP properties published a real post on Sep 4 (verified against
+  `getScheduledPosts`' ground-truth local `publicationDate` + `status`),
+  but `GMPO01` labeled every one of them Sep 3. Trusting `GMPO01` alone
+  under-reported that week's real Posts Published as 0-2 instead of 12.
+
+**The fix: use `getScheduledPosts(brandId, fromDate, toDate, timezone,
+extendedRange=true)` as the source of truth for GBP posts_published**,
+not either analytics connector. Call it per property using that
+property's own `timezone` from `getBrandSettings` (do not reuse one
+timezone across properties -- they're spread across America/New_York,
+America/Chicago, and America/Mexico_City), with `fromDate`/`toDate`
+spanning a day before/after the week window in that local timezone. Count
+only entries whose `providers` array contains `{"network": "gmb", ...}`
+with a `status`/`detailedStatus` of `PUBLISHED`, and whose local-timezone
+`publicationDate` calendar date falls inside `[from_date, to_date]`. A
+`PENDING` GBP entry (scheduled but not yet fired) does not count as
+published yet, even if its date is inside the window. Despite its own
+tool description saying it "only retrieves posts that are scheduled (not
+yet published)", it has empirically returned already-`PUBLISHED` posts
+too in this account -- trust the `status` field on each returned entry,
+not the tool description.
+
+Only fall back to the two analytics connectors (cross-checking each
+other) if `getScheduledPosts` comes back empty for a property that should
+have posted -- that's more likely a real API hiccup than a labeling bug.
 
 (Properties themselves sit in Eastern/Central/Mexico City time, not all
 UTC-6 — this can miscount a post right at the week's edge by a day. That's a
