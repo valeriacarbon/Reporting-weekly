@@ -207,14 +207,18 @@ kpis.engagement = sum across all 15 properties' engagement values, PLUS
   directions_clicks, this week's totals from google_business below) —
   added 2026-09-12 per Val's request, since GBP has no likes/comments/
   shares to fold in the way FB/IG/TikTok do, and clicks are the closest
-  equivalent. To keep the week-over-week delta meaningful, compute the
-  delta against an adjusted previous-week baseline (previous file's
-  kpis.engagement.current + that week's own GBP clicks total), not
-  against the previous file's raw kpis.engagement.current — otherwise
-  the first week this was introduced would show a fake jump that isn't
-  organic growth. From the second week on, both sides of the delta use
-  the same (new) definition, so this adjustment is only necessary when
-  diffing against a file written before 2026-09-12.
+  equivalent. Compute the delta the normal way, straight against the
+  previous file's kpis.engagement.current — same as every other KPI,
+  don't adjust or reconstruct that baseline. (A same-day fix on
+  2026-09-12: an earlier version of this note had you recompute an
+  "adjusted" previous-week baseline that added GBP clicks retroactively,
+  to make the one-time methodology change look like a clean
+  apples-to-apples comparison. That backfired — the adjusted number never
+  appears anywhere on the dashboard, so the delta didn't match what Val
+  actually saw published last week, and read as a drop when the real
+  number had gone up. Just diff against what was actually shown; the one
+  week this changed will have a delta that's partly the GBP-clicks
+  addition and partly organic, and that's fine to leave as-is.)
 
 engagement_by_channel = per network (Facebook/TikTok/Instagram/Google
   Business), matching kpis.engagement's composition: each social
