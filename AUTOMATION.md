@@ -199,8 +199,29 @@ chips replace it) — just write `"posts": {"current": <value>}` with no
 ## Step 6 — Portfolio-level aggregates
 
 ```
-kpis.followers / posts / engagement / views = sum across all 15 properties'
-  respective values (each with a delta per Step 5)
+kpis.followers / posts / views = sum across all 15 properties' respective
+  values (each with a delta per Step 5)
+
+kpis.engagement = sum across all 15 properties' engagement values, PLUS
+  Google Business action clicks (website_clicks + phone_clicks +
+  directions_clicks, this week's totals from google_business below) —
+  added 2026-09-12 per Val's request, since GBP has no likes/comments/
+  shares to fold in the way FB/IG/TikTok do, and clicks are the closest
+  equivalent. To keep the week-over-week delta meaningful, compute the
+  delta against an adjusted previous-week baseline (previous file's
+  kpis.engagement.current + that week's own GBP clicks total), not
+  against the previous file's raw kpis.engagement.current — otherwise
+  the first week this was introduced would show a fake jump that isn't
+  organic growth. From the second week on, both sides of the delta use
+  the same (new) definition, so this adjustment is only necessary when
+  diffing against a file written before 2026-09-12.
+
+engagement_by_channel = per network (Facebook/TikTok/Instagram/Google
+  Business), matching kpis.engagement's composition: each social
+  network's interactions sum, plus Google Business's total clicks (same
+  number as above). No delta needed (same shape as posts_by_channel) —
+  rendered as chips on the Engagement tile so the GBP contribution is
+  visible, not folded in silently.
 
 followers_by_channel = per network (Facebook/TikTok/Instagram — no GBP here,
   matches the existing report), sum of that network's followers across all
