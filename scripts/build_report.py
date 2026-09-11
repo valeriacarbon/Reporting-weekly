@@ -378,6 +378,25 @@ def channel_delta_chips(fbc):
     return "".join(chips)
 
 
+def channel_value_chips(channels):
+    """Small per-channel chips showing this week's raw value, no delta --
+    used where we don't have a reliable per-channel history to compare
+    against yet (e.g. Engagement's Google Business breakdown, added the
+    week GBP clicks were folded into the portfolio Engagement total)."""
+    chips = []
+    for c in channels:
+        channel = c["channel"]
+        value = c["current"]
+        color_key = f"ch-{channel.lower().replace(' ', '-')}"
+        label = "GBP" if channel == "Google Business" else channel
+        chips.append(
+            f'<span class="channel-chip">'
+            f'<span class="channel-dot" style="background:var(--{color_key})"></span>'
+            f'{esc(label)} {fmt(value)}</span>'
+        )
+    return "".join(chips)
+
+
 def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_label="",
               editable_key=None, week_id=None, channel_breakdown_html=""):
     """editable_key + week_id turn this tile into a manually-editable one --
@@ -478,11 +497,13 @@ def build(data_path: Path) -> str:
 
     kpis = data["kpis"]
     fbc = data["followers_by_channel"]
+    ebc = data.get("engagement_by_channel")
     kpi_html = "".join([
         stat_tile("Followers", kpis["followers"]["current"], kpis["followers"]["delta"], compare_label="vs last wk",
                    channel_breakdown_html=channel_delta_chips(fbc)),
         stat_tile("Posts", kpis["posts"]["current"], kpis["posts"]["delta"], compare_label="vs last wk"),
-        stat_tile("Engagement", kpis["engagement"]["current"], kpis["engagement"]["delta"], compare_label="vs last wk"),
+        stat_tile("Engagement", kpis["engagement"]["current"], kpis["engagement"]["delta"], compare_label="vs last wk",
+                   channel_breakdown_html=channel_value_chips(ebc) if ebc else ""),
         stat_tile("Views", kpis["views"]["current"], kpis["views"]["delta"], compare_label="vs last wk"),
     ])
     wow_chart = wow_totals_chart(kpis, data["week_label"], data["prev_week_label"])
