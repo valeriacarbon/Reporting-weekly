@@ -25,6 +25,14 @@ from gbp_window import assert_matching_windows, resolve_gbp_windows
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
+# The Google My Business section still computes and stores week-over-week
+# deltas (the completeness gate and the build assertions in
+# _check_gbp_window depend on GBP_PRIOR being pulled), it just doesn't show
+# them -- Val asked to drop the comparison line and mini bar from the GBP
+# tiles as a presentation-only change. Flip back to True to restore them
+# without touching any other code.
+GBP_SHOW_DELTAS = False
+
 # Validated categorical order (adjacent-pair CVD-safe in both light & dark --
 # see the dataviz skill's palette validator). Direct labels are always shown
 # alongside color, per the skill's relief rule for the borderline pairs.
@@ -402,19 +410,29 @@ def channel_value_chips(channels):
 
 
 def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_label="",
-              editable_key=None, week_id=None, channel_breakdown_html=""):
+              editable_key=None, week_id=None, channel_breakdown_html="", show_delta=True):
     """editable_key + week_id turn this tile into a manually-editable one --
     Metricool doesn't track this metric (GBP specials, Facebook Groups), so a
     person has to type the real number in. Since the site is static (no
     backend), the edit is saved to the viewer's own browser (localStorage),
-    scoped to this metric + this week."""
+    scoped to this metric + this week.
+
+    show_delta=False drops the comparison line (arrow/change/percentage) and
+    the mini comparison bar entirely -- not hidden, not rendered -- leaving
+    just the label and the number. Used by the GBP section, which still
+    computes deltas internally (the window-completeness gate depends on
+    them) but doesn't display them."""
     prev = prev_override if prev_override is not None else current - delta
     peak = max(current, prev, 1)
     bar = f'''
       <svg class="stat-spark" width="100%" height="18" viewBox="0 0 100 18" preserveAspectRatio="none" role="img" aria-hidden="true">
         <rect x="0" y="10" width="{(prev/peak)*100:.1f}" height="6" rx="3" fill="var(--track)"/>
         <rect x="0" y="0" width="{(current/peak)*100:.1f}" height="6" rx="3" fill="var(--series-sequential)"/>
-      </svg>'''
+      </svg>''' if show_delta else ""
+    delta_html = (
+        f'<div class="stat-delta">{delta_chip(current, delta, is_new=is_new, compare_label=compare_label)}</div>'
+        if show_delta else ""
+    )
     edit_attrs = ""
     edit_btn = ""
     edit_form = ""
@@ -448,7 +466,7 @@ def stat_tile(label, current, delta, is_new=False, prev_override=None, compare_l
       {edited_badge}
       {edit_form}
       <div class="stat-value">{fmt(current)}</div>
-      <div class="stat-delta">{delta_chip(current, delta, is_new=is_new, compare_label=compare_label)}</div>
+      {delta_html}
       {breakdown_html}
       {bar}
     </div>'''
@@ -601,12 +619,12 @@ def build(data_path: Path) -> str:
     gbp_prev_window_label = data.get("gbp_prev_window_label", data["prev_week_label"])
     gbp_compare_label = f"vs {gbp_prev_window_label}"
     gmb_html = "".join([
-        stat_tile("Posts published", gmb["posts_published"]["current"], gmb["posts_published"]["delta"], is_new=gmb["posts_published"].get("is_new", False), compare_label=gbp_compare_label),
-        stat_tile("Reach · search", gmb["reach_search"]["current"], gmb["reach_search"].get("delta", 0), is_new=gmb["reach_search"].get("is_new", False), compare_label=gbp_compare_label),
-        stat_tile("Reach · maps", gmb["reach_maps"]["current"], gmb["reach_maps"].get("delta", 0), is_new=gmb["reach_maps"].get("is_new", False), compare_label=gbp_compare_label),
-        stat_tile("Website clicks", gmb["website_clicks"]["current"], gmb["website_clicks"].get("delta", 0), is_new=gmb["website_clicks"].get("is_new", False), compare_label=gbp_compare_label),
-        stat_tile("Phone clicks", gmb["phone_clicks"]["current"], gmb["phone_clicks"].get("delta", 0), is_new=gmb["phone_clicks"].get("is_new", False), compare_label=gbp_compare_label),
-        stat_tile("Directions clicks", gmb["directions_clicks"]["current"], gmb["directions_clicks"].get("delta", 0), is_new=gmb["directions_clicks"].get("is_new", False), compare_label=gbp_compare_label),
+        stat_tile("Posts published", gmb["posts_published"]["current"], gmb["posts_published"]["delta"], is_new=gmb["posts_published"].get("is_new", False), compare_label=gbp_compare_label, show_delta=GBP_SHOW_DELTAS),
+        stat_tile("Reach · search", gmb["reach_search"]["current"], gmb["reach_search"].get("delta", 0), is_new=gmb["reach_search"].get("is_new", False), compare_label=gbp_compare_label, show_delta=GBP_SHOW_DELTAS),
+        stat_tile("Reach · maps", gmb["reach_maps"]["current"], gmb["reach_maps"].get("delta", 0), is_new=gmb["reach_maps"].get("is_new", False), compare_label=gbp_compare_label, show_delta=GBP_SHOW_DELTAS),
+        stat_tile("Website clicks", gmb["website_clicks"]["current"], gmb["website_clicks"].get("delta", 0), is_new=gmb["website_clicks"].get("is_new", False), compare_label=gbp_compare_label, show_delta=GBP_SHOW_DELTAS),
+        stat_tile("Phone clicks", gmb["phone_clicks"]["current"], gmb["phone_clicks"].get("delta", 0), is_new=gmb["phone_clicks"].get("is_new", False), compare_label=gbp_compare_label, show_delta=GBP_SHOW_DELTAS),
+        stat_tile("Directions clicks", gmb["directions_clicks"]["current"], gmb["directions_clicks"].get("delta", 0), is_new=gmb["directions_clicks"].get("is_new", False), compare_label=gbp_compare_label, show_delta=GBP_SHOW_DELTAS),
     ])
     gmb_window_note = (
         f"Google's own reporting lags the rest of this dashboard by 1–2 weeks, so these "
