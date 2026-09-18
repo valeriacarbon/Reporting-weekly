@@ -1,7 +1,7 @@
 {
   "week_label": "Sep 10 \u2013 17, 2026",
   "prev_week_label": "Sep 3 \u2013 10, 2026",
-  "generated_note": "Automated Friday run (2026-09-18) pulled live from Metricool per AUTOMATION.md, window Sep 11-17, 2026 (week_label shows Sep 10-17 for continuity). GBP Posts Published verified against the real publishing calendar (getScheduledPosts, ground-truth local publicationDate + status per property's own timezone) per the 2026-09-12 fix -- only Berry Falls and Santa Fe have a real published GBP post inside this week's window (both Sep 11); every other GBP-connected property's next post is scheduled for Sep 18 (outside this window) and still PENDING, not yet live. Posts Published: 2. GBP Reach/Clicks pulled for Sep 11-14; Sep 15-17 mostly not synced yet at run time (a few properties show a real Sep 17 zero row) -- writing the real partial totals per AUTOMATION.md policy (Reach Search 838, Reach Maps 747, Website Clicks 263, Phone Clicks 59, Directions Clicks 361); expect these to grow on a later recheck once the rest of the week syncs. Engagement KPI = social interactions (Facebook 8 + Instagram 36 + TikTok 689 = 733) + GBP action clicks (683) = 1,416, per the 2026-09-12 methodology change; delta computed against last week's published Engagement (975). Facebook Groups metrics stay at 0/0 (still manual-only, unchanged). URL Tracking and GMB URL Tracking: no new GA4 export received this week -- both carried forward unchanged from the last real numbers shared (delta 0) rather than disappearing, per policy. CORRECTION (same-day, 2026-09-18): Val confirmed Metricool now shows synced GBP stats across the whole portfolio -- re-pulled GMEV18/19/21/22/23 for the Sep 11-17 window. Reach Maps, Website Clicks and Phone Clicks were already fully synced (unchanged). Reach Search and Directions Clicks picked up several previously-missing days (Sep 12/13/15 for most properties) and grew: Reach Search 838->2291, Directions Clicks 361->464. Engagement KPI recomputed with the updated GBP clicks total (786): 733 social + 786 GBP clicks = 1519.",
+  "generated_note": "Automated Friday run (2026-09-18) pulled live from Metricool per AUTOMATION.md, window Sep 11-17, 2026 (week_label shows Sep 10-17 for continuity). GBP Posts Published verified against the real publishing calendar (getScheduledPosts, ground-truth local publicationDate + status per property's own timezone) per the 2026-09-12 fix -- only Berry Falls and Santa Fe have a real published GBP post inside this week's window (both Sep 11); every other GBP-connected property's next post is scheduled for Sep 18 (outside this window) and still PENDING, not yet live. Posts Published: 2. GBP Reach/Clicks pulled for Sep 11-14; Sep 15-17 mostly not synced yet at run time (a few properties show a real Sep 17 zero row) -- writing the real partial totals per AUTOMATION.md policy (Reach Search 838, Reach Maps 747, Website Clicks 263, Phone Clicks 59, Directions Clicks 361); expect these to grow on a later recheck once the rest of the week syncs. Engagement KPI = social interactions (Facebook 8 + Instagram 36 + TikTok 689 = 733) + GBP action clicks (683) = 1,416, per the 2026-09-12 methodology change; delta computed against last week's published Engagement (975). Facebook Groups metrics stay at 0/0 (still manual-only, unchanged). URL Tracking and GMB URL Tracking: no new GA4 export received this week -- both carried forward unchanged from the last real numbers shared (delta 0) rather than disappearing, per policy. CORRECTION (same-day, 2026-09-18): Val confirmed Metricool now shows synced GBP stats across the whole portfolio -- re-pulled GMEV18/19/21/22/23 for the Sep 11-17 window. Reach Maps, Website Clicks and Phone Clicks were already fully synced (unchanged). Reach Search and Directions Clicks picked up several previously-missing days (Sep 12/13/15 for most properties) and grew: Reach Search 838->2291, Directions Clicks 361->464. Engagement KPI recomputed with the updated GBP clicks total (786): 733 social + 786 GBP clicks = 1519. URL TRACKING UPDATE (2026-09-18): Val shared this week's real GA4 exports for both FB Groups and GMB link tracking (window Sep 10-18, 2026). FB Groups: Views 21, Sessions 12, Engaged Sessions 7, Tours 0 (down from last real week's 162/87/61/4). GMB: Views 1,085, Sessions 448, Engaged Sessions 267, Key Events 0 (this is the first real GMB URL Tracking data since the Aug 27-Sep 3 window; deltas compare against that last real reading, not the carried-forward placeholder from last week's file).",
   "kpis": {
     "followers": {
       "current": 2255,
@@ -631,111 +631,111 @@
   ],
   "url_tracking": {
     "views": {
-      "current": 162,
-      "delta": 0
+      "current": 21,
+      "delta": -141
     },
     "sessions": {
-      "current": 87,
-      "delta": 0
+      "current": 12,
+      "delta": -75
     },
     "engaged_sessions": {
-      "current": 61,
-      "delta": 0
+      "current": 7,
+      "delta": -54
     },
     "tours": {
-      "current": 4,
-      "delta": 0
+      "current": 0,
+      "delta": -4
     },
     "by_property": [
       {
         "name": "The Landings at North Ingleside",
-        "views": 15,
-        "sessions": 7,
-        "engaged_sessions": 6,
+        "views": 1,
+        "sessions": 1,
+        "engaged_sessions": 0,
         "tours": 0
       },
       {
         "name": "Berry Falls",
-        "views": 12,
-        "sessions": 10,
-        "engaged_sessions": 6,
+        "views": 2,
+        "sessions": 1,
+        "engaged_sessions": 1,
         "tours": 0
       },
       {
         "name": "The Kenzie",
-        "views": 6,
-        "sessions": 5,
-        "engaged_sessions": 4,
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
         "tours": 0
       },
       {
         "name": "Ingleside Terrace",
-        "views": 8,
-        "sessions": 4,
-        "engaged_sessions": 4,
+        "views": 1,
+        "sessions": 1,
+        "engaged_sessions": 1,
         "tours": 0
       },
       {
         "name": "Lakeside/Lakeview",
-        "views": 15,
-        "sessions": 4,
-        "engaged_sessions": 4,
-        "tours": 0
-      },
-      {
-        "name": "Westminster Club",
         "views": 3,
         "sessions": 1,
         "engaged_sessions": 1,
         "tours": 0
       },
       {
+        "name": "Westminster Club",
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
+        "tours": 0
+      },
+      {
         "name": "Residences at the Overlook",
-        "views": 7,
-        "sessions": 7,
-        "engaged_sessions": 3,
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
         "tours": 0
       },
       {
         "name": "The Lamar Lofts",
-        "views": 14,
-        "sessions": 8,
-        "engaged_sessions": 5,
-        "tours": 2
+        "views": 7,
+        "sessions": 4,
+        "engaged_sessions": 2,
+        "tours": 0
       },
       {
         "name": "The Benton",
-        "views": 9,
-        "sessions": 6,
-        "engaged_sessions": 5,
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
         "tours": 0
       },
       {
         "name": "Hills at Hoover",
-        "views": 4,
-        "sessions": 5,
-        "engaged_sessions": 3,
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
         "tours": 0
       },
       {
         "name": "Claxton Pointe & Pecan Ridge",
-        "views": 14,
-        "sessions": 8,
-        "engaged_sessions": 5,
-        "tours": 2
+        "views": 7,
+        "sessions": 4,
+        "engaged_sessions": 2,
+        "tours": 0
       },
       {
         "name": "Santa Fe",
-        "views": 14,
-        "sessions": 7,
-        "engaged_sessions": 4,
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
         "tours": 0
       },
       {
         "name": "Villa Siena",
-        "views": 41,
-        "sessions": 15,
-        "engaged_sessions": 11,
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
         "tours": 0
       },
       {
@@ -746,20 +746,20 @@
         "tours": 0
       }
     ],
-    "note": "No new GA4 export received this week (Sep 11-17) \u2014 showing last known numbers (Sep 3-10, 2026) carried forward unchanged. Will refresh once Val shares this week's export."
+    "note": "Traffic from Facebook Group posts (GA4 source: fbgroups / organic), Sep 10\u2013Sep 18, 2026. Capri Palms isn't included (no GA4 tracking set up for it yet)."
   },
   "gmb_url_tracking": {
     "views": {
-      "current": 4262,
-      "delta": 0
+      "current": 1085,
+      "delta": -3177
     },
     "sessions": {
-      "current": 1648,
-      "delta": 0
+      "current": 448,
+      "delta": -1200
     },
     "engaged_sessions": {
-      "current": 1053,
-      "delta": 0
+      "current": 267,
+      "delta": -786
     },
     "key_events": {
       "current": 0,
@@ -768,37 +768,37 @@
     "by_property": [
       {
         "name": "The Landings at North Ingleside",
-        "views": 62,
-        "sessions": 34,
-        "engaged_sessions": 7,
+        "views": 4,
+        "sessions": 4,
+        "engaged_sessions": 0,
         "key_events": 0
       },
       {
         "name": "Berry Falls",
-        "views": 8,
-        "sessions": 3,
-        "engaged_sessions": 2,
+        "views": 1,
+        "sessions": 1,
+        "engaged_sessions": 0,
         "key_events": 0
       },
       {
         "name": "The Kenzie",
-        "views": 79,
-        "sessions": 37,
-        "engaged_sessions": 9,
+        "views": 15,
+        "sessions": 8,
+        "engaged_sessions": 2,
         "key_events": 0
       },
       {
         "name": "Ingleside Terrace",
-        "views": 89,
-        "sessions": 49,
-        "engaged_sessions": 14,
+        "views": 14,
+        "sessions": 9,
+        "engaged_sessions": 2,
         "key_events": 0
       },
       {
         "name": "Lakeside/Lakeview",
-        "views": 38,
-        "sessions": 31,
-        "engaged_sessions": 2,
+        "views": 6,
+        "sessions": 5,
+        "engaged_sessions": 0,
         "key_events": 0
       },
       {
@@ -810,61 +810,61 @@
       },
       {
         "name": "Residences at the Overlook",
-        "views": 4,
-        "sessions": 3,
-        "engaged_sessions": 1,
+        "views": 1,
+        "sessions": 1,
+        "engaged_sessions": 0,
         "key_events": 0
       },
       {
         "name": "The Lamar Lofts",
-        "views": 49,
-        "sessions": 28,
+        "views": 17,
+        "sessions": 15,
         "engaged_sessions": 3,
         "key_events": 0
       },
       {
         "name": "The Benton",
-        "views": 4,
+        "views": 3,
         "sessions": 3,
-        "engaged_sessions": 1,
+        "engaged_sessions": 0,
         "key_events": 0
       },
       {
         "name": "Hills at Hoover",
-        "views": 1540,
-        "sessions": 580,
-        "engaged_sessions": 405,
+        "views": 303,
+        "sessions": 129,
+        "engaged_sessions": 79,
         "key_events": 0
       },
       {
         "name": "Claxton Pointe & Pecan Ridge",
-        "views": 49,
-        "sessions": 28,
+        "views": 17,
+        "sessions": 15,
         "engaged_sessions": 3,
         "key_events": 0
       },
       {
         "name": "Santa Fe",
-        "views": 1030,
-        "sessions": 387,
-        "engaged_sessions": 266,
+        "views": 278,
+        "sessions": 112,
+        "engaged_sessions": 69,
         "key_events": 0
       },
       {
         "name": "Villa Siena",
-        "views": 1306,
-        "sessions": 463,
-        "engaged_sessions": 338,
+        "views": 424,
+        "sessions": 145,
+        "engaged_sessions": 108,
         "key_events": 0
       },
       {
         "name": "Aztec Villa",
-        "views": 4,
-        "sessions": 2,
-        "engaged_sessions": 2,
+        "views": 2,
+        "sessions": 1,
+        "engaged_sessions": 1,
         "key_events": 0
       }
     ],
-    "note": "No new GA4 export received since Val's request to pause this section for corrections \u2014 showing last known real numbers (Aug 27-Sep 3, 2026) carried forward unchanged. Will refresh once Val shares an updated export."
+    "note": "Traffic that landed on each property's site from its Google Business Profile (GA4 source: GMB / GMB), Sep 10\u2013Sep 18, 2026. Capri Palms isn't included (no GA4 tracking set up for it yet)."
   }
 }
