@@ -17,7 +17,11 @@ import json
 import math
 import sys
 import html
+from datetime import date
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from gbp_window import assert_matching_windows, resolve_gbp_windows
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -492,6 +496,50 @@ def combo_stat_tile(label, groups_current, groups_delta, posts_current, posts_de
     </div>'''
 
 
+def _check_gbp_window(data):
+    """Build-time guard for the GBP posts_published boundary bug: both the
+    getScheduledPosts count and the getAnalyticsDataByMetrics pull must have
+    been derived from the exact same GBP_CURRENT/GBP_PRIOR window. The data
+    file records that single window in `gbp_window`; here we re-derive it
+    from scratch with resolve_gbp_windows() and fail loudly if the stored
+    window drifted from what that single source of truth would produce, and
+    cross-check that the per-property posts_published sums to the headline
+    total (a divergence there means the two were computed from different
+    windows even if the stored dates match)."""
+    gbp_window = data.get("gbp_window")
+    if not gbp_window:
+        return  # older weekly files predate the independent-window feature
+
+    current_start = date.fromisoformat(gbp_window["current"]["start"])
+    current_end = date.fromisoformat(gbp_window["current"]["end"])
+    prior_start = date.fromisoformat(gbp_window["prior"]["start"])
+    prior_end = date.fromisoformat(gbp_window["prior"]["end"])
+
+    expected = resolve_gbp_windows(current_start)
+    assert_matching_windows(
+        (current_start, current_end),
+        (expected["current_start"], expected["current_end"]),
+        label="GBP_CURRENT",
+    )
+    assert_matching_windows(
+        (prior_start, prior_end),
+        (expected["prior_start"], expected["prior_end"]),
+        label="GBP_PRIOR",
+    )
+
+    gbp_props = data.get("gbp_by_property", [])
+    if gbp_props and all("posts_published" in p for p in gbp_props):
+        per_property_sum = sum(p["posts_published"] for p in gbp_props)
+        headline = data["google_business"]["posts_published"]["current"]
+        if per_property_sum != headline:
+            raise AssertionError(
+                f"GBP posts_published mismatch: per-property sum ({per_property_sum}) "
+                f"!= headline total ({headline}). Every property's posts_published must "
+                f"be recomputed from the same GBP_CURRENT window as the headline number "
+                f"-- see scripts/gbp_window.py."
+            )
+
+
 def build(data_path: Path) -> str:
     data = json.loads(data_path.read_text())
 
@@ -548,6 +596,7 @@ def build(data_path: Path) -> str:
     ])
 
     gmb = data["google_business"]
+    _check_gbp_window(data)
     gbp_window_label = data.get("gbp_window_label", data["week_label"])
     gbp_prev_window_label = data.get("gbp_prev_window_label", data["prev_week_label"])
     gbp_compare_label = f"vs {gbp_prev_window_label}"

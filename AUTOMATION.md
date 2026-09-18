@@ -343,6 +343,71 @@ other as Google's own pipeline speeds up or slows down).
    just don't bother re-verifying it against multiple candidate weeks the
    way Reach/Clicks needs.
 
+### `posts_published` MUST use `scripts/gbp_window.py` — never re-derive the window ad hoc (fixed 2026-09-19)
+
+**What went wrong:** the first implementation of the independent-window
+feature above computed GBP_CURRENT/GBP_PRIOR for Reach/Clicks correctly,
+but for `posts_published` it either reused an old, already-stale stored
+value or re-derived the window boundaries separately for the
+`getScheduledPosts` call. Because GBP posts publish Friday at 12:00
+local — the first day of the window, and the day 100% of GBP posts land
+on — any off-by-one in that second, independent derivation doesn't
+degrade gracefully: it silently reassigns an entire week's post count to
+the adjacent week, every time, with zero partial failures to notice. This
+is exactly what happened to the Sep 10-17 run: GBP_CURRENT (Sep 4-10)
+read 0 published posts and GBP_PRIOR (Aug 27-Sep 3) read 13, when the
+true values (independently re-verified via exact, non-widened
+`getScheduledPosts` pulls per brand-local timezone) are **12** and **1**.
+
+**The fix is architectural, not a one-week number correction.**
+`scripts/gbp_window.py` is now the single source of truth for GBP window
+boundaries:
+
+- `resolve_gbp_windows(current_start)` takes GBP_CURRENT's Friday (the
+  date the walk-back completeness check in step 2 above lands on) and
+  returns `current_start`/`current_end`/`prior_start`/`prior_end` as
+  calendar `date` objects. **Call this once.** Use its output for both
+  the `getAnalyticsDataByMetrics` `from`/`to` (via `to_query_range`) and
+  the `getScheduledPosts` post-count filtering. Never derive the window a
+  second time for one and not the other.
+- `local_date_of(post["publicationDate"])` extracts the calendar date a
+  post published on directly from Metricool's local `dateTime` string —
+  no UTC conversion, no report-server timezone. Compare it against the
+  window with `in_window(d, start, end)`, which is inclusive on both
+  ends (the start Friday belongs to the current window, never the prior
+  one).
+- `is_published_gbp_post(post)` is the only correct provider check: a
+  post counts for GBP iff one of its `providers` has `network == "gmb"`
+  and `status == "PUBLISHED"`. A PENDING gmb provider never counts, even
+  if another provider (e.g. Facebook) on the same post is PUBLISHED.
+- `count_gbp_posts_by_property(posts_by_property, start, end)` returns
+  the per-property counts to write into `gbp_by_property[].posts_published`
+  — sum them to get the headline `google_business.posts_published.current`.
+  The two must always match (`build_report.py` asserts this — see below).
+- When writing the new data file, also write a top-level `gbp_window`
+  object recording the exact dates used:
+  ```json
+  "gbp_window": {
+    "current": {"start": "2026-09-04", "end": "2026-09-10"},
+    "prior": {"start": "2026-08-28", "end": "2026-09-03"}
+  }
+  ```
+  `build_report.py` re-derives the expected window from `gbp_window.current.start`
+  via `resolve_gbp_windows` and calls `assert_matching_windows` against
+  the stored dates on every build, printing both windows to the build log
+  unconditionally and raising loudly (failing the build) on any
+  divergence — plus cross-checking that `gbp_by_property` posts sum to
+  the headline total. **Never skip writing `gbp_window`** — without it
+  this guard is silently skipped (only true for weekly files that predate
+  this feature).
+- `scripts/test_gbp_window.py` has the regression suite for the exact
+  boundary cases that caused this bug (Friday-noon-on-day-1,
+  Thursday-23:59:59-on-last-day, Friday-00:00-the-day-after, the same
+  Friday-noon post across America/New_York, America/Chicago and
+  America/Mexico_City, a PENDING gmb post inside the window, and the
+  per-property-sum-equals-headline check). Run it (`python3
+  scripts/test_gbp_window.py`) any time this logic is touched.
+
 **Everything else in this report is unaffected.** Followers, Posts,
 Engagement, Views, the by-brand property detail, Facebook Groups, and
 both GA4 URL Tracking sections all keep using this run's own Step 1
