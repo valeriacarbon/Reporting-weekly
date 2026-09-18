@@ -548,14 +548,25 @@ def build(data_path: Path) -> str:
     ])
 
     gmb = data["google_business"]
+    gbp_window_label = data.get("gbp_window_label", data["week_label"])
+    gbp_prev_window_label = data.get("gbp_prev_window_label", data["prev_week_label"])
+    gbp_compare_label = f"vs {gbp_prev_window_label}"
     gmb_html = "".join([
-        stat_tile("Posts published", gmb["posts_published"]["current"], gmb["posts_published"]["delta"], is_new=gmb["posts_published"].get("is_new", False)),
-        stat_tile("Reach · search", gmb["reach_search"]["current"], gmb["reach_search"].get("delta", 0), is_new=gmb["reach_search"].get("is_new", False)),
-        stat_tile("Reach · maps", gmb["reach_maps"]["current"], gmb["reach_maps"].get("delta", 0), is_new=gmb["reach_maps"].get("is_new", False)),
-        stat_tile("Website clicks", gmb["website_clicks"]["current"], gmb["website_clicks"].get("delta", 0), is_new=gmb["website_clicks"].get("is_new", False)),
-        stat_tile("Phone clicks", gmb["phone_clicks"]["current"], gmb["phone_clicks"].get("delta", 0), is_new=gmb["phone_clicks"].get("is_new", False)),
-        stat_tile("Directions clicks", gmb["directions_clicks"]["current"], gmb["directions_clicks"].get("delta", 0), is_new=gmb["directions_clicks"].get("is_new", False)),
+        stat_tile("Posts published", gmb["posts_published"]["current"], gmb["posts_published"]["delta"], is_new=gmb["posts_published"].get("is_new", False), compare_label=gbp_compare_label),
+        stat_tile("Reach · search", gmb["reach_search"]["current"], gmb["reach_search"].get("delta", 0), is_new=gmb["reach_search"].get("is_new", False), compare_label=gbp_compare_label),
+        stat_tile("Reach · maps", gmb["reach_maps"]["current"], gmb["reach_maps"].get("delta", 0), is_new=gmb["reach_maps"].get("is_new", False), compare_label=gbp_compare_label),
+        stat_tile("Website clicks", gmb["website_clicks"]["current"], gmb["website_clicks"].get("delta", 0), is_new=gmb["website_clicks"].get("is_new", False), compare_label=gbp_compare_label),
+        stat_tile("Phone clicks", gmb["phone_clicks"]["current"], gmb["phone_clicks"].get("delta", 0), is_new=gmb["phone_clicks"].get("is_new", False), compare_label=gbp_compare_label),
+        stat_tile("Directions clicks", gmb["directions_clicks"]["current"], gmb["directions_clicks"].get("delta", 0), is_new=gmb["directions_clicks"].get("is_new", False), compare_label=gbp_compare_label),
     ])
+    gmb_window_note = (
+        f"Google's own reporting lags the rest of this dashboard by 1–2 weeks, so these "
+        f"six tiles (and the per-property cards below) use their own, independently-detected "
+        f"window instead of this week's <strong>{esc(data['week_label'])}</strong>: the most "
+        f"recent week where every Google Business property had complete daily data, "
+        f"<strong>{esc(gbp_window_label)}</strong>, compared against the fully-synced week "
+        f"before it, <strong>{esc(gbp_prev_window_label)}</strong>."
+    )
 
     gbp_props = data.get("gbp_by_property", [])
     gbp_maxes = {}
@@ -669,6 +680,8 @@ def build(data_path: Path) -> str:
     out = out.replace("{{FB_GROUPS_TILES}}", fg_html)
     out = out.replace("{{FB_GROUPS_NOTE}}", esc(fg["note"]))
     out = out.replace("{{GMB_TILES}}", gmb_html)
+    out = out.replace("{{GMB_WINDOW_NOTE}}", gmb_window_note)
+    out = out.replace("{{GBP_WINDOW_LABEL}}", esc(gbp_window_label))
     out = out.replace("{{GBP_PROPERTY_CARDS}}", gbp_property_cards)
     out = out.replace("{{GMB_URL_TRACKING_SECTION}}", gmb_url_tracking_section)
     out = out.replace("{{URL_TRACKING_SECTION}}", url_tracking_section)
