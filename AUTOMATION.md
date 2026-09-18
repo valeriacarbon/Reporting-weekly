@@ -244,19 +244,23 @@ facebook_groups = {groups_posted_in, groups_and_posts, interactions} always
   this week, and how many total posts across those groups (a group can get
   more than one post) — rendered as a single combined card, not two tiles.
 
-google_business.posts_published    = sum of GBP postsCount (GMEV17) across
-  properties, with delta. This is posts PUBLISHED during the week window —
-  not scheduled/future posts, despite the field's Metricool label.
+google_business.posts_published    = sum of GBP posts_published across
+  properties for the GBP_CURRENT window (see "GBP uses its own window"
+  below), with delta vs GBP_PRIOR. Verify this against the real publishing
+  calendar (`getScheduledPosts`), not the evolution connector's postsCount
+  — see the cross-check section further up.
 google_business.post_views         = sum of GBP postsViews (GMEV16) across
-  properties, with delta. This is the ONLY metric that measures how the
-  GBP posts themselves performed (not the listing/profile overall) — see
-  the "GBP posts vs. profile" note below before assuming Reach/Clicks have
-  anything to do with posting activity.
-google_business.reach_search       = sum of GMEV18 across properties, with delta
-google_business.reach_maps         = sum of GMEV19 across properties, with delta
-google_business.website_clicks     = sum of GMEV21 across properties, with delta
-google_business.phone_clicks       = sum of GMEV22 across properties, with delta
-google_business.directions_clicks  = sum of GMEV23 across properties, with delta
+  properties for the GBP_CURRENT window, with delta vs GBP_PRIOR. This is
+  the ONLY metric that measures how the GBP posts themselves performed
+  (not the listing/profile overall) — see the "GBP posts vs. profile"
+  note below before assuming Reach/Clicks have anything to do with
+  posting activity.
+google_business.reach_search       = sum of GMEV18 across properties for
+  the GBP_CURRENT window, with delta vs GBP_PRIOR
+google_business.reach_maps         = sum of GMEV19, same window/delta rule
+google_business.website_clicks     = sum of GMEV21, same window/delta rule
+google_business.phone_clicks       = sum of GMEV22, same window/delta rule
+google_business.directions_clicks  = sum of GMEV23, same window/delta rule
 ```
 
 `gbp_by_property` is a separate array (used by the "Google My Business —
@@ -264,25 +268,96 @@ by brand" per-property cards) with one entry per GBP-connected property
 (everyone except Capri Palms and Aztec Villa, which aren't on GBP):
 `{name, posts_published, post_views, reach_search, reach_maps,
 website_clicks, phone_clicks, directions_clicks}` — no delta per field,
-just this week's raw numbers (the cards show magnitude bars, not
-week-over-week chips). `posts_published` here should always match that
-property's `posts_channels["Google Business"]` value in the `properties`
-array — same number, just duplicated onto this array so the GBP card
-doesn't have to cross-reference `properties`.
+just the GBP_CURRENT window's raw numbers (the cards show magnitude bars,
+not week-over-week chips). `posts_published` here should always match
+that property's `posts_channels["Google Business"]` value in the
+`properties` array **only when GBP_CURRENT happens to equal this run's
+own week** — once GBP has its own window (the normal case), the two can
+legitimately differ, since `properties[].posts_channels` stays on this
+run's own Step 1 window while `gbp_by_property` follows GBP_CURRENT.
 
 There is no `google_business.specials_posts` anymore — Metricool does track
 Google Business posts after all (it was wrongly treated as a manual-only
 metric for a couple of weeks); everything GBP now comes straight from the
 API, no manual entry needed.
 
-**GBP data can lag by several days** — a query run the morning right after
-the week ends may come back with true zeros for reach/clicks (not null,
-actual `"0.0"` values) simply because Google's own Business Profile
-insights haven't synced into Metricool yet. If a run's GBP numbers all
-come back suspiciously flat, say so in generated_note and don't treat it
-as a real crash — but don't invent a delta-free "not available" placeholder
-either; write the real (possibly zero) numbers you got, since the next
-run will naturally correct itself once the data catches up.
+### GBP uses its own window, independent of the rest of the report (added 2026-09-19)
+
+**Do not assume GBP data for this run's own Step 1 window (`from`/`to`) is
+usable.** Verified 2026-09-19: even 8 days after the Sep 4-10 week ended,
+a fresh pull of that week's `reachSearch` totaled only ~26% of what it
+read a week later (1,544 vs 5,925 portfolio-wide) — Google's own
+reporting can lag *materially* longer than the "same-day recheck" pattern
+documented elsewhere in this file for other fields. Querying GBP on the
+same Step 1 window as everything else will routinely under-report by
+70-75% or more, silently.
+
+**The fix: `google_business` and `gbp_by_property` use their own date
+window, found by walking backward from the most recent completed week
+until one passes a completeness check** — never hardcode a fixed lag (a
+fixed N-day offset will eventually be wrong in one direction or the
+other as Google's own pipeline speeds up or slows down).
+
+**Algorithm:**
+1. Start with `GBP_CURRENT` = this run's own Step 1 week (the most recently
+   completed Friday-Thursday window).
+2. **Completeness test** for a candidate week: pull `["GMEV18","GMEV19","GMEV21","GMEV22","GMEV23"]`
+   (daily rows, not pre-aggregated) for every GBP-connected property over
+   that candidate's 7 days. The candidate is **complete** only if every
+   one of those properties has a **non-null `reachSearch` (GMEV18) value
+   for every one of the 7 calendar days** in range. `reachSearch` is the
+   signal to key on — it was the only one of the 5 fields that never
+   showed a stray null even on data confirmed stable weeks later, while
+   `reachMaps`/`websiteClicks`/`callClicks`/`directionsClicks` can
+   legitimately stay null for a single low-traffic property/day
+   indefinitely (a real sparse zero, not a sync gap) — requiring *all
+   five* fields non-null means no week ever passes and the walk-back
+   never terminates. A day with a row present but `reachSearch` null
+   (e.g. a day that "returns Maps only") still fails the test.
+3. If the candidate fails, step back one week (both `from` and `to` move
+   back 7 days, keeping the same Step-1 boundary convention) and test
+   again. Repeat until a candidate passes.
+4. The first week that passes becomes **GBP_CURRENT**. Then test the week
+   immediately before it the same way — since it's older, it will
+   virtually always already pass — and that becomes **GBP_PRIOR**, the
+   baseline for GBP delta comparisons. (Don't skip this second test; in
+   principle a property could have a real historical gap.)
+5. Compute `google_business` and `gbp_by_property` from GBP_CURRENT's raw
+   pulled data (SUM per field, null treated as 0, same as every other GBP
+   aggregation in this file). Compute deltas against GBP_PRIOR's
+   equivalent totals (pull GBP_PRIOR fresh the same way — don't reuse a
+   stale stored value from an old file, since by definition that old
+   file's own GBP numbers were written before GBP_PRIOR had stabilized).
+6. Write `gbp_window_label` and `gbp_prev_window_label` at the top level
+   of the data file — the same label format as `week_label`/`prev_week_label`
+   (label start = one calendar day before that window's `from`) — e.g.
+   `"gbp_window_label": "Sep 3 – 10, 2026"`. `build_report.py` reads these
+   to render a note box under the "Google My Business" heading explaining
+   the window mismatch, and to relabel each GMB tile's delta chip (e.g.
+   "vs Aug 27 – Sep 3, 2026" instead of "vs last wk").
+7. `posts_published` is NOT subject to this lag — it's sourced from
+   `getScheduledPosts` (the real publishing calendar), which is either
+   published or not, with no gradual-backfill behavior. Still compute it
+   for GBP_CURRENT/GBP_PRIOR (not this run's own week) so the six GMB
+   tiles stay internally consistent about which window they describe —
+   just don't bother re-verifying it against multiple candidate weeks the
+   way Reach/Clicks needs.
+
+**Everything else in this report is unaffected.** Followers, Posts,
+Engagement, Views, the by-brand property detail, Facebook Groups, and
+both GA4 URL Tracking sections all keep using this run's own Step 1
+window exactly as before — GBP_CURRENT/GBP_PRIOR only ever apply to the
+`google_business` and `gbp_by_property` blocks (Posts Published,
+Reach · Search, Reach · Maps, Website Clicks, Phone Clicks, Directions
+Clicks, and the by-brand GBP cards). Do not let `week_label`/
+`prev_week_label` drift to match GBP_CURRENT — they describe the rest of
+the report and must stay on this run's own window.
+
+**In the common case GBP_CURRENT will be one full week behind this run's
+own window** (i.e. equal to the *previous* run's window) — that's normal,
+expected, and not a bug to "fix" by pulling harder. Only walk back
+further than one week if that one-week-back candidate still fails the
+completeness test.
 
 The GMB section on the dashboard shows exactly 6 tiles, in this order:
 Posts Published, Reach · Search, Reach · Maps, Website Clicks, Phone
