@@ -47,6 +47,19 @@ STATUS_GOOD = {"dark": "#0ca30c", "light": "#006300"}
 STATUS_BAD = {"dark": "#e66767", "light": "#e34948"}
 STATUS_FLAT = {"dark": "#898781", "light": "#898781"}
 
+# Fixed stacking/legend order for the by-channel bar breakdown -- same order
+# and colors (from CHANNEL_COLORS) everywhere a channel stack appears, so the
+# color-to-channel mapping never shifts between metrics or sections.
+CHANNEL_ORDER = ["TikTok", "Instagram", "Facebook", "Google Business"]
+
+
+def _channel_css_var(channel):
+    return f"ch-{channel.lower().replace(' ', '-')}"
+
+
+def _channel_short_label(channel):
+    return "GBP" if channel == "Google Business" else channel
+
 
 def esc(s):
     return html.escape(str(s), quote=True)
@@ -98,12 +111,41 @@ def _log_domain(max_value):
     return 10, ceiling, lines
 
 
-def wow_totals_chart(kpis, week_label, prev_week_label):
+def _rounded_top_rect_path(x, y, w, h, r):
+    """Path for a rect rounded on its top two corners only, square at the
+    baseline -- lets a stacked bar keep the same rounded-top silhouette as a
+    solid bar while its interior segment boundaries are plain straight-across
+    rects (clipped to this path), per the dataviz skill's mark spec."""
+    r = min(r, w / 2, h) if h > 0 else 0
+    return (
+        f"M{x:.2f},{y + h:.2f} "
+        f"L{x:.2f},{y + r:.2f} "
+        f"Q{x:.2f},{y:.2f} {x + r:.2f},{y:.2f} "
+        f"L{x + w - r:.2f},{y:.2f} "
+        f"Q{x + w:.2f},{y:.2f} {x + w:.2f},{y + r:.2f} "
+        f"L{x + w:.2f},{y + h:.2f} Z"
+    )
+
+
+def wow_totals_chart(kpis, week_label, prev_week_label, channel_breakdowns):
     """Grouped bar chart (log scale) comparing this week vs last week across
     all four portfolio KPIs in one view -- they differ by orders of magnitude
     (posts in the tens, views in the tens of thousands), so a shared linear
-    axis would flatten the smaller ones to invisible slivers. One hue, two
-    shades (previous vs current), per the dumbbell/before-after form."""
+    axis would flatten the smaller ones to invisible slivers.
+
+    The "last week" bar stays exactly what it was: one solid mark, a single
+    total, nothing to break down. The "this week" bar is stacked by channel
+    (TikTok/Instagram/Facebook/Google Business, CHANNEL_ORDER, same colors
+    used everywhere else in the report) so this week's composition is visible
+    at a glance -- only the internal fill of that one bar changes; its
+    position, height and the log axis underneath are computed exactly as
+    before, so the two bars stay perfectly comparable.
+
+    channel_breakdowns maps each metric label to its list of
+    {"channel", "current"} dicts (e.g. data["views_by_channel"]) -- a channel
+    absent from a given metric (Google Business has no "Followers") is
+    treated as zero and simply doesn't get a segment.
+    """
     metrics = [
         ("Followers", kpis["followers"]),
         ("Posts", kpis["posts"]),
@@ -130,9 +172,11 @@ def wow_totals_chart(kpis, week_label, prev_week_label):
     group_w = plot_w / len(metrics)
     bar_w = min(46, group_w * 0.28)
     bar_gap = 6
+    seg_gap = 2  # surface gap between stacked segments, per the mark spec
 
     parts = [f'<svg viewBox="0 0 {W} {H}" width="100%" height="auto" role="img" '
-             f'aria-label="This week vs last week, all portfolio KPIs, log scale">']
+             f'aria-label="This week vs last week, all portfolio KPIs, log scale, '
+             f'this week broken down by channel">']
 
     for g in gridlines:
         y = y_of(g)
@@ -148,14 +192,56 @@ def wow_totals_chart(kpis, week_label, prev_week_label):
         curr_x = cx + bar_gap / 2
         prev_y, curr_y = y_of(prev), y_of(current)
         base_y = top_pad + plot_h
+
+        # Last week: unchanged -- one solid mark, one total.
         parts.append(
             f'<rect x="{prev_x:.1f}" y="{prev_y:.1f}" width="{bar_w:.1f}" '
-            f'height="{base_y - prev_y:.1f}" rx="4" fill="var(--compare-prev)"/>'
+            f'height="{base_y - prev_y:.1f}" rx="4" fill="var(--compare-prev)">'
+            f'<title>{esc(prev_week_label)} {esc(label)}: {fmt(prev)}</title></rect>'
         )
-        parts.append(
-            f'<rect x="{curr_x:.1f}" y="{curr_y:.1f}" width="{bar_w:.1f}" '
-            f'height="{base_y - curr_y:.1f}" rx="4" fill="var(--series-sequential)"/>'
-        )
+
+        # This week: stacked by channel, clipped to the bar's rounded-top
+        # silhouette so the composite still reads as a single mark. Falls
+        # back to the old solid bar for a metric whose breakdown isn't in
+        # the data file yet (older weekly snapshots), rather than rendering
+        # an empty bar.
+        breakdown = channel_breakdowns.get(label)
+        if breakdown is None:
+            parts.append(
+                f'<rect x="{curr_x:.1f}" y="{curr_y:.1f}" width="{bar_w:.1f}" '
+                f'height="{base_y - curr_y:.1f}" rx="4" fill="var(--series-sequential)">'
+                f'<title>{esc(week_label)} {esc(label)}: {fmt(current)}</title></rect>'
+            )
+        else:
+            by_channel = {c["channel"]: c["current"] for c in breakdown}
+            segments = []
+            cum = 0
+            for channel in CHANNEL_ORDER:
+                seg_value = by_channel.get(channel, 0)
+                if seg_value <= 0:
+                    continue
+                seg_top = y_of(cum + seg_value)
+                seg_bottom = y_of(cum) if cum > 0 else base_y
+                segments.append((channel, seg_value, seg_top, seg_bottom))
+                cum += seg_value
+
+            clip_id = f"wowclip-{i}"
+            parts.append(f'<clipPath id="{clip_id}"><path d="'
+                          f'{_rounded_top_rect_path(curr_x, curr_y, bar_w, base_y - curr_y, 4)}"/></clipPath>')
+            parts.append(f'<g clip-path="url(#{clip_id})">')
+            min_seg_h = 1.5  # a real, nonzero channel never fully disappears on the log scale
+            for idx, (channel, seg_value, seg_top, seg_bottom) in enumerate(segments):
+                y0 = seg_top + (0 if idx == len(segments) - 1 else seg_gap / 2)
+                y1 = seg_bottom - (0 if idx == 0 else seg_gap / 2)
+                if y1 - y0 < min_seg_h:
+                    y0 = min(y0, y1 - min_seg_h)
+                parts.append(
+                    f'<rect x="{curr_x:.1f}" y="{y0:.1f}" width="{bar_w:.1f}" '
+                    f'height="{max(y1 - y0, 0):.1f}" fill="var(--{_channel_css_var(channel)})">'
+                    f'<title>{esc(_channel_short_label(channel))}: {fmt(seg_value)}</title></rect>'
+                )
+            parts.append('</g>')
+
         parts.append(f'<text x="{prev_x + bar_w/2:.1f}" y="{prev_y - 8:.1f}" text-anchor="middle" '
                       f'class="wow-value-label">{fmt(prev)}</text>')
         parts.append(f'<text x="{curr_x + bar_w/2:.1f}" y="{curr_y - 8:.1f}" text-anchor="middle" '
@@ -167,13 +253,20 @@ def wow_totals_chart(kpis, week_label, prev_week_label):
                   f'y2="{top_pad + plot_h:.1f}" stroke="var(--baseline)" stroke-width="1.5"/>')
     parts.append("</svg>")
 
-    legend = (
+    week_legend = (
         '<div class="wow-legend">'
         f'<span class="legend-item"><span class="legend-dot" style="background:var(--compare-prev)"></span>{esc(prev_week_label)}</span>'
         f'<span class="legend-item"><span class="legend-dot" style="background:var(--series-sequential)"></span>{esc(week_label)}</span>'
         '</div>'
     )
-    return legend + "".join(parts)
+    channel_legend = "".join(
+        f'<span class="legend-item">'
+        f'<span class="legend-dot" style="background:var(--{_channel_css_var(ch)})"></span>'
+        f'{esc(_channel_short_label(ch))}</span>'
+        for ch in CHANNEL_ORDER
+    )
+    channel_legend_html = f'<div class="wow-legend channel-legend">{channel_legend}</div>'
+    return week_legend + channel_legend_html + "".join(parts)
 
 
 def mini_bar(current, max_value, css_var="series-sequential", height=6, width=64):
@@ -572,7 +665,13 @@ def build(data_path: Path) -> str:
                    channel_breakdown_html=channel_value_chips(ebc) if ebc else ""),
         stat_tile("Views", kpis["views"]["current"], kpis["views"]["delta"], compare_label="vs last wk"),
     ])
-    wow_chart = wow_totals_chart(kpis, data["week_label"], data["prev_week_label"])
+    channel_breakdowns = {
+        "Followers": fbc,
+        "Posts": data.get("posts_by_channel"),
+        "Engagement": ebc,
+        "Views": data.get("views_by_channel"),
+    }
+    wow_chart = wow_totals_chart(kpis, data["week_label"], data["prev_week_label"], channel_breakdowns)
 
     fbc_max = max(c["current"] for c in fbc)
     followers_chart = "".join(

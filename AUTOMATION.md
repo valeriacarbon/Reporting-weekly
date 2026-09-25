@@ -235,6 +235,21 @@ posts_by_channel = per network (Facebook/TikTok/Instagram/Google Business),
   sum of that network's post count across all properties (no delta needed,
   matches existing shape)
 
+views_by_channel = per network (Facebook/Instagram/TikTok/Google Business),
+  added 2026-09-25 to feed the by-channel stacked segments on the "This week
+  vs last week" chart's current-week bar (see "This week vs last week" chart
+  below). Facebook = postsImpressions + reelsVideoViews, Instagram = views,
+  TikTok = views, same per-network fields Step 4's `views` formula sums —
+  Google Business is always 0 here (Post Views is hidden/unreliable, see
+  "Post Views investigation" below, and GBP is never folded into the Views
+  KPI in the first place). No delta needed, same shape as posts_by_channel/
+  engagement_by_channel. **The four values must sum to exactly
+  kpis.views.current** — build_report.py doesn't assert this one, so check
+  it by hand before shipping. Write it every week now that the feature
+  exists; an older file missing this key still renders (the chart falls back
+  to one solid Views bar for that file only), but don't let that become the
+  new normal.
+
 facebook_groups = {groups_posted_in, groups_and_posts, interactions} always
   {0,0} with the existing note — Metricool doesn't expose Facebook Group
   data; only change this if that ever becomes available. "interactions" is
@@ -280,6 +295,48 @@ There is no `google_business.specials_posts` anymore — Metricool does track
 Google Business posts after all (it was wrongly treated as a manual-only
 metric for a couple of weeks); everything GBP now comes straight from the
 API, no manual entry needed.
+
+### "This week vs last week" chart: current-week bar stacked by channel (added 2026-09-25)
+
+The "Portfolio at a glance" / "This week vs last week — portfolio totals"
+log-scale chart (`wow_totals_chart()` in `scripts/build_report.py`) works the
+same as before with one change: the **last week (gray) bar is still one
+solid mark, unchanged** — but the **this week (blue) bar is now stacked by
+channel** (TikTok/Instagram/Facebook/Google Business), so this week's
+composition is visible without opening the per-channel sections further
+down the page. The total value label on top of each bar, the bar's height/
+position, and the log axis underneath are all computed exactly as before —
+only the internal fill of the current-week bar changed.
+
+- **`CHANNEL_ORDER`** (`scripts/build_report.py`) is the one fixed
+  bottom-to-top stacking order used for every metric's stack, and the same
+  order the small "by channel" legend lists — do not reorder it or make it
+  vary per metric; the color-to-channel mapping (`CHANNEL_COLORS`, same
+  `--ch-*` CSS vars used everywhere else in the report) has to stay
+  identical across Followers/Posts/Engagement/Views and the rest of the
+  dashboard, per Val's explicit ask.
+- Each metric reads its breakdown from `followers_by_channel` /
+  `posts_by_channel` / `engagement_by_channel` / `views_by_channel` (the last
+  one is new — see Step 6 above for how to compute it). A channel absent
+  from a given metric's breakdown (Google Business has no "Followers") is
+  treated as zero and just doesn't get a segment — that's expected, not a
+  bug.
+- **The four (or three, for Followers) channel values for a metric must sum
+  to exactly that metric's `kpis.*.current`** — the stack's top has to land
+  on the same y-position as the existing total-value label above it, or the
+  bar and its label visibly disagree. `build()` doesn't assert this
+  automatically (unlike the GBP window guard); eyeball it or check by hand
+  when writing a new data file.
+- If a data file is missing one of these four `*_by_channel` keys entirely
+  (only possible for `views_by_channel` right now, since it's the newest —
+  the other three have existed for a while), that one metric's current-week
+  bar falls back to the old solid single-color bar rather than rendering
+  empty. Don't rely on that fallback going forward — write all four keys
+  every week.
+- Each segment (and the solid last-week bar) carries an SVG `<title>` for a
+  native hover/focus tooltip naming the channel and its exact value — there's
+  no client-side JS chart library in this report, so this is the accessible,
+  zero-dependency way to expose the per-segment number without adding one.
 
 ### GBP uses its own window, independent of the rest of the report (added 2026-09-19)
 

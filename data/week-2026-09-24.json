@@ -878,5 +878,23 @@
       "start": "2026-08-28",
       "end": "2026-09-03"
     }
-  }
+  },
+  "views_by_channel": [
+    {
+      "channel": "Facebook",
+      "current": 1177
+    },
+    {
+      "channel": "Instagram",
+      "current": 5307
+    },
+    {
+      "channel": "TikTok",
+      "current": 12363
+    },
+    {
+      "channel": "Google Business",
+      "current": 0
+    }
+  ]
 }
