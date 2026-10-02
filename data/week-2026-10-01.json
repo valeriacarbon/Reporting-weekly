@@ -1,7 +1,7 @@
 {
   "week_label": "Sep 24 – Oct 1, 2026",
   "prev_week_label": "Sep 17 – 24, 2026",
-  "generated_note": "Automated Friday run (2026-10-02) pulled live from Metricool per AUTOMATION.md, window Sep 25-Oct 1, 2026 (week_label shows Sep 24-Oct 1 for continuity). GBP Posts Published for this window verified via getScheduledPosts (ground-truth local publicationDate + status per property's own timezone): 3 properties published a real GBP post inside this window (Residences at the Overlook, Santa Fe, Villa Siena -- all Fri Sep 25 local); everyone else's next post is scheduled for Fri Oct 2 and still PENDING, not yet live. GBP WINDOW: re-ran the walk-back completeness test (GMEV18/reachSearch non-null for all 7 days, every GBP-connected property) starting from this run's own week -- Sep 25-Oct 1 failed (only 1 of 7 days present), and Sep 18-24 and Sep 11-17 both failed again too (1 of 7 and 3 of 7 days respectively, Sep 11-17 unchanged for three weeks running now), so the window falls back to GBP_CURRENT = Sep 4-10 (Sep 3-10, 2026) / GBP_PRIOR = Aug 28-Sep 3 (Aug 27-Sep 3, 2026) -- unchanged for the third week running. Spot-checked GMEV18 for Sep 4-10 across multiple properties and confirmed digit-for-digit identical to the last two runs' fully-verified pulls, so google_business/gbp_by_property/gbp_window are carried over verbatim again this run rather than re-pulling all five fields for all 13 properties a third time. Engagement KPI = social interactions (Facebook 1 + Instagram 38 + TikTok 682 = 721) + GBP action clicks (1,695, same GBP_CURRENT window as above) = 2,416, per the 2026-09-12 methodology; delta computed straight against last week's published Engagement (2,558) -- note this is a real drop in social interactions week over week, not a data issue (GBP clicks are flat since the window didn't move). Facebook Groups metrics stay at 0/0 (still manual-only, unchanged). URL Tracking and GMB URL Tracking: no new GA4 export received this week -- both carried forward unchanged from the last real numbers (delta 0) rather than disappearing, per policy. views_by_channel computed fresh this run (Facebook 807 + Instagram 6,937 + TikTok 12,120 + Google Business 0 = 19,864, matches kpis.views). MANUAL CORRECTION (2026-10-03, per Val): Ingleside Terrace published a GBP post on Sep 30, 2026 directly through the Google Business Profile app, bypassing Metricool's scheduler entirely -- getScheduledPosts cannot see it (it only lists posts Metricool itself scheduled), and the lone gmb-network entry it returned for this property (id 385337536) is an unrelated, still-PENDING post queued for Oct 2. Val confirmed the Sep 30 post directly, so it is added by hand: Ingleside Terrace posts_channels[\"Google Business\"] 0 -> 1, posts.current 3 -> 4; posts_by_channel Google Business 3 -> 4; kpis.posts.current 42 -> 43, delta -1 -> 0. This does NOT touch google_business / gbp_by_property / gbp_window (the GBP_CURRENT rollup section) -- that window is Sep 4-10, unaffected by a Sep 30 post. Once GMEV17 (the evolution connector's postsCount field, which reads Google's own account activity regardless of origin) finishes syncing for this window -- currently only 1 of 7 days present -- it should corroborate this post independently; if it does not, that is worth a second look.",
+  "generated_note": "Automated Friday run (2026-10-02) pulled live from Metricool per AUTOMATION.md, window Sep 25-Oct 1, 2026 (week_label shows Sep 24-Oct 1 for continuity). GBP Posts Published for this window verified via getScheduledPosts (ground-truth local publicationDate + status per property's own timezone): 3 properties published a real GBP post inside this window (Residences at the Overlook, Santa Fe, Villa Siena -- all Fri Sep 25 local); everyone else's next post is scheduled for Fri Oct 2 and still PENDING, not yet live. GBP WINDOW: re-ran the walk-back completeness test (GMEV18/reachSearch non-null for all 7 days, every GBP-connected property) starting from this run's own week -- Sep 25-Oct 1 failed (only 1 of 7 days present), and Sep 18-24 and Sep 11-17 both failed again too (1 of 7 and 3 of 7 days respectively, Sep 11-17 unchanged for three weeks running now), so the window falls back to GBP_CURRENT = Sep 4-10 (Sep 3-10, 2026) / GBP_PRIOR = Aug 28-Sep 3 (Aug 27-Sep 3, 2026) -- unchanged for the third week running. Spot-checked GMEV18 for Sep 4-10 across multiple properties and confirmed digit-for-digit identical to the last two runs' fully-verified pulls, so google_business/gbp_by_property/gbp_window are carried over verbatim again this run rather than re-pulling all five fields for all 13 properties a third time. Engagement KPI = social interactions (Facebook 1 + Instagram 38 + TikTok 682 = 721) + GBP action clicks (1,695, same GBP_CURRENT window as above) = 2,416, per the 2026-09-12 methodology; delta computed straight against last week's published Engagement (2,558) -- note this is a real drop in social interactions week over week, not a data issue (GBP clicks are flat since the window didn't move). Facebook Groups metrics stay at 0/0 (still manual-only, unchanged). URL Tracking and GMB URL Tracking: no new GA4 export received this week -- both carried forward unchanged from the last real numbers (delta 0) rather than disappearing, per policy. views_by_channel computed fresh this run (Facebook 807 + Instagram 6,937 + TikTok 12,120 + Google Business 0 = 19,864, matches kpis.views). MANUAL CORRECTION (2026-10-03, per Val): Ingleside Terrace published a GBP post on Sep 30, 2026 directly through the Google Business Profile app, bypassing Metricool's scheduler entirely -- getScheduledPosts cannot see it (it only lists posts Metricool itself scheduled), and the lone gmb-network entry it returned for this property (id 385337536) is an unrelated, still-PENDING post queued for Oct 2. Val confirmed the Sep 30 post directly, so it is added by hand: Ingleside Terrace posts_channels[\"Google Business\"] 0 -> 1, posts.current 3 -> 4; posts_by_channel Google Business 3 -> 4; kpis.posts.current 42 -> 43, delta -1 -> 0. This does NOT touch google_business / gbp_by_property / gbp_window (the GBP_CURRENT rollup section) -- that window is Sep 4-10, unaffected by a Sep 30 post. Once GMEV17 (the evolution connector's postsCount field, which reads Google's own account activity regardless of origin) finishes syncing for this window -- currently only 1 of 7 days present -- it should corroborate this post independently; if it does not, that is worth a second look. URL TRACKING UPDATE (2026-10-03): Val shared this week's real GA4 export for both FB Groups and GMB link tracking (window Sep 24-Oct 2, 2026). FB Groups: Views 44, Sessions 23, Engaged Sessions 15, Tours 0 (delta vs last real reading Sep 17-25: -41/-7/-3/0). GMB: Views 1,344, Sessions 388, Engaged Sessions 261, Key Events 0 (delta vs last real reading Sep 17-25: +37/-77/-23/0). Both replace the carried-forward placeholders this file originally shipped with.",
   "kpis": {
     "followers": {
       "current": 2315,
@@ -649,16 +649,16 @@
   ],
   "url_tracking": {
     "views": {
-      "current": 85,
-      "delta": 0
+      "current": 44,
+      "delta": -41
     },
     "sessions": {
-      "current": 30,
-      "delta": 0
+      "current": 23,
+      "delta": -7
     },
     "engaged_sessions": {
-      "current": 18,
-      "delta": 0
+      "current": 15,
+      "delta": -3
     },
     "tours": {
       "current": 0,
@@ -667,16 +667,16 @@
     "by_property": [
       {
         "name": "The Landings at North Ingleside",
-        "views": 0,
-        "sessions": 0,
-        "engaged_sessions": 0,
+        "views": 12,
+        "sessions": 6,
+        "engaged_sessions": 4,
         "tours": 0
       },
       {
         "name": "Berry Falls",
-        "views": 10,
-        "sessions": 5,
-        "engaged_sessions": 2,
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
         "tours": 0
       },
       {
@@ -688,9 +688,9 @@
       },
       {
         "name": "Ingleside Terrace",
-        "views": 0,
-        "sessions": 0,
-        "engaged_sessions": 0,
+        "views": 7,
+        "sessions": 5,
+        "engaged_sessions": 4,
         "tours": 0
       },
       {
@@ -709,16 +709,16 @@
       },
       {
         "name": "Residences at the Overlook",
-        "views": 15,
-        "sessions": 3,
-        "engaged_sessions": 1,
+        "views": 6,
+        "sessions": 5,
+        "engaged_sessions": 2,
         "tours": 0
       },
       {
         "name": "The Lamar Lofts",
-        "views": 12,
-        "sessions": 6,
-        "engaged_sessions": 4,
+        "views": 1,
+        "sessions": 1,
+        "engaged_sessions": 0,
         "tours": 0
       },
       {
@@ -730,30 +730,30 @@
       },
       {
         "name": "Hills at Hoover",
-        "views": 8,
-        "sessions": 2,
-        "engaged_sessions": 2,
+        "views": 9,
+        "sessions": 3,
+        "engaged_sessions": 3,
         "tours": 0
       },
       {
         "name": "Claxton Pointe & Pecan Ridge",
-        "views": 12,
-        "sessions": 6,
-        "engaged_sessions": 4,
+        "views": 1,
+        "sessions": 1,
+        "engaged_sessions": 0,
         "tours": 0
       },
       {
         "name": "Santa Fe",
-        "views": 6,
-        "sessions": 2,
-        "engaged_sessions": 2,
+        "views": 0,
+        "sessions": 0,
+        "engaged_sessions": 0,
         "tours": 0
       },
       {
         "name": "Villa Siena",
-        "views": 22,
-        "sessions": 6,
-        "engaged_sessions": 3,
+        "views": 8,
+        "sessions": 2,
+        "engaged_sessions": 2,
         "tours": 0
       },
       {
@@ -764,20 +764,20 @@
         "tours": 0
       }
     ],
-    "note": "No new GA4 export received this week for Facebook Group link tracking -- carried forward unchanged from the last real numbers (Sep 17–Sep 25, 2026 window shown below), deltas zeroed rather than showing stale week-over-week comparisons."
+    "note": "Traffic from Facebook Group posts (GA4 source: fbgroups / organic), Sep 24–Oct 2, 2026. Capri Palms isn't included (no GA4 tracking set up for it yet)."
   },
   "gmb_url_tracking": {
     "views": {
-      "current": 1307,
-      "delta": 0
+      "current": 1344,
+      "delta": 37
     },
     "sessions": {
-      "current": 465,
-      "delta": 0
+      "current": 388,
+      "delta": -77
     },
     "engaged_sessions": {
-      "current": 284,
-      "delta": 0
+      "current": 261,
+      "delta": -23
     },
     "key_events": {
       "current": 0,
@@ -786,37 +786,37 @@
     "by_property": [
       {
         "name": "The Landings at North Ingleside",
-        "views": 6,
-        "sessions": 6,
-        "engaged_sessions": 0,
+        "views": 28,
+        "sessions": 13,
+        "engaged_sessions": 4,
         "key_events": 0
       },
       {
         "name": "Berry Falls",
         "views": 2,
-        "sessions": 2,
-        "engaged_sessions": 0,
+        "sessions": 1,
+        "engaged_sessions": 1,
         "key_events": 0
       },
       {
         "name": "The Kenzie",
-        "views": 48,
-        "sessions": 15,
-        "engaged_sessions": 7,
+        "views": 34,
+        "sessions": 14,
+        "engaged_sessions": 5,
         "key_events": 0
       },
       {
         "name": "Ingleside Terrace",
-        "views": 106,
-        "sessions": 45,
-        "engaged_sessions": 24,
+        "views": 125,
+        "sessions": 55,
+        "engaged_sessions": 37,
         "key_events": 0
       },
       {
         "name": "Lakeside/Lakeview",
-        "views": 19,
-        "sessions": 8,
-        "engaged_sessions": 3,
+        "views": 5,
+        "sessions": 5,
+        "engaged_sessions": 0,
         "key_events": 0
       },
       {
@@ -828,62 +828,62 @@
       },
       {
         "name": "Residences at the Overlook",
-        "views": 0,
-        "sessions": 0,
-        "engaged_sessions": 0,
+        "views": 5,
+        "sessions": 2,
+        "engaged_sessions": 2,
         "key_events": 0
       },
       {
         "name": "The Lamar Lofts",
-        "views": 39,
-        "sessions": 16,
-        "engaged_sessions": 5,
+        "views": 28,
+        "sessions": 11,
+        "engaged_sessions": 2,
         "key_events": 0
       },
       {
         "name": "The Benton",
-        "views": 12,
-        "sessions": 5,
+        "views": 6,
+        "sessions": 3,
         "engaged_sessions": 3,
         "key_events": 0
       },
       {
         "name": "Hills at Hoover",
-        "views": 364,
-        "sessions": 123,
-        "engaged_sessions": 82,
+        "views": 322,
+        "sessions": 90,
+        "engaged_sessions": 61,
         "key_events": 0
       },
       {
         "name": "Claxton Pointe & Pecan Ridge",
-        "views": 39,
-        "sessions": 16,
-        "engaged_sessions": 5,
+        "views": 28,
+        "sessions": 11,
+        "engaged_sessions": 2,
         "key_events": 0
       },
       {
         "name": "Santa Fe",
-        "views": 251,
-        "sessions": 94,
-        "engaged_sessions": 55,
+        "views": 436,
+        "sessions": 84,
+        "engaged_sessions": 66,
         "key_events": 0
       },
       {
         "name": "Villa Siena",
-        "views": 421,
-        "sessions": 135,
-        "engaged_sessions": 100,
+        "views": 324,
+        "sessions": 98,
+        "engaged_sessions": 78,
         "key_events": 0
       },
       {
         "name": "Aztec Villa",
-        "views": 0,
-        "sessions": 0,
+        "views": 1,
+        "sessions": 1,
         "engaged_sessions": 0,
         "key_events": 0
       }
     ],
-    "note": "No new GA4 export received this week for Google Business Profile link tracking -- carried forward unchanged from the last real numbers (Sep 17–Sep 25, 2026 window shown below), deltas zeroed rather than showing stale week-over-week comparisons."
+    "note": "Traffic that landed on each property's site from its Google Business Profile (GA4 source: GMB / GMB), Sep 24–Oct 2, 2026. Capri Palms isn't included (no GA4 tracking set up for it yet)."
   },
   "gbp_window_label": "Sep 3 – 10, 2026",
   "gbp_prev_window_label": "Aug 27 – Sep 3, 2026",
