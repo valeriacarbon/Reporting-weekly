@@ -90,6 +90,32 @@ Only fall back to the two analytics connectors (cross-checking each
 other) if `getScheduledPosts` comes back empty for a property that should
 have posted -- that's more likely a real API hiccup than a labeling bug.
 
+**`getScheduledPosts` has a structural blind spot: posts published
+directly through the Google Business Profile app/website, bypassing
+Metricool's scheduler entirely, don't exist in its data at all** (fixed
+2026-10-03, Ingleside Terrace, Sep 25-Oct 1 run). It only lists posts
+Metricool itself scheduled -- there's no API-visible difference between
+"this property posted nothing" and "this property posted directly to
+Google," since both return nothing relevant from this tool. The
+evolution connector's `GMEV17` (`postsCount`) *does* read Google's own
+account activity regardless of origin, so a direct-to-Google post
+should eventually show up there -- but only once it syncs, which given
+the GBP lag documented below can take 1-2+ weeks, i.e. it will not be
+available in time for the week it actually happened in. **There is no
+automated way to catch this.** If a property's real activity doesn't
+match what `getScheduledPosts` shows, ask Val rather than trusting the
+tool silently -- she'll know if she posted outside Metricool. When she
+confirms one, add it by hand to that property's
+`posts_channels["Google Business"]` (and roll the total up through
+`posts.current` / `posts_by_channel` / `kpis.posts`, same as any other
+aggregate), and say so plainly in `generated_note` with enough detail
+that a future run doesn't "helpfully" overwrite it back to 0. This is
+scoped to `properties[].posts_channels` / `posts_by_channel` /
+`kpis.posts` only (this run's own Step 1 window) -- it has nothing to do
+with the separate `google_business` / `gbp_by_property` GBP_CURRENT
+rollup, which runs on its own lagged window (see below) and wouldn't
+even cover the same dates most weeks.
+
 (Properties themselves sit in Eastern/Central/Mexico City time, not all
 UTC-6 — this can miscount a post right at the week's edge by a day. That's a
 known, already-accepted limitation; do not try to fix it per-property, it
