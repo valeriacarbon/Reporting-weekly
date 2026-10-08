@@ -507,6 +507,68 @@ expected, and not a bug to "fix" by pulling harder. Only walk back
 further than one week if that one-week-back candidate still fails the
 completeness test.
 
+### The "multi-week GBP lag" (2026-09 runs) was a false alarm — the real bug was in how the completeness test itself queries data (fixed 2026-10-08)
+
+**What went wrong:** for three weekly runs in a row (Sep 11-17, Sep 18-24,
+Sep 25-Oct 1), the walk-back completeness test above concluded every
+candidate week back to Sep 4-10 was incomplete, so GBP_CURRENT got stuck
+at Sep 4-10 for three weeks running. This was reported in each of those
+runs' `generated_note` as a genuine multi-week Google/Metricool sync lag.
+**It wasn't.** Val checked Metricool's own UI directly on 2026-10-08 and
+saw September fully loaded, with only Metricool's standard "some GBP
+metrics may not be available for the last 5-6 days" disclaimer — nothing
+close to a 3+ week lag.
+
+**Root cause:** `getAnalyticsDataByMetrics` called with all 5 GBP
+evolution fields together (`["GMEV18","GMEV19","GMEV21","GMEV22","GMEV23"]`)
+**intermittently drops entire dates from the merged result**, even though
+every one of those dates has real, non-null data. Confirmed directly:
+running the *exact same* 5-field call twice in a row, seconds apart, for
+the same property and date range produced two different results — the
+first cut off partway through the range (looking exactly like a sync
+lag), the second returned the full range cleanly. Pulling each field
+**individually** (`["GMEV18"]` alone, etc.) always returned the complete,
+correct range, every time. The bug is specific to combining multiple
+evolution fields in one call — it is not a real gap in Metricool's data,
+and it is not a Google-side reporting lag.
+
+**The completeness test (step 2 above) was unknowingly measuring this
+bug, not real data completeness** — a candidate week "failed" because
+the 5-field query dropped some of its dates in the merged response, not
+because Google/Metricool hadn't synced that week yet.
+
+**Fixed procedure — do this from now on:**
+1. Still pull all 5 fields together first (one call per property, as
+   before — it's usually fine and saves calls).
+2. **Before concluding a date is missing, check row count first.** A
+   genuinely complete week returns exactly 7 rows per property (one per
+   calendar day — `reachSearch` can legitimately be `null` within a row,
+   but the row itself must be present for all 7 dates). If any property
+   returns fewer than 7 rows, **do not conclude the week is incomplete
+   yet** — re-run the identical call once more. If the retry returns all
+   7 rows, use that (the first call hit the merge bug). Only treat a week
+   as genuinely incomplete if a property *still* comes back short after a
+   retry.
+3. If a retry still comes up short, fall back to pulling that property's
+   missing fields individually or in pairs (e.g. `["GMEV18","GMEV19"]` then
+   `["GMEV21","GMEV22","GMEV23"]`) rather than all 5 together — this has
+   not been observed to drop dates in this account.
+4. **Never conclude a multi-week lag from a single pull.** If a week looks
+   incomplete, retry before walking back further — walking back without
+   retrying is how the false 3-week "lag" got reported as fact three runs
+   in a row.
+
+**Correction applied 2026-10-08:** re-ran the completeness test with the
+retry procedure above for Sep 25-Oct 1 (this run's own week) and Sep
+18-24 (prior week) — both came back fully complete, all 13 properties,
+13×7=91 rows exactly, no retries even needed. GBP_CURRENT/GBP_PRIOR are
+corrected to Sep 25-Oct 1 / Sep 18-24 in `data/week-2026-10-01.json` (see
+that file's `generated_note` for the exact before/after numbers). Earlier
+weekly files (`data/week-2026-09-17.json`, `week-2026-09-24.json`) were
+**not** retroactively corrected — their GBP numbers may have the same
+issue, but those reports already shipped and this fix is going forward
+only, per the file-naming/immutability convention elsewhere in this repo.
+
 The GMB section on the dashboard shows exactly 6 tiles, in this order:
 Posts Published, Reach · Search, Reach · Maps, Website Clicks, Phone
 Clicks, Directions Clicks — laid out 3 per row. The old combined
@@ -710,18 +772,19 @@ property in the period, not the most posts — don't compute it from posts
 counts, that was a bug caught and fixed during the first build
 (2026-10-08).
 
-**GBP reach/clicks (GMEV18/19/21/22/23) may not cover the full month** —
-the GBP sync lag documented in the GBP window section above (walk-back
-completeness test, GBP_CURRENT often stuck a week or more behind) means a
-month-to-date pull run early in the following month can come back with
-real data for only the first half of the month and nothing for the rest
-(confirmed on the Sep 2026 build, run 2026-10-08: data cut off cleanly at
-Sep 15 for every GBP-connected property, Sep 16-30 simply absent, not
-zero). **Don't wait for it to sync or treat silence as zero** — pull what
-exists, call out the actual last-synced date per property (or portfolio-
-wide if they all match) in `generated_note`, and label the Reach/Clicks
-totals as partial-month rather than silently presenting them as a full
-30-day sum.
+**GBP reach/clicks (GMEV18/19/21/22/23) will look like they stop partway
+through the month if you pull all 5 fields together in one call and take
+the first result at face value — this is almost always the merge-drops-
+dates bug, not a real sync gap.** Hit exactly this on the first Sep 2026
+build (2026-10-08): a 5-field pull for Sep 1-30 came back with real data
+through Sep 15 and nothing after, looking identical to a multi-week sync
+lag. Re-running the *identical* call returned the full 30 days cleanly.
+See the "multi-week GBP lag... was a false alarm" section above for the
+root cause and the fixed retry procedure — it applies here exactly the
+same way: check for 30 rows per property (not 7, since this is a
+calendar month), and if any property comes up short, retry the identical
+call before concluding anything is actually missing. Only report a
+partial-month caveat if a property *still* comes up short after a retry.
 
 **GBP posts published**: use `getScheduledPosts` ground truth (same as
 the weekly report's cross-check), not the laggy `GMEV17` evolution field.
