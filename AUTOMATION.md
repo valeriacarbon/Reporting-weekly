@@ -680,3 +680,53 @@ Facebook Groups and URL Tracking are omitted from this page entirely (no
 historical data to sum for the former; too few weeks of GA4 data for the
 latter to represent a period total) — don't add placeholder zeros for
 them, just leave those sections out like the current version does.
+
+## Monthly Report (`monthly.html`) — separate, manual-only, do NOT touch here
+
+There is a third page, `monthly.html`, linked from the same nav tab bar as
+the other two. Same pattern as the Quarterly Report, just a calendar-month
+window instead of a quarter: `scripts/template_monthly.html` (same CSS as
+`template.html`/`template_quarterly.html`), built by
+`scripts/build_monthly_report.py` from a `data/monthly-<label>.json` file
+(e.g. `data/monthly-2026-sep.json`, covering Sep 1 – Sep 30, 2026). It
+reuses `total_tile`/`property_bar_row_total`/`property_card_total` from
+`build_quarterly_report.py` rather than duplicating them.
+
+**This page is explicitly NOT part of the Friday weekly automation.**
+Only touch it if a message explicitly asks for the monthly report to be
+rebuilt or extended to a new month.
+
+If you ever are asked to rebuild it: pull fresh from Metricool directly for
+the full requested calendar month (same field IDs/aggregation rules as
+Steps 3–4 above, followers = LAST in range, everything else = SUM in
+range) — don't assemble it from weekly `data/week-*.json` snapshots, same
+reasoning as Quarterly. Check `getBrandSettings` joinDate/firstConnectionDate
+for partial-month properties, same as Quarterly. Facebook Groups and URL
+Tracking are omitted entirely, same as Quarterly.
+
+For `top_channel` (used for both the Views-by-property bar color and the
+property card badge): it's the channel with the most **views** for that
+property in the period, not the most posts — don't compute it from posts
+counts, that was a bug caught and fixed during the first build
+(2026-10-08).
+
+**GBP reach/clicks (GMEV18/19/21/22/23) may not cover the full month** —
+the GBP sync lag documented in the GBP window section above (walk-back
+completeness test, GBP_CURRENT often stuck a week or more behind) means a
+month-to-date pull run early in the following month can come back with
+real data for only the first half of the month and nothing for the rest
+(confirmed on the Sep 2026 build, run 2026-10-08: data cut off cleanly at
+Sep 15 for every GBP-connected property, Sep 16-30 simply absent, not
+zero). **Don't wait for it to sync or treat silence as zero** — pull what
+exists, call out the actual last-synced date per property (or portfolio-
+wide if they all match) in `generated_note`, and label the Reach/Clicks
+totals as partial-month rather than silently presenting them as a full
+30-day sum.
+
+**GBP posts published**: use `getScheduledPosts` ground truth (same as
+the weekly report's cross-check), not the laggy `GMEV17` evolution field.
+Remember the direct-to-GBP blind spot documented above — a property may
+have posted straight through the Google Business Profile app, invisible
+to `getScheduledPosts` entirely — so cross-check against anything Val has
+already told you about a given month before trusting the tool's count as
+complete.
