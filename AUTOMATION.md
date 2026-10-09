@@ -835,6 +835,20 @@ from the property's Google Business Profile (GA4 source `GMB / GMB`)
 instead of Facebook Group links. Same manual-PDF situation, same "not
 pullable from Metricool" caveat.
 
+**`gmb_url_tracking`'s window must match the GBP window, not necessarily
+the `url_tracking` (FB Groups) window** (fixed 2026-10-09, per Val: "pls
+replace the data for this one, so we have both synced on the same week").
+GBP follows the last-fully-completed-week rule (see above), which can be
+a different window than whatever date range Val's latest GA4 export
+happens to cover. If Val shares a GMB GA4 export for a window that
+doesn't match the current file's `gbp_window_label`, don't just drop it
+in — check which window it actually covers and use it for whichever
+week (this one or last week's file) that window matches, so the GMB URL
+Tracking numbers and the GBP reach/clicks numbers above them are always
+describing the same week. `url_tracking` (FB Groups) has no such
+constraint — it isn't paired with a GBP-windowed section, so it just
+uses whatever window Val's latest FB Groups export covers.
+
 **If you don't have this week's GA4 numbers for either section, carry
 forward last week's numbers unchanged (delta 0) rather than omitting the
 key entirely.** (Fixed 2026-09-11 — a run had left both keys out of that
