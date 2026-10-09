@@ -269,6 +269,126 @@ def wow_totals_chart(kpis, week_label, prev_week_label, channel_breakdowns):
     return week_legend + channel_legend_html + "".join(parts)
 
 
+def property_views_stacked_chart(props, channel_key="views_channels", value_key="views",
+                                  metric_label="Views", aria_note=""):
+    """Vertical bar chart, one bar per property, each bar stacked by channel
+    (TikTok/Instagram/Facebook/Google Business) -- replaces the old
+    horizontal single-color "top channel" ranking bar, which looked like the
+    whole number belonged to the top channel instead of being its largest
+    slice. Log scale for the same reason as wow_totals_chart: one property
+    can have 10x+ the views of another, and a shared linear axis would
+    flatten the smaller ones to invisible slivers.
+
+    props must already be sorted in the desired display order (callers sort
+    by total `value_key` descending). Each prop needs `name` and a
+    channel_key dict ({"Facebook": n, "Instagram": n, ...} -- channels absent
+    or zero just don't get a segment). A property missing channel_key
+    entirely falls back to a single solid bar in --series-sequential, same
+    graceful-degradation pattern as wow_totals_chart, for data files written
+    before this field existed.
+    """
+    totals = [max(sum(p.get(channel_key, {}).values()) or p[value_key]["current"], 1) for p in props]
+    domain_min, domain_max, gridlines = _log_domain(max(totals))
+    log_min, log_max = math.log10(domain_min), math.log10(domain_max)
+
+    n = len(props)
+    left_pad, right_pad, top_pad, bottom_pad = 60, 16, 16, 120
+    slot_w = 58
+    plot_w = slot_w * n
+    plot_h = 300
+    W, H = left_pad + plot_w + right_pad, top_pad + plot_h + bottom_pad
+    bar_w = min(34, slot_w * 0.62)
+
+    def y_of(value):
+        value = max(value, domain_min)
+        frac = (math.log10(value) - log_min) / (log_max - log_min)
+        return top_pad + plot_h * (1 - frac)
+
+    base_y = top_pad + plot_h
+    # Fixed pixel width (not width="100%"): with up to 15 properties this chart
+    # is wider than it is useful to squeeze into a phone screen -- better to
+    # scroll it horizontally (see the .pstack-scroll wrapper below) and keep
+    # every bar/label a readable size than to shrink everything to fit.
+    parts = [f'<svg viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" '
+             f'aria-label="{esc(metric_label)} by property, log scale, stacked by channel.{esc(aria_note)}">']
+
+    for g in gridlines:
+        y = y_of(g)
+        parts.append(f'<line x1="{left_pad}" y1="{y:.1f}" x2="{W - right_pad}" y2="{y:.1f}" '
+                      f'stroke="var(--rule)" stroke-width="1"/>')
+        parts.append(f'<text x="{left_pad - 8}" y="{y:.1f}" text-anchor="end" '
+                      f'dominant-baseline="middle" class="wow-axis-label">{fmt(g)}</text>')
+
+    for i, p in enumerate(props):
+        name = p["name"]
+        breakdown = p.get(channel_key)
+        total = p[value_key]["current"] if isinstance(p.get(value_key), dict) else p.get(value_key, 0)
+        cx = left_pad + slot_w * i + slot_w / 2
+        bx = cx - bar_w / 2
+        top_y = y_of(max(total, 1)) if total > 0 else base_y
+
+        if not breakdown:
+            parts.append(
+                f'<rect x="{bx:.1f}" y="{top_y:.1f}" width="{bar_w:.1f}" '
+                f'height="{base_y - top_y:.1f}" rx="4" fill="var(--series-sequential)">'
+                f'<title>{esc(name)}: {fmt(total)}</title></rect>'
+            )
+        else:
+            segments = []
+            cum = 0
+            for channel in CHANNEL_ORDER:
+                seg_value = breakdown.get(channel, 0)
+                if seg_value <= 0:
+                    continue
+                seg_top = y_of(cum + seg_value)
+                seg_bottom = y_of(cum) if cum > 0 else base_y
+                segments.append((channel, seg_value, seg_top, seg_bottom))
+                cum += seg_value
+
+            if not segments:
+                parts.append(f'<rect x="{bx:.1f}" y="{base_y - 1.5:.1f}" width="{bar_w:.1f}" '
+                              f'height="1.5" fill="var(--rule)"><title>{esc(name)}: 0</title></rect>')
+            else:
+                clip_id = f"pstack-{i}"
+                parts.append(f'<clipPath id="{clip_id}"><path d="'
+                              f'{_rounded_top_rect_path(bx, top_y, bar_w, base_y - top_y, 4)}"/></clipPath>')
+                parts.append(f'<g clip-path="url(#{clip_id})">')
+                seg_gap, min_seg_h = 2, 1.5
+                for idx, (channel, seg_value, seg_top, seg_bottom) in enumerate(segments):
+                    y0 = seg_top + (0 if idx == len(segments) - 1 else seg_gap / 2)
+                    y1 = seg_bottom - (0 if idx == 0 else seg_gap / 2)
+                    if y1 - y0 < min_seg_h:
+                        y0 = min(y0, y1 - min_seg_h)
+                    parts.append(
+                        f'<rect x="{bx:.1f}" y="{y0:.1f}" width="{bar_w:.1f}" '
+                        f'height="{max(y1 - y0, 0):.1f}" fill="var(--{_channel_css_var(channel)})">'
+                        f'<title>{esc(name)} — {esc(_channel_short_label(channel))}: {fmt(seg_value)}</title></rect>'
+                    )
+                parts.append('</g>')
+
+        parts.append(f'<text x="{cx:.1f}" y="{top_y - 8:.1f}" text-anchor="middle" '
+                      f'class="wow-value-label">{fmt(total)}</text>')
+        label_y = base_y + 14
+        parts.append(
+            f'<text x="{cx:.1f}" y="{label_y:.1f}" text-anchor="end" '
+            f'transform="rotate(-45 {cx:.1f} {label_y:.1f})" class="wow-cat-label pstack-prop-label">'
+            f'{esc(name)}</text>'
+        )
+
+    parts.append(f'<line x1="{left_pad}" y1="{base_y:.1f}" x2="{W - right_pad}" '
+                  f'y2="{base_y:.1f}" stroke="var(--baseline)" stroke-width="1.5"/>')
+    parts.append("</svg>")
+
+    channel_legend = "".join(
+        f'<span class="legend-item">'
+        f'<span class="legend-dot" style="background:var(--{_channel_css_var(ch)})"></span>'
+        f'{esc(_channel_short_label(ch))}</span>'
+        for ch in CHANNEL_ORDER
+    )
+    legend_html = f'<div class="wow-legend channel-legend" style="border-top:none;padding-top:0;">{channel_legend}</div>'
+    return legend_html + f'<div class="pstack-scroll">{"".join(parts)}</div>'
+
+
 def mini_bar(current, max_value, css_var="series-sequential", height=6, width=64):
     """A tiny single-hue magnitude bar used inside stat tiles / property rows.
     css_var is a full CSS custom-property name (without the leading --), e.g.
@@ -686,10 +806,7 @@ def build(data_path: Path) -> str:
 
     props = sorted(data["properties"], key=lambda p: p["views"]["current"], reverse=True)
     views_max = max(p["views"]["current"] for p in props)
-    views_chart = "".join(
-        property_bar_row(p["name"], p["views"]["current"], views_max, p["views"]["delta"], p["top_channel"])
-        for p in props
-    )
+    views_chart = property_views_stacked_chart(props, aria_note=f" {data['week_label']}.")
 
     maxes = {
         "followers": max(p["followers"]["current"] for p in props),

@@ -224,7 +224,12 @@
       "views": {
         "current": 5262
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 136,
+        "Instagram": 1854,
+        "TikTok": 3272
+      }
     },
     {
       "name": "The Benton",
@@ -247,7 +252,12 @@
       "views": {
         "current": 1569
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 54,
+        "Instagram": 183,
+        "TikTok": 1332
+      }
     },
     {
       "name": "The Lamar Lofts",
@@ -270,7 +280,12 @@
       "views": {
         "current": 5847
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 149,
+        "Instagram": 1310,
+        "TikTok": 4388
+      }
     },
     {
       "name": "The Landings at North Ingleside",
@@ -293,7 +308,12 @@
       "views": {
         "current": 10828
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 231,
+        "Instagram": 1465,
+        "TikTok": 9132
+      }
     },
     {
       "name": "The Kenzie",
@@ -316,7 +336,12 @@
       "views": {
         "current": 5145
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 578,
+        "Instagram": 506,
+        "TikTok": 4061
+      }
     },
     {
       "name": "Westminster Club",
@@ -339,7 +364,12 @@
       "views": {
         "current": 6690
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 457,
+        "Instagram": 417,
+        "TikTok": 5816
+      }
     },
     {
       "name": "Claxton Pointe & Pecan Ridge",
@@ -362,7 +392,12 @@
       "views": {
         "current": 5085
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 386,
+        "Instagram": 3357,
+        "TikTok": 1342
+      }
     },
     {
       "name": "Berry Falls",
@@ -385,7 +420,12 @@
       "views": {
         "current": 7683
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 505,
+        "Instagram": 2464,
+        "TikTok": 4714
+      }
     },
     {
       "name": "Ingleside Terrace",
@@ -408,7 +448,12 @@
       "views": {
         "current": 4654
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 1243,
+        "Instagram": 1553,
+        "TikTok": 1858
+      }
     },
     {
       "name": "Hills at Hoover",
@@ -431,7 +476,12 @@
       "views": {
         "current": 5551
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 214,
+        "Instagram": 1150,
+        "TikTok": 4187
+      }
     },
     {
       "name": "Residences at the Overlook",
@@ -454,7 +504,12 @@
       "views": {
         "current": 12676
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 880,
+        "Instagram": 6809,
+        "TikTok": 4987
+      }
     },
     {
       "name": "Santa Fe",
@@ -477,7 +532,12 @@
       "views": {
         "current": 4305
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 652,
+        "Instagram": 517,
+        "TikTok": 3136
+      }
     },
     {
       "name": "Villa Siena",
@@ -500,7 +560,12 @@
       "views": {
         "current": 1188
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "Facebook": 871,
+        "Instagram": 310,
+        "TikTok": 7
+      }
     },
     {
       "name": "Aztec Villa",
@@ -518,7 +583,8 @@
       "views": {
         "current": 0
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {}
     },
     {
       "name": "Capri Palms",
@@ -538,7 +604,10 @@
       "views": {
         "current": 6891
       },
-      "partial_quarter_since": null
+      "partial_quarter_since": null,
+      "views_channels": {
+        "TikTok": 6891
+      }
     }
   ]
 }

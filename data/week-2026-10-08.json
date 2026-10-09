@@ -297,6 +297,11 @@
       "views": {
         "current": 700,
         "delta": -1345
+      },
+      "views_channels": {
+        "Facebook": 16,
+        "Instagram": 509,
+        "TikTok": 175
       }
     },
     {
@@ -317,6 +322,9 @@
       "views": {
         "current": 20,
         "delta": -740
+      },
+      "views_channels": {
+        "Instagram": 20
       }
     },
     {
@@ -341,6 +349,11 @@
       "views": {
         "current": 1994,
         "delta": 1096
+      },
+      "views_channels": {
+        "Facebook": 18,
+        "Instagram": 159,
+        "TikTok": 1817
       }
     },
     {
@@ -366,6 +379,11 @@
       "views": {
         "current": 422,
         "delta": -579
+      },
+      "views_channels": {
+        "Facebook": 45,
+        "Instagram": 194,
+        "TikTok": 183
       }
     },
     {
@@ -386,6 +404,9 @@
       "views": {
         "current": 4,
         "delta": -23
+      },
+      "views_channels": {
+        "Instagram": 4
       }
     },
     {
@@ -406,6 +427,9 @@
       "views": {
         "current": 26,
         "delta": -3159
+      },
+      "views_channels": {
+        "Instagram": 26
       }
     },
     {
@@ -431,6 +455,11 @@
       "views": {
         "current": 648,
         "delta": 68
+      },
+      "views_channels": {
+        "Facebook": 37,
+        "Instagram": 437,
+        "TikTok": 174
       }
     },
     {
@@ -455,6 +484,10 @@
       "views": {
         "current": 1150,
         "delta": 121
+      },
+      "views_channels": {
+        "Facebook": 336,
+        "Instagram": 814
       }
     },
     {
@@ -480,6 +513,11 @@
       "views": {
         "current": 1058,
         "delta": 98
+      },
+      "views_channels": {
+        "Facebook": 27,
+        "Instagram": 879,
+        "TikTok": 152
       }
     },
     {
@@ -504,6 +542,11 @@
       "views": {
         "current": 488,
         "delta": -1857
+      },
+      "views_channels": {
+        "Facebook": 14,
+        "Instagram": 345,
+        "TikTok": 129
       }
     },
     {
@@ -529,6 +572,11 @@
       "views": {
         "current": 662,
         "delta": -4651
+      },
+      "views_channels": {
+        "Facebook": 17,
+        "Instagram": 521,
+        "TikTok": 124
       }
     },
     {
@@ -554,6 +602,10 @@
       "views": {
         "current": 141,
         "delta": -1161
+      },
+      "views_channels": {
+        "Instagram": 5,
+        "TikTok": 136
       }
     },
     {
@@ -579,6 +631,10 @@
       "views": {
         "current": 35,
         "delta": 32
+      },
+      "views_channels": {
+        "Facebook": 18,
+        "Instagram": 17
       }
     },
     {
@@ -599,7 +655,8 @@
       "views": {
         "current": 0,
         "delta": 0
-      }
+      },
+      "views_channels": {}
     },
     {
       "name": "Capri Palms",
@@ -619,7 +676,8 @@
       "views": {
         "current": 0,
         "delta": -416
-      }
+      },
+      "views_channels": {}
     }
   ],
   "url_tracking": {

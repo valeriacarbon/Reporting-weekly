@@ -16,10 +16,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from build_report import (  # noqa: E402
     CHANNEL_COLORS, esc, fmt, mini_bar, channel_bar_row, post_channel_chips,
-    gbp_metric_row, gbp_property_card,
+    gbp_metric_row, gbp_property_card, property_views_stacked_chart,
 )
 from build_quarterly_report import (  # noqa: E402
-    total_tile, property_bar_row_total, property_card_total,
+    total_tile, property_card_total,
 )
 
 
@@ -54,10 +54,7 @@ def build(data_path: Path) -> str:
 
     props = sorted(data["properties"], key=lambda p: p["views"]["current"], reverse=True)
     views_max = max(p["views"]["current"] for p in props)
-    views_chart = "".join(
-        property_bar_row_total(p["name"], p["views"]["current"], views_max, p["top_channel"])
-        for p in props
-    )
+    views_chart = property_views_stacked_chart(props, aria_note=f" {data['month_label']}.")
 
     maxes = {
         "followers": max(p["followers"]["current"] for p in props),

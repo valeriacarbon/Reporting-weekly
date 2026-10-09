@@ -139,6 +139,22 @@
   @media (max-width: 620px) { .three-col { grid-template-columns: 1fr; } }
   .three-col h3 { font-size: 12.5px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 14px; }
 
+  /* ---- property-by-channel stacked bar chart ---- */
+  .wow-chart-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 10px;
+    padding: 20px 20px 8px;
+  }
+  .wow-legend { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 8px; }
+  .wow-legend.channel-legend { margin-bottom: 14px; padding-top: 8px; border-top: 1px dashed var(--rule); }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-2); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .wow-axis-label { font-size: 10.5px; fill: var(--ink-mute); font-family: system-ui, sans-serif; }
+  .wow-cat-label { font-size: 12.5px; fill: var(--ink-2); font-weight: 600; font-family: system-ui, sans-serif; }
+  .wow-value-label { font-size: 11px; fill: var(--ink); font-weight: 650; font-family: system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+  .pstack-prop-label { font-size: 10px; font-weight: 500; fill: var(--ink-mute); }
+  .pstack-scroll { overflow-x: auto; }
+  .pstack-scroll svg { display: block; }
+
   /* ---- property views ranking chart ---- */
   .pbar-row { display: grid; grid-template-columns: 220px 1fr 90px; align-items: center; gap: 12px; margin-bottom: 8px; }
   .pbar-label { font-size: 13px; display: flex; flex-direction: column; gap: 2px; }
@@ -280,8 +296,8 @@
 
   <section>
     <h2>Views by property</h2>
-    <p class="section-sub">Ranked high to low, month total. Bar color marks each property's top-performing channel this month.</p>
-    {{VIEWS_CHART}}
+    <p class="section-sub">Ranked high to low, month total. Each bar is stacked by channel, so you can see the real mix behind the total — not just which channel led.</p>
+    <div class="wow-chart-card">{{VIEWS_CHART}}</div>
   </section>
 
   <section>

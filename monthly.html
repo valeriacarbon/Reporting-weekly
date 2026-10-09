@@ -148,6 +148,22 @@
   @media (max-width: 620px) { .three-col { grid-template-columns: 1fr; } }
   .three-col h3 { font-size: 12.5px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 14px; }
 
+  /* ---- property-by-channel stacked bar chart ---- */
+  .wow-chart-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 10px;
+    padding: 20px 20px 8px;
+  }
+  .wow-legend { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 8px; }
+  .wow-legend.channel-legend { margin-bottom: 14px; padding-top: 8px; border-top: 1px dashed var(--rule); }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-2); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .wow-axis-label { font-size: 10.5px; fill: var(--ink-mute); font-family: system-ui, sans-serif; }
+  .wow-cat-label { font-size: 12.5px; fill: var(--ink-2); font-weight: 600; font-family: system-ui, sans-serif; }
+  .wow-value-label { font-size: 11px; fill: var(--ink); font-weight: 650; font-family: system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+  .pstack-prop-label { font-size: 10px; font-weight: 500; fill: var(--ink-mute); }
+  .pstack-scroll { overflow-x: auto; }
+  .pstack-scroll svg { display: block; }
+
   /* ---- property views ranking chart ---- */
   .pbar-row { display: grid; grid-template-columns: 220px 1fr 90px; align-items: center; gap: 12px; margin-bottom: 8px; }
   .pbar-label { font-size: 13px; display: flex; flex-direction: column; gap: 2px; }
@@ -382,113 +398,8 @@
 
   <section>
     <h2>Views by property</h2>
-    <p class="section-sub">Ranked high to low, month total. Bar color marks each property's top-performing channel this month.</p>
-    
-    <div class="pbar-row">
-      <div class="pbar-label">Residences at the Overlook<span class="pbar-badge" style="color:var(--ch-instagram)">Instagram</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:100.0%; background:var(--ch-instagram)"></div>
-      </div>
-      <div class="pbar-value">12,676</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">The Landings at North Ingleside<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:85.4%; background:var(--ch-tiktok)"></div>
-      </div>
-      <div class="pbar-value">10,828</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">Berry Falls<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:60.6%; background:var(--ch-tiktok)"></div>
-      </div>
-      <div class="pbar-value">7,683</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">Capri Palms<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:54.4%; background:var(--ch-tiktok)"></div>
-      </div>
-      <div class="pbar-value">6,891</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">Westminster Club<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:52.8%; background:var(--ch-tiktok)"></div>
-      </div>
-      <div class="pbar-value">6,690</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">The Lamar Lofts<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:46.1%; background:var(--ch-tiktok)"></div>
-      </div>
-      <div class="pbar-value">5,847</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">Hills at Hoover<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:43.8%; background:var(--ch-tiktok)"></div>
-      </div>
-      <div class="pbar-value">5,551</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">Lakeside/Lakeview<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:41.5%; background:var(--ch-tiktok)"></div>
-      </div>
-      <div class="pbar-value">5,262</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">The Kenzie<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:40.6%; background:var(--ch-tiktok)"></div>
-      </div>
-      <div class="pbar-value">5,145</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">Claxton Pointe &amp; Pecan Ridge<span class="pbar-badge" style="color:var(--ch-instagram)">Instagram</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:40.1%; background:var(--ch-instagram)"></div>
-      </div>
-      <div class="pbar-value">5,085</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">Ingleside Terrace<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:36.7%; background:var(--ch-tiktok)"></div>
-      </div>
-      <div class="pbar-value">4,654</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">Santa Fe<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:34.0%; background:var(--ch-tiktok)"></div>
-      </div>
-      <div class="pbar-value">4,305</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">The Benton<span class="pbar-badge" style="color:var(--ch-tiktok)">TikTok</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:12.4%; background:var(--ch-tiktok)"></div>
-      </div>
-      <div class="pbar-value">1,569</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">Villa Siena<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:9.4%; background:var(--ch-facebook)"></div>
-      </div>
-      <div class="pbar-value">1,188</div>
-    </div>
-    <div class="pbar-row">
-      <div class="pbar-label">Aztec Villa<span class="pbar-badge" style="color:var(--ch-facebook)">Facebook</span></div>
-      <div class="pbar-track">
-        <div class="pbar-fill" style="width:1.2%; background:var(--ch-facebook)"></div>
-      </div>
-      <div class="pbar-value">0</div>
-    </div>
+    <p class="section-sub">Ranked high to low, month total. Each bar is stacked by channel, so you can see the real mix behind the total — not just which channel led.</p>
+    <div class="wow-chart-card"><div class="wow-legend channel-legend" style="border-top:none;padding-top:0;"><span class="legend-item"><span class="legend-dot" style="background:var(--ch-tiktok)"></span>TikTok</span><span class="legend-item"><span class="legend-dot" style="background:var(--ch-instagram)"></span>Instagram</span><span class="legend-item"><span class="legend-dot" style="background:var(--ch-facebook)"></span>Facebook</span><span class="legend-item"><span class="legend-dot" style="background:var(--ch-google-business)"></span>GBP</span></div><div class="pstack-scroll"><svg viewBox="0 0 946 436" width="946" height="436" role="img" aria-label="Views by property, log scale, stacked by channel. Sep 1 – 30, 2026."><line x1="60" y1="316.0" x2="930" y2="316.0" stroke="var(--rule)" stroke-width="1"/><text x="52" y="316.0" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">10</text><line x1="60" y1="263.6" x2="930" y2="263.6" stroke="var(--rule)" stroke-width="1"/><text x="52" y="263.6" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">50</text><line x1="60" y1="241.0" x2="930" y2="241.0" stroke="var(--rule)" stroke-width="1"/><text x="52" y="241.0" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">100</text><line x1="60" y1="188.6" x2="930" y2="188.6" stroke="var(--rule)" stroke-width="1"/><text x="52" y="188.6" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">500</text><line x1="60" y1="166.0" x2="930" y2="166.0" stroke="var(--rule)" stroke-width="1"/><text x="52" y="166.0" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">1,000</text><line x1="60" y1="113.6" x2="930" y2="113.6" stroke="var(--rule)" stroke-width="1"/><text x="52" y="113.6" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">5,000</text><line x1="60" y1="91.0" x2="930" y2="91.0" stroke="var(--rule)" stroke-width="1"/><text x="52" y="91.0" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">10,000</text><line x1="60" y1="38.6" x2="930" y2="38.6" stroke="var(--rule)" stroke-width="1"/><text x="52" y="38.6" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">50,000</text><line x1="60" y1="16.0" x2="930" y2="16.0" stroke="var(--rule)" stroke-width="1"/><text x="52" y="16.0" text-anchor="end" dominant-baseline="middle" class="wow-axis-label">100,000</text><clipPath id="pstack-0"><path d="M72.00,316.00 L72.00,87.28 Q72.00,83.28 76.00,83.28 L102.00,83.28 Q106.00,83.28 106.00,87.28 L106.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-0)"><rect x="72.0" y="114.7" width="34.0" height="201.3" fill="var(--ch-tiktok)"><title>Residences at the Overlook — TikTok: 4,987</title></rect><rect x="72.0" y="86.6" width="34.0" height="26.0" fill="var(--ch-instagram)"><title>Residences at the Overlook — Instagram: 6,809</title></rect><rect x="72.0" y="83.1" width="34.0" height="1.5" fill="var(--ch-facebook)"><title>Residences at the Overlook — Facebook: 880</title></rect></g><text x="89.0" y="75.3" text-anchor="middle" class="wow-value-label">12,676</text><text x="89.0" y="330.0" text-anchor="end" transform="rotate(-45 89.0 330.0)" class="wow-cat-label pstack-prop-label">Residences at the Overlook</text><clipPath id="pstack-1"><path d="M130.00,316.00 L130.00,92.41 Q130.00,88.41 134.00,88.41 L160.00,88.41 Q164.00,88.41 164.00,92.41 L164.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-1)"><rect x="130.0" y="95.0" width="34.0" height="221.0" fill="var(--ch-tiktok)"><title>The Landings at North Ingleside — TikTok: 9,132</title></rect><rect x="130.0" y="90.1" width="34.0" height="2.8" fill="var(--ch-instagram)"><title>The Landings at North Ingleside — Instagram: 1,465</title></rect><rect x="130.0" y="86.6" width="34.0" height="1.5" fill="var(--ch-facebook)"><title>The Landings at North Ingleside — Facebook: 231</title></rect></g><text x="147.0" y="80.4" text-anchor="middle" class="wow-value-label">10,828</text><text x="147.0" y="330.0" text-anchor="end" transform="rotate(-45 147.0 330.0)" class="wow-cat-label pstack-prop-label">The Landings at North Ingleside</text><clipPath id="pstack-2"><path d="M188.00,316.00 L188.00,103.59 Q188.00,99.59 192.00,99.59 L218.00,99.59 Q222.00,99.59 222.00,103.59 L222.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-2)"><rect x="188.0" y="116.5" width="34.0" height="199.5" fill="var(--ch-tiktok)"><title>Berry Falls — TikTok: 4,714</title></rect><rect x="188.0" y="102.8" width="34.0" height="11.7" fill="var(--ch-instagram)"><title>Berry Falls — Instagram: 2,464</title></rect><rect x="188.0" y="99.3" width="34.0" height="1.5" fill="var(--ch-facebook)"><title>Berry Falls — Facebook: 505</title></rect></g><text x="205.0" y="91.6" text-anchor="middle" class="wow-value-label">7,683</text><text x="205.0" y="330.0" text-anchor="end" transform="rotate(-45 205.0 330.0)" class="wow-cat-label pstack-prop-label">Berry Falls</text><clipPath id="pstack-3"><path d="M246.00,316.00 L246.00,107.13 Q246.00,103.13 250.00,103.13 L276.00,103.13 Q280.00,103.13 280.00,107.13 L280.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-3)"><rect x="246.0" y="103.1" width="34.0" height="212.9" fill="var(--ch-tiktok)"><title>Capri Palms — TikTok: 6,891</title></rect></g><text x="263.0" y="95.1" text-anchor="middle" class="wow-value-label">6,891</text><text x="263.0" y="330.0" text-anchor="end" transform="rotate(-45 263.0 330.0)" class="wow-cat-label pstack-prop-label">Capri Palms</text><clipPath id="pstack-4"><path d="M304.00,316.00 L304.00,108.09 Q304.00,104.09 308.00,104.09 L334.00,104.09 Q338.00,104.09 338.00,108.09 L338.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-4)"><rect x="304.0" y="109.7" width="34.0" height="206.3" fill="var(--ch-tiktok)"><title>Westminster Club — TikTok: 5,816</title></rect><rect x="304.0" y="106.2" width="34.0" height="1.5" fill="var(--ch-instagram)"><title>Westminster Club — Instagram: 417</title></rect><rect x="304.0" y="103.9" width="34.0" height="1.5" fill="var(--ch-facebook)"><title>Westminster Club — Facebook: 457</title></rect></g><text x="321.0" y="96.1" text-anchor="middle" class="wow-value-label">6,690</text><text x="321.0" y="330.0" text-anchor="end" transform="rotate(-45 321.0 330.0)" class="wow-cat-label pstack-prop-label">Westminster Club</text><clipPath id="pstack-5"><path d="M362.00,316.00 L362.00,112.48 Q362.00,108.48 366.00,108.48 L392.00,108.48 Q396.00,108.48 396.00,112.48 L396.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-5)"><rect x="362.0" y="118.8" width="34.0" height="197.2" fill="var(--ch-tiktok)"><title>The Lamar Lofts — TikTok: 4,388</title></rect><rect x="362.0" y="110.3" width="34.0" height="6.5" fill="var(--ch-instagram)"><title>The Lamar Lofts — Instagram: 1,310</title></rect><rect x="362.0" y="106.8" width="34.0" height="1.5" fill="var(--ch-facebook)"><title>The Lamar Lofts — Facebook: 149</title></rect></g><text x="379.0" y="100.5" text-anchor="middle" class="wow-value-label">5,847</text><text x="379.0" y="330.0" text-anchor="end" transform="rotate(-45 379.0 330.0)" class="wow-cat-label pstack-prop-label">The Lamar Lofts</text><clipPath id="pstack-6"><path d="M420.00,316.00 L420.00,114.17 Q420.00,110.17 424.00,110.17 L450.00,110.17 Q454.00,110.17 454.00,114.17 L454.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-6)"><rect x="420.0" y="120.4" width="34.0" height="195.6" fill="var(--ch-tiktok)"><title>Hills at Hoover — TikTok: 4,187</title></rect><rect x="420.0" y="112.5" width="34.0" height="5.9" fill="var(--ch-instagram)"><title>Hills at Hoover — Instagram: 1,150</title></rect><rect x="420.0" y="109.0" width="34.0" height="1.5" fill="var(--ch-facebook)"><title>Hills at Hoover — Facebook: 214</title></rect></g><text x="437.0" y="102.2" text-anchor="middle" class="wow-value-label">5,551</text><text x="437.0" y="330.0" text-anchor="end" transform="rotate(-45 437.0 330.0)" class="wow-cat-label pstack-prop-label">Hills at Hoover</text><clipPath id="pstack-7"><path d="M478.00,316.00 L478.00,115.91 Q478.00,111.91 482.00,111.91 L508.00,111.91 Q512.00,111.91 512.00,115.91 L512.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-7)"><rect x="478.0" y="128.4" width="34.0" height="187.6" fill="var(--ch-tiktok)"><title>Lakeside/Lakeview — TikTok: 3,272</title></rect><rect x="478.0" y="113.8" width="34.0" height="12.6" fill="var(--ch-instagram)"><title>Lakeside/Lakeview — Instagram: 1,854</title></rect><rect x="478.0" y="110.3" width="34.0" height="1.5" fill="var(--ch-facebook)"><title>Lakeside/Lakeview — Facebook: 136</title></rect></g><text x="495.0" y="103.9" text-anchor="middle" class="wow-value-label">5,262</text><text x="495.0" y="330.0" text-anchor="end" transform="rotate(-45 495.0 330.0)" class="wow-cat-label pstack-prop-label">Lakeside/Lakeview</text><clipPath id="pstack-8"><path d="M536.00,316.00 L536.00,116.65 Q536.00,112.65 540.00,112.65 L566.00,112.65 Q570.00,112.65 570.00,116.65 L570.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-8)"><rect x="536.0" y="121.4" width="34.0" height="194.6" fill="var(--ch-tiktok)"><title>The Kenzie — TikTok: 4,061</title></rect><rect x="536.0" y="117.5" width="34.0" height="1.8" fill="var(--ch-instagram)"><title>The Kenzie — Instagram: 506</title></rect><rect x="536.0" y="112.6" width="34.0" height="2.9" fill="var(--ch-facebook)"><title>The Kenzie — Facebook: 578</title></rect></g><text x="553.0" y="104.6" text-anchor="middle" class="wow-value-label">5,145</text><text x="553.0" y="330.0" text-anchor="end" transform="rotate(-45 553.0 330.0)" class="wow-cat-label pstack-prop-label">The Kenzie</text><clipPath id="pstack-9"><path d="M594.00,316.00 L594.00,117.03 Q594.00,113.03 598.00,113.03 L624.00,113.03 Q628.00,113.03 628.00,117.03 L628.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-9)"><rect x="594.0" y="157.4" width="34.0" height="158.6" fill="var(--ch-tiktok)"><title>Claxton Pointe &amp; Pecan Ridge — TikTok: 1,342</title></rect><rect x="594.0" y="116.6" width="34.0" height="38.8" fill="var(--ch-instagram)"><title>Claxton Pointe &amp; Pecan Ridge — Instagram: 3,357</title></rect><rect x="594.0" y="113.0" width="34.0" height="1.6" fill="var(--ch-facebook)"><title>Claxton Pointe &amp; Pecan Ridge — Facebook: 386</title></rect></g><text x="611.0" y="105.0" text-anchor="middle" class="wow-value-label">5,085</text><text x="611.0" y="330.0" text-anchor="end" transform="rotate(-45 611.0 330.0)" class="wow-cat-label pstack-prop-label">Claxton Pointe &amp; Pecan Ridge</text><clipPath id="pstack-10"><path d="M652.00,316.00 L652.00,119.91 Q652.00,115.91 656.00,115.91 L682.00,115.91 Q686.00,115.91 686.00,119.91 L686.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-10)"><rect x="652.0" y="146.8" width="34.0" height="169.2" fill="var(--ch-tiktok)"><title>Ingleside Terrace — TikTok: 1,858</title></rect><rect x="652.0" y="127.0" width="34.0" height="17.8" fill="var(--ch-instagram)"><title>Ingleside Terrace — Instagram: 1,553</title></rect><rect x="652.0" y="115.9" width="34.0" height="9.1" fill="var(--ch-facebook)"><title>Ingleside Terrace — Facebook: 1,243</title></rect></g><text x="669.0" y="107.9" text-anchor="middle" class="wow-value-label">4,654</text><text x="669.0" y="330.0" text-anchor="end" transform="rotate(-45 669.0 330.0)" class="wow-cat-label pstack-prop-label">Ingleside Terrace</text><clipPath id="pstack-11"><path d="M710.00,316.00 L710.00,122.45 Q710.00,118.45 714.00,118.45 L740.00,118.45 Q744.00,118.45 744.00,122.45 L744.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-11)"><rect x="710.0" y="129.8" width="34.0" height="186.2" fill="var(--ch-tiktok)"><title>Santa Fe — TikTok: 3,136</title></rect><rect x="710.0" y="124.8" width="34.0" height="3.0" fill="var(--ch-instagram)"><title>Santa Fe — Instagram: 517</title></rect><rect x="710.0" y="118.5" width="34.0" height="4.3" fill="var(--ch-facebook)"><title>Santa Fe — Facebook: 652</title></rect></g><text x="727.0" y="110.5" text-anchor="middle" class="wow-value-label">4,305</text><text x="727.0" y="330.0" text-anchor="end" transform="rotate(-45 727.0 330.0)" class="wow-cat-label pstack-prop-label">Santa Fe</text><clipPath id="pstack-12"><path d="M768.00,316.00 L768.00,155.33 Q768.00,151.33 772.00,151.33 L798.00,151.33 Q802.00,151.33 802.00,155.33 L802.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-12)"><rect x="768.0" y="157.7" width="34.0" height="158.3" fill="var(--ch-tiktok)"><title>The Benton — TikTok: 1,332</title></rect><rect x="768.0" y="153.5" width="34.0" height="2.2" fill="var(--ch-instagram)"><title>The Benton — Instagram: 183</title></rect><rect x="768.0" y="150.0" width="34.0" height="1.5" fill="var(--ch-facebook)"><title>The Benton — Facebook: 54</title></rect></g><text x="785.0" y="143.3" text-anchor="middle" class="wow-value-label">1,569</text><text x="785.0" y="330.0" text-anchor="end" transform="rotate(-45 785.0 330.0)" class="wow-cat-label pstack-prop-label">The Benton</text><clipPath id="pstack-13"><path d="M826.00,316.00 L826.00,164.39 Q826.00,160.39 830.00,160.39 L856.00,160.39 Q860.00,160.39 860.00,164.39 L860.00,316.00 Z"/></clipPath><g clip-path="url(#pstack-13)"><rect x="826.0" y="314.5" width="34.0" height="1.5" fill="var(--ch-tiktok)"><title>Villa Siena — TikTok: 7</title></rect><rect x="826.0" y="204.4" width="34.0" height="110.6" fill="var(--ch-instagram)"><title>Villa Siena — Instagram: 310</title></rect><rect x="826.0" y="160.4" width="34.0" height="42.0" fill="var(--ch-facebook)"><title>Villa Siena — Facebook: 871</title></rect></g><text x="843.0" y="152.4" text-anchor="middle" class="wow-value-label">1,188</text><text x="843.0" y="330.0" text-anchor="end" transform="rotate(-45 843.0 330.0)" class="wow-cat-label pstack-prop-label">Villa Siena</text><rect x="884.0" y="316.0" width="34.0" height="0.0" rx="4" fill="var(--series-sequential)"><title>Aztec Villa: 0</title></rect><text x="901.0" y="308.0" text-anchor="middle" class="wow-value-label">0</text><text x="901.0" y="330.0" text-anchor="end" transform="rotate(-45 901.0 330.0)" class="wow-cat-label pstack-prop-label">Aztec Villa</text><line x1="60" y1="316.0" x2="930" y2="316.0" stroke="var(--baseline)" stroke-width="1.5"/></svg></div></div>
   </section>
 
   <section>

@@ -197,6 +197,13 @@
   .wow-axis-label { font-size: 10.5px; fill: var(--ink-mute); font-family: system-ui, sans-serif; }
   .wow-cat-label { font-size: 12.5px; fill: var(--ink-2); font-weight: 600; font-family: system-ui, sans-serif; }
   .wow-value-label { font-size: 11px; fill: var(--ink); font-weight: 650; font-family: system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+  .pstack-prop-label { font-size: 10px; font-weight: 500; fill: var(--ink-mute); }
+  /* Chart is drawn at a fixed pixel width that grows with property count --
+     deliberately NOT width:100%, so bars/labels never shrink below a
+     readable size. A desktop container wider than the chart just shows it
+     at native size; a narrower one (phone) scrolls horizontally instead. */
+  .pstack-scroll { overflow-x: auto; }
+  .pstack-scroll svg { display: block; }
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
   @media (max-width: 780px) { .two-col { grid-template-columns: 1fr; gap: 24px; } }
@@ -362,8 +369,8 @@
 
   <section>
     <h2>Views by property</h2>
-    <p class="section-sub">Ranked high to low. Bar color marks each property's top-performing channel this week.</p>
-    {{VIEWS_CHART}}
+    <p class="section-sub">Ranked high to low, this week. Each bar is stacked by channel, so you can see the real mix behind the total — not just which channel led.</p>
+    <div class="wow-chart-card">{{VIEWS_CHART}}</div>
   </section>
 
   <section>

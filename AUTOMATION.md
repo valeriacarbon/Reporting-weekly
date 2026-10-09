@@ -291,6 +291,19 @@ views_by_channel = per network (Facebook/Instagram/TikTok/Google Business),
   to one solid Views bar for that file only), but don't let that become the
   new normal.
 
+properties[].views_channels = per-property channel breakdown of `views`
+  (added 2026-10-09, same day/reason as the chart it feeds — see "Views by
+  property is now a stacked bar chart" below). `{"Facebook": n, "Instagram":
+  n, "TikTok": n}` — a channel with 0 views just isn't a key, same sparse
+  convention as `posts_channels`. No "Google Business" key (GBP views are
+  always 0, never folded into this metric — same reasoning as
+  `views_by_channel`). **Must sum to exactly that property's
+  `views.current`** — not asserted in code, check by hand. Write it every
+  week now that the feature exists, same as `views_by_channel`; a property
+  missing this key falls back to a solid single-color bar for that property
+  only (see `property_views_stacked_chart` in `build_report.py`), don't let
+  that become the new normal either.
+
 facebook_groups = {groups_posted_in, groups_and_posts, interactions} always
   {0,0} with the existing note — Metricool doesn't expose Facebook Group
   data; only change this if that ever becomes available. "interactions" is
@@ -378,6 +391,47 @@ only the internal fill of the current-week bar changed.
   native hover/focus tooltip naming the channel and its exact value — there's
   no client-side JS chart library in this report, so this is the accessible,
   zero-dependency way to expose the per-segment number without adding one.
+
+### "Views by property" is now a vertical stacked bar chart, not a horizontal single-color ranking list (fixed 2026-10-09)
+
+**What was wrong:** the old "Views by property" section (`property_bar_row`
+in Weekly, `property_bar_row_total` in Quarterly/Monthly) was a horizontal
+bar per property, colored by `top_channel` with a text badge naming that
+channel. Val flagged (correctly) that this reads as if the **entire** bar
+value belongs to the named channel — e.g. Residences at the Overlook showed
+"12,676" next to an "INSTAGRAM" badge, which looks like 12,676 Instagram
+views, when the real breakdown was Instagram 6,809 / TikTok 4,987 / Facebook
+880 and Instagram was just this property's *largest* slice. Nothing was
+wrong with the underlying number — the chart design was misleading about
+its composition.
+
+**The fix:** `property_views_stacked_chart()` in `scripts/build_report.py`
+(shared by Weekly and Monthly — see below for Quarterly). Same visual
+language as the "This week vs last week" chart above, rotated 90°: vertical
+bars, one per property, each stacked by channel in `CHANNEL_ORDER`, log
+scale for the same reason (one property can have 10x+ another's views).
+Property name labels are rotated -45° under each bar since there can be 13+
+properties. Needs `properties[].views_channels` per property (documented
+under Step 6 above) — a property missing that key falls back to a solid
+single-color bar (old behavior) rather than rendering empty, same
+graceful-degradation pattern as `views_by_channel`'s fallback. **Don't rely
+on that fallback** — write `views_channels` every run.
+
+- The chart is drawn at a **fixed pixel width that grows with property
+  count**, deliberately not `width="100%"` — with 13-15 properties, scaling
+  down to fit a phone screen would make every bar and label unreadably
+  small. The `.pstack-scroll` wrapper (`overflow-x: auto`) lets it scroll
+  horizontally on narrow viewports instead, while desktop (wide enough to
+  show it at native size) never needs to scroll.
+- **Quarterly was NOT converted** — `property_bar_row_total` /
+  `build_quarterly_report.py` still use the old horizontal single-color
+  style. Converting it needs a `views_channels` breakdown per property for
+  the quarter, which requires a fresh per-property FB/IG/TK pull from
+  Metricool for that historical window (not derivable from what's already
+  in `data/quarterly-*.json`) — do this the next time Quarterly is
+  refreshed, not as a standalone task.
+- Same per-segment `<title>` tooltip pattern as the wow chart (`{property}
+  — {channel}: {value}`).
 
 ### GBP uses its own window, independent of the rest of the report (added 2026-09-19)
 
