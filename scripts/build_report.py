@@ -871,10 +871,10 @@ def build(data_path: Path) -> str:
     gmb_url_tracking_section = ""
     if gmb_url_tracking:
         gmb_ut_html = "".join([
-            stat_tile("Views", gmb_url_tracking["views"]["current"], gmb_url_tracking["views"].get("delta", 0), is_new=gmb_url_tracking["views"].get("is_new", False), compare_label="vs last wk"),
-            stat_tile("Sessions", gmb_url_tracking["sessions"]["current"], gmb_url_tracking["sessions"].get("delta", 0), is_new=gmb_url_tracking["sessions"].get("is_new", False), compare_label="vs last wk"),
-            stat_tile("Engaged sessions", gmb_url_tracking["engaged_sessions"]["current"], gmb_url_tracking["engaged_sessions"].get("delta", 0), is_new=gmb_url_tracking["engaged_sessions"].get("is_new", False), compare_label="vs last wk"),
-            stat_tile("Key events", gmb_url_tracking["key_events"]["current"], gmb_url_tracking["key_events"].get("delta", 0), is_new=gmb_url_tracking["key_events"].get("is_new", False), compare_label="vs last wk"),
+            stat_tile("Views", gmb_url_tracking["views"]["current"], gmb_url_tracking["views"].get("delta", 0), show_delta=False),
+            stat_tile("Sessions", gmb_url_tracking["sessions"]["current"], gmb_url_tracking["sessions"].get("delta", 0), show_delta=False),
+            stat_tile("Engaged sessions", gmb_url_tracking["engaged_sessions"]["current"], gmb_url_tracking["engaged_sessions"].get("delta", 0), show_delta=False),
+            stat_tile("Key events", gmb_url_tracking["key_events"]["current"], gmb_url_tracking["key_events"].get("delta", 0), show_delta=False),
         ])
         gut_props = gmb_url_tracking.get("by_property", [])
         gut_maxes = {
@@ -908,10 +908,10 @@ def build(data_path: Path) -> str:
     url_tracking_section = ""
     if url_tracking:
         url_tracking_html = "".join([
-            stat_tile("Views", url_tracking["views"]["current"], url_tracking["views"].get("delta", 0), is_new=url_tracking["views"].get("is_new", False), compare_label="vs last wk"),
-            stat_tile("Sessions", url_tracking["sessions"]["current"], url_tracking["sessions"].get("delta", 0), is_new=url_tracking["sessions"].get("is_new", False), compare_label="vs last wk"),
-            stat_tile("Engaged sessions", url_tracking["engaged_sessions"]["current"], url_tracking["engaged_sessions"].get("delta", 0), is_new=url_tracking["engaged_sessions"].get("is_new", False), compare_label="vs last wk"),
-            stat_tile("Tours", url_tracking["tours"]["current"], url_tracking["tours"].get("delta", 0), is_new=url_tracking["tours"].get("is_new", False), compare_label="vs last wk"),
+            stat_tile("Views", url_tracking["views"]["current"], url_tracking["views"].get("delta", 0), show_delta=False),
+            stat_tile("Sessions", url_tracking["sessions"]["current"], url_tracking["sessions"].get("delta", 0), show_delta=False),
+            stat_tile("Engaged sessions", url_tracking["engaged_sessions"]["current"], url_tracking["engaged_sessions"].get("delta", 0), show_delta=False),
+            stat_tile("Tours", url_tracking["tours"]["current"], url_tracking["tours"].get("delta", 0), show_delta=False),
         ])
         ut_props = url_tracking.get("by_property", [])
         ut_maxes = {
