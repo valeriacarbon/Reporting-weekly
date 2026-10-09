@@ -206,6 +206,21 @@ top_channel      = whichever of Facebook/Instagram/TikTok has the highest
 (GBP is never folded into `followers`/`engagement`/`views` — same as the
 original report's design, where Google Business is its own separate section.)
 
+**This report is organic-only by design, not because no paid activity
+exists (clarified by Val, 2026-10-09).** `IG.views` (IGEV05) can
+technically include paid impressions if a Meta Ads account is connected
+to the brand in Metricool, but Val deliberately does not connect Meta
+Ads (or any ads account) into Metricool for properties that are actually
+running paid campaigns in Ads Manager — this dashboard's scope is
+organic social only, by her choice, not because paid activity isn't
+happening. Don't conclude "no ads are running for this property" from
+the absence of ads data here; the correct statement is "this report
+doesn't include paid data, regardless of what's actually running in Ads
+Manager." If asked whether a specific property's views include paid
+reach, the honest answer is: Metricool has no ads account connected for
+it, so nothing paid could be flowing into this number even if a real
+campaign is live elsewhere — not an assurance that no campaign exists.
+
 ## Step 5 — Roll forward and compute deltas
 
 Find the most recently dated file in `data/` (by filename). **Its "current"
