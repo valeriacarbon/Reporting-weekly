@@ -197,14 +197,68 @@ posts_channels   = { "Facebook": FB.postsCount + FB.storiesCount,
                       "Google Business": GBP.postsCount }
 posts            = sum of posts_channels values present for that property
 engagement       = FB.postsInteractions + IG.postsInteractions + TikTok.interactions
-views             = FB.postsImpressions + FB.reelsVideoViews + IG.views + TikTok.views
-top_channel      = whichever of Facebook/Instagram/TikTok has the highest
-                    `views` contribution this week (tie → keep last week's
-                    top_channel unchanged)
+views_channels   = { "Facebook": FB.postsImpressions + FB.reelsVideoViews,
+                      "Instagram": IG.views,
+                      "TikTok": TikTok.views,
+                      "Google Business": GBP.reachSearch + GBP.reachMaps }
+                    (sparse — a channel the property doesn't have connected,
+                    or whose value is 0, just isn't a key; see the GBP-views
+                    note below for why Reach stands in for GBP "views")
+views            = sum of views_channels values present for that property
+top_channel      = whichever channel in views_channels (now INCLUDING Google
+                    Business, added 2026-10-09 — see below) has the highest
+                    value this week (tie → keep last week's top_channel
+                    unchanged)
 ```
 
-(GBP is never folded into `followers`/`engagement`/`views` — same as the
-original report's design, where Google Business is its own separate section.)
+(`followers` and `engagement` still never fold in GBP — GBP has no
+followers concept, and GBP's engagement-equivalent, GBP action clicks, is
+added once at the portfolio `kpis.engagement` level, not per-property, see
+Step 6. `views` is the one metric where GBP now DOES get folded in, both
+per-property and portfolio-wide — the exception, not the rule.)
+
+### GBP is now folded into Views, using Reach as the GBP proxy (added 2026-10-09, per Val)
+
+**Why a proxy, not real GBP post views:** true per-post view data for GBP
+(`GMEV16`, and the individual-post fields `GMPO12`/`GMPO13`) is confirmed
+absent from this Metricool account — not a bug, re-verified live on
+2026-10-09 (queried `GMEV16` alone, unaffected by the multi-field merge bug
+elsewhere in this doc, still `0`/`null` for every real post) on top of the
+original 2026-08-28 investigation (see "Post Views investigation" below).
+That field is still not displayed anywhere on the dashboard, and still
+shouldn't be — this is a separate decision.
+
+**The GBP-views proxy is Reach: `GBP.reachSearch + GBP.reachMaps`** — i.e.
+the same `google_business.reach_search` / `reach_maps` / `gbp_by_property[].
+reach_search` / `reach_maps` figures already pulled and displayed in the
+"Google My Business" section (see "GBP posts vs. profile" below for what
+Reach actually measures — it's the *listing's* visibility, not the posts').
+This is a deliberate substitution, same principle already used for
+Engagement (GBP action clicks standing in for likes/comments, since GBP has
+neither) — not a claim that Reach and post-views are the same thing, just
+the closest real, reliable number Metricool gives us for "how many times
+was this property seen on Google" when true post-view data doesn't exist.
+
+- Uses the **same GBP_CURRENT window** as the rest of the GBP block (which
+  may lag this run's own Step 1 week — see "GBP uses its own window"
+  below), not this run's own window. This means `views` now mixes two
+  different date ranges per property (FB/IG/TK for this run's week, GBP
+  Reach for GBP_CURRENT) — same tradeoff Engagement already accepted.
+- **`top_channel` MUST be recomputed over the full `views_channels` dict,
+  including Google Business, every time `views_channels` changes** — not
+  just Facebook/Instagram/TikTok. Missing this reintroduces exactly the bug
+  Val caught in the first place (a channel badge that doesn't match what
+  the stacked bar actually shows): on the first 2026-10-09 rebuild, 3
+  properties in the Monthly file and 8 in the Weekly file had a stale
+  `top_channel` that didn't match their new GBP-inclusive `views_channels`
+  (e.g. Lakeside/Lakeview badged "TikTok" while Google Business was
+  actually its largest views contributor) until this was caught and fixed.
+- **This is a one-time methodology jump, same caveat as the 2026-09-12
+  Engagement change**: any Views comparison (week-over-week, month-over-
+  month) that spans before/after 2026-10-09 is not apples-to-apples. Diff
+  straight against what was actually published, same as always — don't try
+  to reconstruct an adjusted historical baseline (see the Engagement note
+  above for why that backfires).
 
 **This report is organic-only by design, not because no paid activity
 exists (clarified by Val, 2026-10-09).** `IG.views` (IGEV05) can
@@ -280,10 +334,12 @@ views_by_channel = per network (Facebook/Instagram/TikTok/Google Business),
   added 2026-09-25 to feed the by-channel stacked segments on the "This week
   vs last week" chart's current-week bar (see "This week vs last week" chart
   below). Facebook = postsImpressions + reelsVideoViews, Instagram = views,
-  TikTok = views, same per-network fields Step 4's `views` formula sums —
-  Google Business is always 0 here (Post Views is hidden/unreliable, see
-  "Post Views investigation" below, and GBP is never folded into the Views
-  KPI in the first place). No delta needed, same shape as posts_by_channel/
+  TikTok = views, same per-network fields Step 4's `views` formula sums.
+  **Google Business = GBP.reachSearch + GBP.reachMaps (added 2026-10-09)** —
+  no longer always 0; see "GBP is now folded into Views" above for why
+  Reach is the GBP proxy here and not real post-view data (still absent/
+  unreliable, see "Post Views investigation" below — that part hasn't
+  changed). No delta needed, same shape as posts_by_channel/
   engagement_by_channel. **The four values must sum to exactly
   kpis.views.current** — build_report.py doesn't assert this one, so check
   it by hand before shipping. Write it every week now that the feature
@@ -291,18 +347,15 @@ views_by_channel = per network (Facebook/Instagram/TikTok/Google Business),
   to one solid Views bar for that file only), but don't let that become the
   new normal.
 
-properties[].views_channels = per-property channel breakdown of `views`
-  (added 2026-10-09, same day/reason as the chart it feeds — see "Views by
-  property is now a stacked bar chart" below). `{"Facebook": n, "Instagram":
-  n, "TikTok": n}` — a channel with 0 views just isn't a key, same sparse
-  convention as `posts_channels`. No "Google Business" key (GBP views are
-  always 0, never folded into this metric — same reasoning as
-  `views_by_channel`). **Must sum to exactly that property's
-  `views.current`** — not asserted in code, check by hand. Write it every
-  week now that the feature exists, same as `views_by_channel`; a property
-  missing this key falls back to a solid single-color bar for that property
-  only (see `property_views_stacked_chart` in `build_report.py`), don't let
-  that become the new normal either.
+properties[].views_channels = per-property channel breakdown of `views`,
+  computed in Step 4 above (now includes Google Business = GBP Reach, added
+  2026-10-09 — see "GBP is now folded into Views" above). Feeds
+  `property_views_stacked_chart()` in `build_report.py` (see "Views by
+  property is now a stacked bar chart" below). **Must sum to exactly that
+  property's `views.current`** — not asserted in code, check by hand. Write
+  it every week now that the feature exists, same as `views_by_channel`; a
+  property missing this key falls back to a solid single-color bar for that
+  property only, don't let that become the new normal either.
 
 facebook_groups = {groups_posted_in, groups_and_posts, interactions} always
   {0,0} with the existing note — Metricool doesn't expose Facebook Group
