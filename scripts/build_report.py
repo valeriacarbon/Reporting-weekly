@@ -473,7 +473,6 @@ def property_card(p, maxes):
           <div class="metric-label">{label}</div>
           <div class="metric-bar">{bar}</div>
           <div class="metric-value">{fmt(d["current"])}</div>
-          <div class="metric-delta">{delta_chip(d["current"], d["delta"])}</div>
         </div>''')
     posts_row = f'''
         <div class="metric-row posts-row">
