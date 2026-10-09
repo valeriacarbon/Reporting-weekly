@@ -143,6 +143,11 @@
   @media (max-width: 780px) { .two-col { grid-template-columns: 1fr; gap: 24px; } }
   .two-col h3 { font-size: 12.5px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 14px; }
 
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; }
+  @media (max-width: 980px) { .three-col { grid-template-columns: 1fr 1fr; gap: 24px; } }
+  @media (max-width: 620px) { .three-col { grid-template-columns: 1fr; } }
+  .three-col h3 { font-size: 12.5px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 14px; }
+
   /* ---- property views ranking chart ---- */
   .pbar-row { display: grid; grid-template-columns: 220px 1fr 90px; align-items: center; gap: 12px; margin-bottom: 8px; }
   .pbar-label { font-size: 13px; display: flex; flex-direction: column; gap: 2px; }
@@ -282,7 +287,7 @@
   </section>
 
   <section>
-    <div class="two-col">
+    <div class="three-col">
       <div>
         <h3>Followers by channel</h3>
         
@@ -338,6 +343,38 @@
         <div class="chbar-fill" style="width:30.8%; background:var(--ch-google-business)"></div>
       </div>
       <div class="chbar-value">24 </div>
+    </div>
+      </div>
+      <div>
+        <h3>Views by channel</h3>
+        
+    <div class="chbar-row">
+      <div class="chbar-label">Facebook</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:11.5%; background:var(--ch-facebook)"></div>
+      </div>
+      <div class="chbar-value">6,356 </div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">Instagram</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:39.7%; background:var(--ch-instagram)"></div>
+      </div>
+      <div class="chbar-value">21,895 </div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">TikTok</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:100.0%; background:var(--ch-tiktok)"></div>
+      </div>
+      <div class="chbar-value">55,123 </div>
+    </div>
+    <div class="chbar-row">
+      <div class="chbar-label">Google Business</div>
+      <div class="chbar-track">
+        <div class="chbar-fill" style="width:0.0%; background:var(--ch-google-business)"></div>
+      </div>
+      <div class="chbar-value">0 </div>
     </div>
       </div>
     </div>

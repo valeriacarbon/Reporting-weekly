@@ -46,6 +46,12 @@ def build(data_path: Path) -> str:
         channel_bar_row(c["channel"], c["current"], pbc_max) for c in pbc
     )
 
+    vbc = data["views_by_channel"]
+    vbc_max = max(c["current"] for c in vbc)
+    views_by_channel_chart = "".join(
+        channel_bar_row(c["channel"], c["current"], vbc_max) for c in vbc
+    )
+
     props = sorted(data["properties"], key=lambda p: p["views"]["current"], reverse=True)
     views_max = max(p["views"]["current"] for p in props)
     views_chart = "".join(
@@ -101,6 +107,7 @@ def build(data_path: Path) -> str:
     out = out.replace("{{KPI_TILES}}", kpi_html)
     out = out.replace("{{FOLLOWERS_CHART}}", followers_chart)
     out = out.replace("{{POSTS_CHART}}", posts_chart)
+    out = out.replace("{{VIEWS_BY_CHANNEL_CHART}}", views_by_channel_chart)
     out = out.replace("{{VIEWS_CHART}}", views_chart)
     out = out.replace("{{PROPERTY_CARDS}}", property_cards)
     out = out.replace("{{GMB_TILES}}", gmb_html)
