@@ -366,6 +366,18 @@ only the internal fill of the current-week bar changed.
 
 ### GBP uses its own window, independent of the rest of the report (added 2026-09-19)
 
+**THE RULE (per Val, confirmed 2026-10-09): GBP always syncs on the last
+fully-completed week — never this run's own Step 1 week.** Don't try to
+chase this run's own window for GBP; it will not be synced yet (Metricool
+documents a standard 5-6 day lag), and that's expected, not a bug. The
+walk-back/completeness-test mechanics below exist to *verify* this rule
+and to catch the rare case where even last week isn't complete yet (or
+to catch the query-merge bug — see the dedicated section further down) —
+they are not there to discover some other, shorter-than-a-week answer.
+If you ever find yourself concluding GBP_CURRENT should equal this run's
+own week, stop and re-check: that would break the rule and is far more
+likely a misread than a real exception.
+
 **Do not assume GBP data for this run's own Step 1 window (`from`/`to`) is
 usable.** Verified 2026-09-19: even 8 days after the Sep 4-10 week ended,
 a fresh pull of that week's `reachSearch` totaled only ~26% of what it
