@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_report import (  # noqa: E402
     CHANNEL_COLORS, esc, fmt, mini_bar, channel_bar_row, post_channel_chips,
     gbp_metric_row, gbp_property_card, property_views_stacked_chart,
+    url_tracking_card, gmb_url_tracking_card,
 )
 from build_quarterly_report import (  # noqa: E402
     total_tile, property_card_total,
@@ -91,6 +92,68 @@ def build(data_path: Path) -> str:
         }
     gbp_property_cards = "".join(gbp_property_card(p, gbp_maxes) for p in gbp_props)
 
+    gmb_url_tracking = data.get("gmb_url_tracking")
+    gmb_url_tracking_section = ""
+    if gmb_url_tracking:
+        gmb_ut_html = "".join([
+            total_tile("Views", gmb_url_tracking["views"]),
+            total_tile("Sessions", gmb_url_tracking["sessions"]),
+            total_tile("Engaged sessions", gmb_url_tracking["engaged_sessions"]),
+            total_tile("Key events", gmb_url_tracking["key_events"]),
+        ])
+        gut_props = gmb_url_tracking.get("by_property", [])
+        gut_maxes = {
+            "views": max((p["views"] for p in gut_props), default=1),
+            "sessions": max((p["sessions"] for p in gut_props), default=1),
+            "engaged_sessions": max((p["engaged_sessions"] for p in gut_props), default=1),
+            "key_events": max((p["key_events"] for p in gut_props), default=1),
+        }
+        gmb_ut_cards = "".join(gmb_url_tracking_card(p, gut_maxes) for p in gut_props)
+        gmb_url_tracking_section = f'''
+  <section>
+    <h2>Google My Business — URL Tracking</h2>
+    <p class="section-sub">Traffic that lands on each property's site from its Google Business Profile (Google Analytics, source: GMB / GMB), summed across the month.</p>
+    <div class="stat-grid">{gmb_ut_html}</div>
+  </section>
+
+  <section>
+    <h2>Google My Business — URL Tracking by brand</h2>
+    <p class="section-sub">Quick view per property.</p>
+    <div class="property-grid">{gmb_ut_cards}</div>
+    <div class="note-box">{esc(gmb_url_tracking["note"])}</div>
+  </section>'''
+
+    url_tracking = data.get("url_tracking")
+    url_tracking_section = ""
+    if url_tracking:
+        url_tracking_html = "".join([
+            total_tile("Views", url_tracking["views"]),
+            total_tile("Sessions", url_tracking["sessions"]),
+            total_tile("Engaged sessions", url_tracking["engaged_sessions"]),
+            total_tile("Tours", url_tracking["tours"]),
+        ])
+        ut_props = url_tracking.get("by_property", [])
+        ut_maxes = {
+            "views": max((p["views"] for p in ut_props), default=1),
+            "sessions": max((p["sessions"] for p in ut_props), default=1),
+            "engaged_sessions": max((p["engaged_sessions"] for p in ut_props), default=1),
+            "tours": max((p["tours"] for p in ut_props), default=1),
+        }
+        url_tracking_cards = "".join(url_tracking_card(p, ut_maxes) for p in ut_props)
+        url_tracking_section = f'''
+  <section>
+    <h2>URL Tracking</h2>
+    <p class="section-sub">Traffic from Facebook Group posts landing on each property's site (Google Analytics), summed across the month.</p>
+    <div class="stat-grid">{url_tracking_html}</div>
+  </section>
+
+  <section>
+    <h2>URL Tracking — by brand</h2>
+    <p class="section-sub">Quick view per property.</p>
+    <div class="property-grid">{url_tracking_cards}</div>
+    <div class="note-box">{esc(url_tracking["note"])}</div>
+  </section>'''
+
     channel_css_vars = "\n".join(
         f'      --ch-{k.lower().replace(" ", "-")}: {v["dark"]};' for k, v in CHANNEL_COLORS.items()
     )
@@ -109,6 +172,8 @@ def build(data_path: Path) -> str:
     out = out.replace("{{PROPERTY_CARDS}}", property_cards)
     out = out.replace("{{GMB_TILES}}", gmb_html)
     out = out.replace("{{GBP_PROPERTY_CARDS}}", gbp_property_cards)
+    out = out.replace("{{GMB_URL_TRACKING_SECTION}}", gmb_url_tracking_section)
+    out = out.replace("{{URL_TRACKING_SECTION}}", url_tracking_section)
     out = out.replace("{{GENERATED_NOTE}}", esc(data["generated_note"]))
     out = out.replace("{{CHANNEL_CSS_VARS_DARK}}", channel_css_vars)
     out = out.replace("{{CHANNEL_CSS_VARS_LIGHT}}", channel_css_vars_light)

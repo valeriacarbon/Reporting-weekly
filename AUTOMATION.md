@@ -897,8 +897,21 @@ the full requested calendar month (same field IDs/aggregation rules as
 Steps 3–4 above, followers = LAST in range, everything else = SUM in
 range) — don't assemble it from weekly `data/week-*.json` snapshots, same
 reasoning as Quarterly. Check `getBrandSettings` joinDate/firstConnectionDate
-for partial-month properties, same as Quarterly. Facebook Groups and URL
-Tracking are omitted entirely, same as Quarterly.
+for partial-month properties, same as Quarterly.
+
+**Unlike Quarterly, this page DOES include `url_tracking` and
+`gmb_url_tracking`** (added 2026-10-09, per Val) — she shared a full-month
+GA4 "Organic Links Performance" export (`fbgroups / organic` and
+`GMB / GMB` source/medium) covering the whole calendar month, which is
+exactly the period-total shape this page needs. Same data shape, same
+`url_tracking_card`/`gmb_url_tracking_card` components and `total_tile`
+(no delta) as every other stat on this page — see `build_monthly_report.py`
+and `template_monthly.html` for the two sections
+("URL Tracking" / "URL Tracking — by brand" and "Google My Business — URL
+Tracking" / "... by brand"). If a future month's rebuild doesn't come with
+a matching GA4 export, leave these two keys out of that month's data file
+entirely (don't invent zeros) and the sections will simply not render —
+same graceful-omission behavior Quarterly still uses for these sections.
 
 For `top_channel` (used for both the Views-by-property bar color and the
 property card badge): it's the channel with the most **views** for that
