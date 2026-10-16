@@ -641,6 +641,37 @@ expected, and not a bug to "fix" by pulling harder. Only walk back
 further than one week if that one-week-back candidate still fails the
 completeness test.
 
+**A completeness check done at 7am can be stale by that afternoon — the
+sync keeps backfilling intraday (fixed 2026-10-16).** The Oct 9 automated
+run tested Oct 2-8 and found it genuinely incomplete (several properties
+missing Oct 6-8), so GBP_CURRENT correctly stayed at Sep 25-Oct 1 that
+morning. Hours later the same day, Val pushed back that this looked too
+stale, and re-testing the *identical* Oct 2-8 window found it fully
+complete (7/7 real days, all 13 properties) — the data had simply
+finished syncing since the morning run. This is not the query-merge bug
+(retries were identical, and single-day queries confirmed real vs.
+placeholder values) and not a reason to change the Friday-Thursday window
+shape (see below) — it's a timing gap between a once-a-day morning check
+and a slower-than-usual intraday sync. **If GBP numbers are questioned or
+look suspicious after the fact, re-run the completeness check live rather
+than trusting the morning snapshot** — that's what resolved it here, and
+updating the already-published file with the corrected window is the
+right move when this happens (see `week-2026-10-15.json`'s
+`generated_note` for the worked example, including how to safely shift
+GBP_CURRENT/GBP_PRIOR forward one week using the old GBP_CURRENT's
+already-verified numbers as the new GBP_PRIOR baseline).
+
+**Do not "fix" this by changing the window shape to Thursday-Thursday,
+Monday-Sunday, or Sunday-Saturday** (both suggested and rejected
+2026-10-16). Friday-Thursday is not arbitrary: GBP posts publish Friday
+at noon, so Friday must be a window *boundary* (the start), not buried
+mid-week, or posts silently misassign between weeks (see
+`scripts/gbp_window.py` and the dedicated section below) — every other
+section of this report already runs on this same cadence. A same-day
+backfill lag isn't fixed by shifting which 7 calendar days are being
+checked; it's fixed by re-checking instead of trusting a single snapshot,
+same as above.
+
 ### The "multi-week GBP lag" (2026-09 runs) was a false alarm — the real bug was in how the completeness test itself queries data (fixed 2026-10-08)
 
 **What went wrong:** for three weekly runs in a row (Sep 11-17, Sep 18-24,
