@@ -1,7 +1,7 @@
 {
   "week_label": "Oct 8 – 15, 2026",
   "prev_week_label": "Oct 1 – 8, 2026",
-  "generated_note": "Automated Friday run (2026-10-16) pulled live from Metricool per AUTOMATION.md, window Oct 9-15, 2026. All 13 GBP-connected properties returned exactly 7 rows per network for this run's own Followers/Posts/Engagement/Views window -- no cross-boundary rows discarded this time.\n\nDATA QUALITY ISSUE (caught and corrected this run, broader than last week's isolated 3-property case): the Facebook/Instagram evolution connector's posts/stories SUM fields (FBEV33/35, IGEV37/16) were inflated for essentially every property this week, not just a few -- e.g. Lakeside/Lakeview's FB evolution summed to 4 posts + 3 stories and IG to 4 posts + 3 stories, while the real publishing calendar (getScheduledPosts, PUBLISHED, in-window) shows exactly 1 real post per network that week (a single FB/IG/TikTok/GBP multi-post campaign on Oct 12). The pattern looks like the evolution 'postsCount' field repeating a cumulative count across multiple trailing days rather than a true daily delta, which inflates the SUM when multiple days are added together. Given this matched the same failure mode documented last week (Benton/Claxton/Berry Falls), this run uses getScheduledPosts (PUBLISHED, in-window, per-property local timezone from getBrandSettings) as ground truth for every property's Facebook/Instagram/TikTok posts_channels count, not the evolution SUM fields. Interactions and views from the evolution connector were left as pulled (no ground-truth source exists to cross-check those). Worth flagging to Metricool support if this keeps recurring week over week.\n\nDATA ANOMALY: Lakeside/Lakeview's TikTok followers (TKEV07) evolution reading dropped to an anomalous 0 on Oct 14-15 after reading a real 37-38 for the first 5 days of the window -- treated as an unsynced/glitched trailing value (same principle as skipping trailing nulls) and used the last real reading (38, from Oct 13) instead of 0.\n\nGBP WINDOW: GBP_CURRENT stays at Sep 25 - Oct 1, 2026 for a 3rd consecutive run (GBP_PRIOR Sep 18-24, both unchanged from last week's file). This run specifically verified this is a REAL, persistent sync stall, not the query-merge bug documented elsewhere in AUTOMATION.md: (1) ran the 5-field completeness check for Oct 2-8 twice, got byte-identical results both times (the merge bug produces DIFFERENT results on retry, so identical retries rule it out); (2) pulled GMEV18 alone (single-field, immune to the merge bug) for several properties over the full Oct 1-16 range and confirmed GBP reachSearch data simply stops being written past Oct 4-5, 2026 for every property checked (Lakeside cuts off Oct 5, Santa Fe and Ingleside Terrace cut off Oct 4) -- an 11-12 day gap as of today, well beyond Metricool's documented 5-6 day disclaimer. (3) re-confirmed Sep 25-Oct 1 is still fully complete (7/7 days) for spot-checked properties, so GBP_CURRENT/PRIOR are safe to carry forward unchanged rather than walking back further. Given this is now stuck for a 3rd straight week with a genuinely verified (not query-artifact) cause, this is worth flagging to Val and/or Metricool support directly -- the normal 5-6 day lag does not explain an 11+ day gap that hasn't moved in over a week. google_business, gbp_by_property, gbp_window, gbp_window_label, and gbp_prev_window_label are all carried forward verbatim from last week's file.\n\nEngagement KPI = social interactions (Facebook 10 + Instagram 2 + TikTok 354 = 366) + GBP action clicks (1,552, same carried-forward GBP_CURRENT window) = 1,918; delta computed straight against last week's published Engagement. Views KPI = social views (Facebook 557 + Instagram 3,859 + TikTok 7,805 = 12,221) + GBP Reach proxy (6,724, same carried-forward window) = 18,945. Facebook Groups metrics stay at 0/0 (still manual-only, unchanged). URL Tracking and GMB URL Tracking: no new GA4 export received this week -- both carried forward unchanged from the last real numbers (delta 0) rather than disappearing, per policy.",
+  "generated_note": "Automated Friday run (2026-10-16) pulled live from Metricool per AUTOMATION.md, window Oct 9-15, 2026. All 13 GBP-connected properties returned exactly 7 rows per network for this run's own Followers/Posts/Engagement/Views window -- no cross-boundary rows discarded this time.\n\nDATA QUALITY ISSUE (caught and corrected this run, broader than last week's isolated 3-property case): the Facebook/Instagram evolution connector's posts/stories SUM fields (FBEV33/35, IGEV37/16) were inflated for essentially every property this week, not just a few -- e.g. Lakeside/Lakeview's FB evolution summed to 4 posts + 3 stories and IG to 4 posts + 3 stories, while the real publishing calendar (getScheduledPosts, PUBLISHED, in-window) shows exactly 1 real post per network that week (a single FB/IG/TikTok/GBP multi-post campaign on Oct 12). The pattern looks like the evolution 'postsCount' field repeating a cumulative count across multiple trailing days rather than a true daily delta, which inflates the SUM when multiple days are added together. Given this matched the same failure mode documented last week (Benton/Claxton/Berry Falls), this run uses getScheduledPosts (PUBLISHED, in-window, per-property local timezone from getBrandSettings) as ground truth for every property's Facebook/Instagram/TikTok posts_channels count, not the evolution SUM fields. Interactions and views from the evolution connector were left as pulled (no ground-truth source exists to cross-check those). Worth flagging to Metricool support if this keeps recurring week over week.\n\nDATA ANOMALY: Lakeside/Lakeview's TikTok followers (TKEV07) evolution reading dropped to an anomalous 0 on Oct 14-15 after reading a real 37-38 for the first 5 days of the window -- treated as an unsynced/glitched trailing value (same principle as skipping trailing nulls) and used the last real reading (38, from Oct 13) instead of 0.\n\nGBP WINDOW: GBP_CURRENT stays at Sep 25 - Oct 1, 2026 for a 3rd consecutive run (GBP_PRIOR Sep 18-24, both unchanged from last week's file). This run specifically verified this is a REAL, persistent sync stall, not the query-merge bug documented elsewhere in AUTOMATION.md: (1) ran the 5-field completeness check for Oct 2-8 twice, got byte-identical results both times (the merge bug produces DIFFERENT results on retry, so identical retries rule it out); (2) pulled GMEV18 alone (single-field, immune to the merge bug) for several properties over the full Oct 1-16 range and confirmed GBP reachSearch data simply stops being written past Oct 4-5, 2026 for every property checked (Lakeside cuts off Oct 5, Santa Fe and Ingleside Terrace cut off Oct 4) -- an 11-12 day gap as of today, well beyond Metricool's documented 5-6 day disclaimer. (3) re-confirmed Sep 25-Oct 1 is still fully complete (7/7 days) for spot-checked properties, so GBP_CURRENT/PRIOR are safe to carry forward unchanged rather than walking back further. Given this is now stuck for a 3rd straight week with a genuinely verified (not query-artifact) cause, this is worth flagging to Val and/or Metricool support directly -- the normal 5-6 day lag does not explain an 11+ day gap that hasn't moved in over a week. google_business, gbp_by_property, gbp_window, gbp_window_label, and gbp_prev_window_label are all carried forward verbatim from last week's file.\n\nEngagement KPI = social interactions (Facebook 10 + Instagram 2 + TikTok 354 = 366) + GBP action clicks (1,552, same carried-forward GBP_CURRENT window) = 1,918; delta computed straight against last week's published Engagement. Views KPI = social views (Facebook 557 + Instagram 3,859 + TikTok 7,805 = 12,221) + GBP Reach proxy (6,724, same carried-forward window) = 18,945. Facebook Groups metrics stay at 0/0 (still manual-only, unchanged). URL Tracking and GMB URL Tracking: no new GA4 export received this week -- both carried forward unchanged from the last real numbers (delta 0) rather than disappearing, per policy.\n\nGA4 UPDATE (2026-10-16, per Val's export): FB Groups URL Tracking now has real data for this run (Oct 8-15 GA4 window, matches this week's own report window): Views 228, Sessions 38, Engaged Sessions 29, Tours 0 (delta vs last real reading: +188/+24/+19/+0). GMB URL Tracking is untouched pending the missing 2nd-row data Val is still sending for 6 properties.",
   "kpis": {
     "followers": {
       "current": 2391,
@@ -706,16 +706,16 @@
   ],
   "url_tracking": {
     "views": {
-      "current": 40,
-      "delta": 0
+      "current": 228,
+      "delta": 188
     },
     "sessions": {
-      "current": 14,
-      "delta": 0
+      "current": 38,
+      "delta": 24
     },
     "engaged_sessions": {
-      "current": 10,
-      "delta": 0
+      "current": 29,
+      "delta": 19
     },
     "tours": {
       "current": 0,
@@ -731,72 +731,72 @@
       },
       {
         "name": "The Benton",
-        "views": 0,
-        "sessions": 0,
-        "engaged_sessions": 0,
+        "views": 3,
+        "sessions": 3,
+        "engaged_sessions": 1,
         "tours": 0
       },
       {
         "name": "The Lamar Lofts",
-        "views": 0,
-        "sessions": 0,
-        "engaged_sessions": 0,
+        "views": 1,
+        "sessions": 1,
+        "engaged_sessions": 1,
         "tours": 0
       },
       {
         "name": "The Landings at North Ingleside",
-        "views": 4,
-        "sessions": 2,
-        "engaged_sessions": 2,
+        "views": 15,
+        "sessions": 5,
+        "engaged_sessions": 5,
         "tours": 0
       },
       {
         "name": "The Kenzie",
-        "views": 0,
-        "sessions": 0,
-        "engaged_sessions": 0,
+        "views": 19,
+        "sessions": 8,
+        "engaged_sessions": 5,
         "tours": 0
       },
       {
         "name": "Westminster Club",
-        "views": 0,
-        "sessions": 0,
-        "engaged_sessions": 0,
+        "views": 8,
+        "sessions": 5,
+        "engaged_sessions": 3,
         "tours": 0
       },
       {
         "name": "Claxton Pointe & Pecan Ridge",
-        "views": 0,
-        "sessions": 0,
-        "engaged_sessions": 0,
+        "views": 1,
+        "sessions": 1,
+        "engaged_sessions": 1,
         "tours": 0
       },
       {
         "name": "Berry Falls",
-        "views": 10,
-        "sessions": 2,
+        "views": 11,
+        "sessions": 1,
         "engaged_sessions": 1,
         "tours": 0
       },
       {
         "name": "Ingleside Terrace",
-        "views": 4,
+        "views": 26,
         "sessions": 3,
-        "engaged_sessions": 2,
+        "engaged_sessions": 3,
         "tours": 0
       },
       {
         "name": "Hills at Hoover",
-        "views": 11,
+        "views": 48,
         "sessions": 2,
         "engaged_sessions": 2,
         "tours": 0
       },
       {
         "name": "Residences at the Overlook",
-        "views": 11,
-        "sessions": 5,
-        "engaged_sessions": 3,
+        "views": 96,
+        "sessions": 9,
+        "engaged_sessions": 7,
         "tours": 0
       },
       {
@@ -821,7 +821,7 @@
         "tours": 0
       }
     ],
-    "note": "No new GA4 export received this week for Facebook Groups URL Tracking -- numbers carried forward unchanged from the last real reading (Oct 1-9, 2026 window), delta zeroed per policy rather than letting the section disappear."
+    "note": "Real GA4 export received this week (window Oct 8-15, 2026, fbgroups/organic source/medium) -- matches this week's own report window exactly, replaces the carried-forward Oct 1-9 placeholder from last week."
   },
   "gmb_url_tracking": {
     "views": {
