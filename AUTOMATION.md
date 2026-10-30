@@ -8,7 +8,7 @@ it anymore.** Everything below is self-contained; follow it in order.
 
 ## What this run does, in one sentence
 
-Pull this week's real stats from Metricool for all 15 properties, roll last
+Pull this week's real stats from Metricool for all 14 properties, roll last
 run's "this week" numbers into "last week", write a new dated data file,
 regenerate `index.html`, and push straight to `main` — no approval step,
 this is meant to run fully unattended.
@@ -141,10 +141,25 @@ property was added). As of 2026-08, the mapping is:
 | Residences at the Overlook | 6564064 | Facebook, Instagram, TikTok, GBP |
 | Santa Fe | 6564321 | Facebook, Instagram, TikTok, GBP |
 | Villa Siena | 6564332 | Facebook, Instagram, TikTok, GBP |
-| Aztec Villa | 6564812 | Facebook only |
-| Capri Palms | 6587008 | TikTok only |
+| Capri Palms | 6587008 | Facebook, TikTok |
 
 Only call the networks each property actually has connected.
+
+**Aztec Villa merged into Capri Palms (2026-10-30, per Val):** Aztec Villa and
+Capri Palms are the same physical property under two separate Metricool brand
+IDs, pending a rename in Metricool that hasn't happened yet. Val has already
+pointed Aztec Villa's Facebook page at the Capri Palms brand on the Metricool
+side — as of this date, brandId `6564812` ("Aztec Villa") no longer appears
+in `getBrandSettings` at all, and Capri Palms' brandId `6587008` now carries
+both `facebookData` and `tiktokData`. **Going forward there are 14 properties,
+not 15** — just pull Capri Palms (`6587008`) for both Facebook and TikTok;
+there is no separate Aztec Villa brand to query anymore. This was applied as
+a same-day correction to `data/week-2026-10-29.json` (see that file's
+`generated_note` for the merge mechanics and verification that portfolio
+totals were unaffected). **Historical weekly files before 2026-10-29 are not
+retroactively rewritten** — they still legitimately show Aztec Villa and
+Capri Palms as two separate properties, consistent with this report's
+file-immutability convention.
 
 ## Step 3 — Pull metrics (one call per property per connected network)
 
@@ -294,10 +309,10 @@ chips replace it) — just write `"posts": {"current": <value>}` with no
 ## Step 6 — Portfolio-level aggregates
 
 ```
-kpis.followers / posts / views = sum across all 15 properties' respective
+kpis.followers / posts / views = sum across all 14 properties' respective
   values (each with a delta per Step 5)
 
-kpis.engagement = sum across all 15 properties' engagement values, PLUS
+kpis.engagement = sum across all 14 properties' engagement values, PLUS
   Google Business action clicks (website_clicks + phone_clicks +
   directions_clicks, this week's totals from google_business below) —
   added 2026-09-12 per Val's request, since GBP has no likes/comments/
@@ -387,7 +402,7 @@ google_business.directions_clicks  = sum of GMEV23, same window/delta rule
 
 `gbp_by_property` is a separate array (used by the "Google My Business —
 by brand" per-property cards) with one entry per GBP-connected property
-(everyone except Capri Palms and Aztec Villa, which aren't on GBP):
+(everyone except Capri Palms, which isn't on GBP):
 `{name, posts_published, post_views, reach_search, reach_maps,
 website_clicks, phone_clicks, directions_clicks}` — no delta per field,
 just the GBP_CURRENT window's raw numbers (the cards show magnitude bars,
@@ -776,6 +791,25 @@ since Step 3 only ever queries the `evolution` connector, not `ads`). So
 even setting aside that GBP Insights is inherently organic-only, there's
 currently no paid channel in the picture that could be inflating these
 numbers.
+
+**Re-checked 2026-10-30 (Villa Siena Facebook-followers anomaly):** Villa
+Siena's Facebook followers jumped 80 → 231 → 271 over the Oct 16-29 runs,
+flagged as implausible organic growth in both weeks' `generated_note`. Val's
+read was that this is explained by an ads account. Re-ran `getBrandSettings`
+for Villa Siena (brandId `6564332`) specifically to check — **its
+`networksData` has no `facebookAdsData` key, same as every property here
+except Lakeside/Lakeview**, i.e. **Villa Siena does not have a Facebook (or
+any) ads account connected in Metricool.** The Aug-2026 finding above still
+holds unchanged. This doesn't contradict Val's underlying point that paid
+activity could be running for Villa Siena in Ads Manager directly (per the
+"organic-only by design" note elsewhere in this doc, Val doesn't connect ads
+accounts into Metricool even for properties actually running paid
+campaigns) — it just means Metricool itself has no visibility into it, so
+this follower count is still reading as 100% organic/Facebook-side data
+whatever the real cause. **Per Val's explicit instruction, stop re-flagging
+this specific Villa Siena Facebook-follower growth pattern as an anomaly in
+future `generated_note`s** — she's aware of it and attributes it to paid
+activity outside Metricool's visibility.
 
 ### Post Views investigation (unresolved as of 2026-08-28)
 

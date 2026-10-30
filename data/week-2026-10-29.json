@@ -1,7 +1,7 @@
 {
   "week_label": "Oct 22 – 29, 2026",
   "prev_week_label": "Oct 15 – 22, 2026",
-  "generated_note": "Automated Friday run (2026-10-30) pulled live from Metricool per AUTOMATION.md, window Oct 23-29, 2026 (this run's own Step 1 window).\n\nDATA QUALITY (posts_channels): used getScheduledPosts (PUBLISHED, in-window, per-property local timezone) as ground truth for every GBP-connected property's Facebook/Instagram/TikTok/GBP posts_channels count, not the evolution SUM fields. Aztec Villa and Capri Palms are the two exceptions this run: getScheduledPosts returned zero entries for both despite the evolution connector showing real activity (Aztec: 1 Facebook post, 7 interactions, 14 post views on Oct 29; Capri Palms: 2 TikTok videos, 110 interactions, 1,714 views across Oct 28-29) -- per AUTOMATION.md's explicit fallback rule (only use the evolution connector when getScheduledPosts comes back empty for a property that should have posted), used the evolution SUM counts for these two single-network properties this run: Aztec Villa posts_channels={Facebook:1}, Capri Palms posts_channels={TikTok:2}.\n\nDATA ANOMALY (flag for Val, continuing from last week): Villa Siena's Facebook followers (FBEV17) climbed again this week -- 234, 243, 254, 263, 266, 272, 271 (Oct 23-29) -- continuing directly from last week's suspicious climb (80 to 231 over Oct 16-22). The two weeks combined show Villa Siena FB followers going from ~55 (pre-Oct-16 baseline) to 271 in under two weeks, which is still not plausible organic growth for this page. Used the standard LAST-value rule (271, from Oct 29) since there is no ground truth to override it with, but this should be verified directly against Villa Siena's real Facebook page follower count -- it is now pulling the portfolio Facebook followers_by_channel total up by a large margin for two consecutive weeks.\n\nGBP WINDOW: ran the full walk-back/completeness check. This run's own window (Oct 23-29) is not synced yet, as expected (only 2-3 of 7 days have any GBP data per property, reachSearch null for most days) -- this is the normal pre-sync state, not a bug. Walked back one week to Oct 16-22 (last run's own window) and confirmed it is fully complete (7/7 days, all 13 GBP-connected properties, every property's reach/clicks figures verified identical to what was already published in week-2026-10-22.json). GBP_CURRENT stays at Oct 16-22, 2026 for a 2nd consecutive run -- this is the expected 'one week behind' case per AUTOMATION.md, not a stall. GBP_PRIOR re-pulled fresh for Oct 9-15, 2026 and confirmed complete (7/7 days, all 13 properties): reach_search/reach_maps/website_clicks/directions_clicks all matched the previously-derived prior-window totals exactly (5314/1378/577/626), but phone_clicks (callClicks) came back 277 this run vs. 280 derived last run -- a small 3-unit intraday/multi-day backfill on an otherwise-stable older window, not an error (the other 4 of 5 fields matched exactly). Because google_business and gbp_by_property both still describe Oct 16-22 vs Oct 9-15 (unchanged windows), every GMB tile's current value is identical to last week's published figures except phone_clicks' delta, which shifts from -40 to -37 to reflect the revised prior-week baseline. posts_published cross-checked via getScheduledPosts ground truth per gbp_window.py's resolved boundaries: GBP_CURRENT=8 (unchanged), GBP_PRIOR=6 (unchanged) -- both independently re-verified per-property and confirmed to sum correctly. Views KPI, views_by_channel, and every property's views_channels/top_channel were recomputed this run using the unchanged GBP Reach proxy; engagement KPI and the Google Business engagement_by_channel entry use the unchanged GBP clicks total (1,502).\n\nURL Tracking and GMB URL Tracking: no new GA4 export received this week -- both sections carried forward unchanged from the last real reading (Oct 8-15, 2026 window for FB Groups; Oct 8-15, 2026 window for GMB), delta zeroed per policy rather than letting either section disappear. Facebook Groups metrics stay at 0/0 (still manual-only, unchanged).",
+  "generated_note": "Automated Friday run (2026-10-30) pulled live from Metricool per AUTOMATION.md, window Oct 23-29, 2026 (this run's own Step 1 window).\n\nDATA QUALITY (posts_channels): used getScheduledPosts (PUBLISHED, in-window, per-property local timezone) as ground truth for every GBP-connected property's Facebook/Instagram/TikTok/GBP posts_channels count, not the evolution SUM fields. Aztec Villa and Capri Palms are the two exceptions this run: getScheduledPosts returned zero entries for both despite the evolution connector showing real activity (Aztec: 1 Facebook post, 7 interactions, 14 post views on Oct 29; Capri Palms: 2 TikTok videos, 110 interactions, 1,714 views across Oct 28-29) -- per AUTOMATION.md's explicit fallback rule (only use the evolution connector when getScheduledPosts comes back empty for a property that should have posted), used the evolution SUM counts for these two single-network properties this run: Aztec Villa posts_channels={Facebook:1}, Capri Palms posts_channels={TikTok:2}.\n\nDATA ANOMALY (flag for Val, continuing from last week): Villa Siena's Facebook followers (FBEV17) climbed again this week -- 234, 243, 254, 263, 266, 272, 271 (Oct 23-29) -- continuing directly from last week's suspicious climb (80 to 231 over Oct 16-22). The two weeks combined show Villa Siena FB followers going from ~55 (pre-Oct-16 baseline) to 271 in under two weeks, which is still not plausible organic growth for this page. Used the standard LAST-value rule (271, from Oct 29) since there is no ground truth to override it with, but this should be verified directly against Villa Siena's real Facebook page follower count -- it is now pulling the portfolio Facebook followers_by_channel total up by a large margin for two consecutive weeks.\n\nGBP WINDOW: ran the full walk-back/completeness check. This run's own window (Oct 23-29) is not synced yet, as expected (only 2-3 of 7 days have any GBP data per property, reachSearch null for most days) -- this is the normal pre-sync state, not a bug. Walked back one week to Oct 16-22 (last run's own window) and confirmed it is fully complete (7/7 days, all 13 GBP-connected properties, every property's reach/clicks figures verified identical to what was already published in week-2026-10-22.json). GBP_CURRENT stays at Oct 16-22, 2026 for a 2nd consecutive run -- this is the expected 'one week behind' case per AUTOMATION.md, not a stall. GBP_PRIOR re-pulled fresh for Oct 9-15, 2026 and confirmed complete (7/7 days, all 13 properties): reach_search/reach_maps/website_clicks/directions_clicks all matched the previously-derived prior-window totals exactly (5314/1378/577/626), but phone_clicks (callClicks) came back 277 this run vs. 280 derived last run -- a small 3-unit intraday/multi-day backfill on an otherwise-stable older window, not an error (the other 4 of 5 fields matched exactly). Because google_business and gbp_by_property both still describe Oct 16-22 vs Oct 9-15 (unchanged windows), every GMB tile's current value is identical to last week's published figures except phone_clicks' delta, which shifts from -40 to -37 to reflect the revised prior-week baseline. posts_published cross-checked via getScheduledPosts ground truth per gbp_window.py's resolved boundaries: GBP_CURRENT=8 (unchanged), GBP_PRIOR=6 (unchanged) -- both independently re-verified per-property and confirmed to sum correctly. Views KPI, views_by_channel, and every property's views_channels/top_channel were recomputed this run using the unchanged GBP Reach proxy; engagement KPI and the Google Business engagement_by_channel entry use the unchanged GBP clicks total (1,502).\n\nURL Tracking and GMB URL Tracking: no new GA4 export received this week -- both sections carried forward unchanged from the last real reading (Oct 8-15, 2026 window for FB Groups; Oct 8-15, 2026 window for GMB), delta zeroed per policy rather than letting either section disappear. Facebook Groups metrics stay at 0/0 (still manual-only, unchanged).\n\nSAME-DAY CORRECTION (2026-10-30, per Val): Aztec Villa and Capri Palms are the same physical property under two separate Metricool brand IDs (6564812 Facebook-only, 6587008 TikTok-only) pending a rename in Metricool that hasn't been done yet -- Val has already pointed Aztec Villa's Facebook page at the Capri Palms brand. Removed 'Aztec Villa' as a separate line item and merged its Facebook data (followers, posts_channels, engagement, views_channels) into a single 'Capri Palms' property that now reports both Facebook and TikTok. This week's merged Capri Palms: followers 66 (+8 vs. combined Aztec+Capri baseline from last week), engagement 117 (+117), views 1728 (+1728). Portfolio-level KPIs, followers_by_channel, posts_by_channel, engagement_by_channel, and views_by_channel are numerically UNCHANGED by this merge (verified by hand) -- they already summed across all properties regardless of grouping. Going forward this is one 'Capri Palms' line, not two. Historical weekly files before 2026-10-29 are NOT retroactively rewritten -- they legitimately still show Aztec Villa and Capri Palms as two separate properties, consistent with this report's file-immutability convention.",
   "kpis": {
     "followers": {
       "current": 2661,
@@ -662,53 +662,30 @@
       }
     },
     {
-      "name": "Aztec Villa",
-      "top_channel": "Facebook",
-      "followers": {
-        "current": 29,
-        "delta": 4
-      },
-      "posts": {
-        "current": 1
-      },
-      "posts_channels": {
-        "Facebook": 1
-      },
-      "engagement": {
-        "current": 7,
-        "delta": 7
-      },
-      "views": {
-        "current": 14,
-        "delta": 14
-      },
-      "views_channels": {
-        "Facebook": 14
-      }
-    },
-    {
       "name": "Capri Palms",
       "top_channel": "TikTok",
       "followers": {
-        "current": 37,
-        "delta": 4
+        "current": 66,
+        "delta": 8
       },
       "posts": {
-        "current": 2
+        "current": 3
       },
       "posts_channels": {
-        "TikTok": 2
+        "TikTok": 2,
+        "Facebook": 1
       },
       "engagement": {
-        "current": 110,
-        "delta": 110
+        "current": 117,
+        "delta": 117
       },
       "views": {
-        "current": 1714,
-        "delta": 1714
+        "current": 1728,
+        "delta": 1728
       },
       "views_channels": {
-        "TikTok": 1714
+        "TikTok": 1714,
+        "Facebook": 14
       }
     }
   ],
@@ -816,13 +793,6 @@
       },
       {
         "name": "Villa Siena",
-        "views": 0,
-        "sessions": 0,
-        "engaged_sessions": 0,
-        "tours": 0
-      },
-      {
-        "name": "Aztec Villa",
         "views": 0,
         "sessions": 0,
         "engaged_sessions": 0,
@@ -939,13 +909,6 @@
         "sessions": 142,
         "engaged_sessions": 103,
         "key_events": 2
-      },
-      {
-        "name": "Aztec Villa",
-        "views": 0,
-        "sessions": 0,
-        "engaged_sessions": 0,
-        "key_events": 0
       }
     ],
     "note": "No new GA4 export received this week for Google Business URL Tracking -- numbers carried forward unchanged from the last real reading (Oct 8-15, 2026 window), delta zeroed per policy rather than letting the section disappear."
