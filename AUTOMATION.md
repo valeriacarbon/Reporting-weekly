@@ -868,6 +868,51 @@ git push origin main
 No PR, no approval step — push straight to `main` so GitHub Pages
 (`https://valeriacarbon.github.io/Reporting-weekly/`) picks it up.
 
+## Step 9 — Build the Organic Brief (every week, right after Step 8)
+
+The dashboard above (`index.html`) is the **Detail Pack** and keeps running
+exactly as it is. On top of it, every run also builds the **Organic Brief**
+(`brief.html`): a 5-slide deck Val presents in 8 to 10 minutes. Same
+`data/week-*.json` file, no extra Metricool calls.
+
+```
+python3 scripts/build_brief.py data/week-<end-date>.json
+git add brief.html data/brief-inputs.json
+git commit -m "Organic Brief: <week_label>"
+git push origin main
+```
+
+Slides, always in this order: **1 Scoreboard** (8 on/off-track tiles),
+**2 Wins and losses** (3 wins, each with a why; 3 losses, each with a next
+step), **3 Reviews** (Opiniion standing + this week's new reviews),
+**4 Priority properties** (ramp-up, under 4.0 stars, watchlist), **5 Actions**
+(next steps with owner and due, last week's status, asks for the approver).
+Live at `https://valeriacarbon.github.io/Reporting-weekly/brief.html`, linked
+from the Weekly Report's nav. Arrow keys move, N shows speaker notes, print
+gives one slide per page.
+
+What Metricool cannot give lives in `data/brief-inputs.json`:
+
+- `ramp_up`, `watchlist`, `approver`, `targets` (IG interactions per 1,000
+  views, rating floor).
+- `ratings`: the Opiniion 12-month snapshot. Replace it when Val shares a
+  new Opiniion file; do not change it otherwise.
+- `weeks.<end-date>`: Val's notes for that week — `why` / `next` (keyed by
+  win/loss: `gb_actions`, `google_site`, `top_views`, `tiktok`, `followers`,
+  `instagram`, `fb_groups`, `coverage`, `posts`, `views`), `next_moves`
+  (keyed by property name), `reviews_this_week`
+  (`new`/`positive`/`negative`/`top_complaint`/`top_praise`/`awaiting_reply`),
+  `next_steps` (`[{action, owner, due}]`), `last_week`
+  (`{done, total, open: [...]}`), `asks` (`[...]`).
+
+On each run, add an empty `weeks.<end-date>` entry (same keys as the
+previous one, empty values) so Val has a place to fill in. **Never invent
+these values.** Anything missing prints as a `[bracketed placeholder]`;
+next steps and asks left empty are auto-drafted from slides 2 and 4 and
+tagged "Draft". When the GA4 sections were carried forward (Step "URL
+Tracking"), the Google site-visit, key-event and FB-tour tiles turn gray
+("No new data") instead of on/off track.
+
 ## Do NOT
 
 - Do not touch or resurrect `weekly-social-report-copy.html` — it's

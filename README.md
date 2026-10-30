@@ -39,7 +39,9 @@ every Friday.
 data/week-2026-08-06.json   this week's snapshot (transcribed from the PDF you shared)
 scripts/template.html       the HTML/CSS shell with {{PLACEHOLDER}} slots
 scripts/build_report.py     reads a data JSON, computes chart geometry, writes index.html
-index.html                  the generated dashboard — this is what GitHub Pages serves
+index.html                  the generated dashboard (Detail Pack) — this is what GitHub Pages serves
+scripts/build_brief.py      reads the same data JSON + data/brief-inputs.json, writes brief.html
+brief.html                  the Organic Brief: 5-slide weekly deck built on top of the Detail Pack
 ```
 
 ## Updating it week to week

@@ -1,0 +1,36 @@
+{
+  "_readme": "Inputs for the Organic Brief (brief.html) that Metricool and the weekly data file do not carry. Edit by hand; build_brief.py reads it every week. 'weeks' is keyed by the weekly data file's end date (week-YYYY-MM-DD.json). Anything left out of a week prints as a [bracketed placeholder] on the slide, never as an invented number.",
+  "approver": "Andres Cueto",
+  "ramp_up": ["Santa Fe", "Villa Siena", "Hills at Hoover"],
+  "watchlist": [],
+  "targets": {
+    "ig_engagement_per_1k_views": 5,
+    "rating_floor": 4.0
+  },
+  "ratings": {
+    "source": "Opiniion review summary",
+    "window_label": "Oct 9, 2025 to Oct 9, 2026",
+    "as_of_label": "Oct 9",
+    "portfolio": {"rating": 4.0, "reviews": 590, "negative_pct": 26},
+    "by_property": [
+      {"name": "Hills at Hoover", "rating": 2.4, "reviews": 47, "negative_pct": 70},
+      {"name": "Santa Fe", "rating": 3.1, "reviews": 14, "negative_pct": 50},
+      {"name": "Residences at the Overlook", "rating": 3.3, "reviews": 48, "negative_pct": 46},
+      {"name": "The Lamar Lofts", "rating": 3.7, "reviews": 9, "negative_pct": 33},
+      {"name": "Villa Siena", "rating": 4.1, "reviews": null, "negative_pct": null},
+      {"name": "Westminster Club", "rating": 4.9, "reviews": 35, "negative_pct": 0},
+      {"name": "Capri Palms", "rating": 4.7, "reviews": null, "negative_pct": null}
+    ]
+  },
+  "weeks": {
+    "2026-10-29": {
+      "why": {},
+      "next": {},
+      "next_moves": {},
+      "reviews_this_week": null,
+      "next_steps": [],
+      "last_week": null,
+      "asks": []
+    }
+  }
+}

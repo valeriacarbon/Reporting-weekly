@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Organic Brief · Oct 22 – 29, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#F5F6F8; --ink:#18214A; }
+html,body { margin:0; height:100%; background:#0F1426; }
+body { font-family:'IBM Plex Sans', Arial, sans-serif; color:var(--ink); overflow:hidden; }
+#stage { position:absolute; top:50%; left:50%; width:1920px; height:1080px; transform-origin:0 0; }
+.slide { position:absolute; inset:0; box-sizing:border-box; background:var(--bg); color:var(--ink);
+  padding:110px 128px 150px; display:none; flex-direction:column; gap:24px; }
+.slide.active { display:flex; }
+.slide p, .slide h2, .slide h3 { margin:0; }
+h2 { font-size:52px; font-weight:600; line-height:1.15; }
+h3 { font-size:32px; font-weight:600; display:flex; align-items:center; gap:16px; }
+.kicker { font-size:24px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#2F5BD3; }
+.sub { font-size:24px; color:#6B7385; }
+.tiles { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+.tile { background:#fff; border-radius:12px; padding:20px 24px; display:flex; flex-direction:column; gap:8px; }
+.tile-bar { width:56px; height:6px; border-radius:3px; }
+.tile-label { font-size:24px; color:#6B7385; }
+.tile-value { font-size:52px; font-weight:600; line-height:1.1; }
+.tile-sub { font-size:22px; color:#4A5366; }
+.health { font-size:22px; line-height:1.4; color:#4A5366; }
+.cols { display:flex; gap:32px; }
+.flex1 { flex:1; } .flex58 { flex:58; } .flex42 { flex:42; }
+.stack { display:flex; flex-direction:column; gap:20px; }
+.card { background:#fff; border-radius:16px; padding:32px 36px; display:flex; flex-direction:column; gap:20px; }
+.item { display:flex; flex-direction:column; gap:4px; }
+.item-head { font-size:26px; line-height:1.35; }
+.item-foot { font-size:24px; color:#2F5BD3; }
+.line { font-size:26px; line-height:1.35; }
+.ph { color:#2F5BD3; font-style:italic; }
+table { width:100%; border-collapse:collapse; font-size:28px; background:#fff; }
+table.tight { font-size:24px; }
+th { background:#18214A; color:#F5F6F8; font-weight:600; text-align:right; padding:14px 18px; }
+td { padding:14px 18px; text-align:right; border-bottom:1px solid #E3E6EC; }
+td:first-child { text-align:left; }
+tr.total td { background:#E9ECF2; }
+ol { font-size:26px; line-height:1.4; margin:0; padding-left:32px; }
+.draft { font-size:18px; font-weight:600; color:#8A5A00; background:#FFF3D6; border-radius:6px; padding:4px 10px; }
+.footer { position:absolute; left:128px; bottom:56px; width:1664px; font-size:22px; color:#6B7385; }
+.notes { display:none; position:absolute; left:0; right:0; bottom:0; background:#18214A; color:#F5F6F8;
+  font-size:24px; line-height:1.4; padding:24px 128px; }
+body.show-notes .notes { display:block; }
+#hint { position:fixed; right:16px; bottom:12px; color:#8A8F9C; font:13px system-ui, sans-serif; }
+#hint a { color:#8A8F9C; }
+@media print {
+  @page { size:1920px 1080px; margin:0; }
+  html,body { background:#fff; overflow:visible; height:auto; }
+  #stage { position:static; transform:none !important; }
+  .slide { display:flex !important; position:relative; width:1920px; height:1080px; page-break-after:always; break-after:page; }
+  .notes, #hint { display:none !important; }
+}
+</style>
+</head>
+<body>
+<div id="stage">
+<section class="slide" id="scoreboard">
+<p class="kicker">Organic Brief · Social Oct 22 to 29 · Google Business Oct 16 to 22</p>
+<h2>Google Business is doing the converting. Facebook and Instagram drew 12 interactions all week.</h2>
+<div class="tiles"><div class="tile"><div class="tile-bar" style="background:#17734A"></div><p class="tile-label">Google Business actions</p><p class="tile-value">1,502</p><p class="tile-sub"><span style="color:#17734A"><b>On track.</b></span> Up 1% · Oct 16 to 22</p></div><div class="tile"><div class="tile-bar" style="background:#8A8F9C"></div><p class="tile-label">Site visits from Google</p><p class="tile-value">537</p><p class="tile-sub"><span style="color:#8A8F9C"><b>No new data.</b></span> No new GA4 export</p></div><div class="tile"><div class="tile-bar" style="background:#8A8F9C"></div><p class="tile-label">Key events from Google</p><p class="tile-value">14</p><p class="tile-sub"><span style="color:#8A8F9C"><b>No new data.</b></span> No new GA4 export</p></div><div class="tile"><div class="tile-bar" style="background:#8A8F9C"></div><p class="tile-label">Tours from FB groups</p><p class="tile-value">0</p><p class="tile-sub"><span style="color:#8A8F9C"><b>No new data.</b></span> No new GA4 export · 0 posts, 0 interactions</p></div><div class="tile"><div class="tile-bar" style="background:#B42318"></div><p class="tile-label">Instagram engagement</p><p class="tile-value">0</p><p class="tile-sub"><span style="color:#B42318"><b>Off track.</b></span> Per 1k views · TikTok 44</p></div><div class="tile"><div class="tile-bar" style="background:#17734A"></div><p class="tile-label">Posts published</p><p class="tile-value">41</p><p class="tile-sub"><span style="color:#17734A"><b>On track.</b></span> 4-wk avg 41 · last wk 45</p></div><div class="tile"><div class="tile-bar" style="background:#17734A"></div><p class="tile-label">Ramp-up coverage</p><p class="tile-value">3 of 3</p><p class="tile-sub"><span style="color:#17734A"><b>On track.</b></span> All posted this week</p></div><div class="tile"><div class="tile-bar" style="background:#B42318"></div><p class="tile-label">Under 4.0 stars</p><p class="tile-value">4</p><p class="tile-sub"><span style="color:#B42318"><b>Off track.</b></span> Hills 2.4 · Santa Fe 3.1</p></div></div>
+<p class="health"><b>Data health:</b> Google Business runs a week behind social (Oct 16 to 22). No new GA4 export this week, so Google site visits, key events and FB group tours repeat last week&#x27;s reading. Facebook group posts are entered by hand. Ratings are Opiniion review summary, Oct 9, 2025 to Oct 9, 2026. The Detail Pack&#x27;s Engagement and Views totals include Google Business, so the Brief splits by channel.</p>
+<p class="footer">Carbon Residential · Organic Brief · Oct 22 – 29, 2026 · 1</p>
+<aside class="notes">About 90 seconds. Verdict: Google Business is doing the converting. Facebook and Instagram drew 12 interactions all week. Read the red tiles, skip the green ones. Gray tiles had no new data this week. Slides 2 and 3 cover why and what is next.</aside>
+</section>
+<section class="slide" id="winslosses">
+<h2>Google Business and Ingleside Terrace carried the week. Instagram and Facebook groups did not.</h2>
+<p class="sub">Social Oct 22 to 29. Google Business Oct 16 to 22.</p>
+<div class="cols"><div class="card flex1"><h3 style="color:#17734A">Wins</h3><div class="item"><p class="item-head"><b>Google Business actions up 1% to 1,502.</b> Villa Siena 282 and Santa Fe 231 led, both ramp-up.</p><p class="item-foot ph">Why: [Val to confirm what changed]</p></div><div class="item"><p class="item-head"><b>Ingleside Terrace led views at 2,999,</b> with Instagram as its top channel.</p><p class="item-foot ph">Why: [Val to confirm what changed]</p></div><div class="item"><p class="item-head"><b>TikTok drew 257 interactions on 5,838 views.</b> 44 per 1,000 views.</p><p class="item-foot ph">Why: [Val to confirm what changed]</p></div></div><div class="card flex1"><h3 style="color:#B42318">Losses</h3><div class="item"><p class="item-head"><b>Instagram: 0 interactions on 6,740 views.</b> Followers up 3 to 272.</p><p class="item-foot">Next: re-cut the top TikToks as Reels on 3 properties</p></div><div class="item"><p class="item-head"><b>Facebook groups: no posts this week, 0 tours.</b></p><p class="item-foot">Next: confirm whether group posting resumes, or retire the channel</p></div><div class="item"><p class="item-head"><b>The Benton and The Kenzie got only 1 post.</b></p><p class="item-foot">Next: confirm their plan in the next calendar</p></div></div></div>
+<p class="footer">Carbon Residential · Organic Brief · Oct 22 – 29, 2026 · 2</p>
+<aside class="notes">About 2 minutes. Every win needs a why, so the team can repeat it. Every loss needs a next step. Bracketed lines are for Val to fill in. Loss next steps go to Andres Cueto for a yes or no on slide 5.</aside>
+</section>
+<section class="slide" id="reviews">
+<h2>4 properties sit under 4.0 stars. Hills at Hoover is the outlier at 2.4.</h2>
+<p class="sub">Opiniion review summary, Oct 9, 2025 to Oct 9, 2026. This week’s new reviews on the right.</p>
+<div class="cols"><div class="flex58"><table><tr><th style="width:46%;text-align:left">Property</th><th style="width:18%">Rating</th><th style="width:18%">Reviews</th><th style="width:18%">Negative</th></tr><tr><td><b>Hills at Hoover</b></td><td style="color:#B42318"><b>2.4</b></td><td>47</td><td style="color:#B42318">70%</td></tr><tr><td><b>Santa Fe</b></td><td style="color:#B42318"><b>3.1</b></td><td>14</td><td style="color:#B42318">50%</td></tr><tr><td><b>Residences at the Overlook</b></td><td style="color:#B42318"><b>3.3</b></td><td>48</td><td style="color:#B42318">46%</td></tr><tr><td><b>The Lamar Lofts</b></td><td style="color:#8A5A00"><b>3.7</b></td><td>9</td><td style="color:#8A5A00">33%</td></tr><tr class="total"><td><b>Portfolio</b></td><td><b>4.0</b></td><td><b>590</b></td><td><b>26%</b></td></tr></table></div><div class="flex42 stack"><div class="card"><h3 style="color:#2F5BD3">This week</h3><p class="line ph">[__] new reviews: [__] positive, [__] negative</p><p class="line ph">Top complaint: [theme]</p><p class="line ph">Top praise: [theme]</p><p class="line ph">[__] waiting for a reply</p></div><div class="card"><h3 style="color:#17734A">Best rated</h3><p class="line">Westminster Club 4.9 on 35 reviews, none negative. Capri Palms 4.7.</p></div></div></div>
+<p class="footer">Carbon Residential · Organic Brief · Oct 22 – 29, 2026 · 3</p>
+<aside class="notes">About 90 seconds. Weekly view Andres Cueto asked for: new positive and negative reviews and the main theme of each. The table is the 12-month standing. Low ratings are usually on-site issues, so the ask is to raise them with the site teams.</aside>
+</section>
+<section class="slide" id="priority">
+<h2>Ramp-up properties lead Google actions. Santa Fe’s 104 site visits produced no key events.</h2>
+<p class="sub">Posts Oct 22 to 29. Google Business actions Oct 16 to 22. Ratings from Opiniion. Site visits repeat last week (no new GA4 export).</p>
+<table class="tight"><tr><th style="width:24%;text-align:left">Property</th><th style="width:8%">Posts</th><th style="width:12%">Google actions</th><th style="width:11%">Site visits</th><th style="width:11%">Key events</th><th style="width:8%">Rating</th><th style="width:26%;text-align:left">Next move</th></tr><tr><td><b>Villa Siena · ramp-up</b></td><td>3</td><td style="color:#17734A"><b>282</b></td><td>142</td><td>2</td><td>4.1</td><td style="text-align:left">Keep the cadence</td></tr><tr><td><b>Santa Fe · ramp-up</b></td><td>3</td><td>231</td><td>104</td><td style="color:#B42318"><b>0</b></td><td style="color:#B42318">3.1</td><td style="text-align:left">Check the tour button on the page Google links to</td></tr><tr><td><b>Hills at Hoover · ramp-up</b></td><td>3</td><td>178</td><td>90</td><td style="color:#17734A"><b>7</b></td><td style="color:#B42318">2.4</td><td style="text-align:left">Pair posts with replies to reviews</td></tr><tr><td><b>Residences at the Overlook</b></td><td>3</td><td>113</td><td style="color:#B42318"><b>4</b></td><td>0</td><td style="color:#B42318">3.3</td><td style="text-align:left">Check the Google link tracking</td></tr><tr><td><b>The Lamar Lofts</b></td><td>4</td><td>32</td><td>37</td><td>0</td><td style="color:#8A5A00">3.7</td><td style="text-align:left">Keep the cadence</td></tr></table>
+<p class="footer">Carbon Residential · Organic Brief · Oct 22 – 29, 2026 · 4</p>
+<aside class="notes">About 2 minutes. Priority properties are the ramp-up properties, plus any property under 4.0 stars or on the watchlist. Every other property stays in the Detail Pack.</aside>
+</section>
+<section class="slide" id="actions">
+<h2>6 next steps for next week, 3 asks</h2>
+<div class="cols"><div class="flex58 stack"><h3 style="color:#2F5BD3">Next steps <span class="draft">Draft: auto-built from slides 2 and 4</span></h3><table class="tight"><tr><th style="width:62%;text-align:left">Action</th><th style="width:20%;text-align:left">Owner</th><th style="width:18%;text-align:left">Due</th></tr><tr><td style="text-align:left">Re-cut the top TikToks as Reels on 3 properties</td><td style="text-align:left">Val</td><td style="text-align:left">[date]</td></tr><tr><td style="text-align:left">Confirm whether group posting resumes, or retire the channel</td><td style="text-align:left">Val</td><td style="text-align:left">[date]</td></tr><tr><td style="text-align:left">Confirm the plan for The Benton and The Kenzie in the next calendar</td><td style="text-align:left">Val</td><td style="text-align:left">[date]</td></tr><tr><td style="text-align:left">Santa Fe: check the tour button on the page Google links to</td><td style="text-align:left">Val</td><td style="text-align:left">[date]</td></tr><tr><td style="text-align:left">Hills at Hoover: pair posts with replies to reviews</td><td style="text-align:left">Val</td><td style="text-align:left">[date]</td></tr><tr><td style="text-align:left">Residences at the Overlook: check the Google link tracking</td><td style="text-align:left">Val</td><td style="text-align:left">[date]</td></tr></table></div><div class="flex42 stack"><div class="card"><h3>Last week</h3><p class="line ph" style="color:#4A5366">[__] of [__] done. Still open: [list the open items].</p></div><div class="card"><h3 style="color:#2F5BD3">Asks for Andres Cueto</h3><ol><li>Decide whether Facebook group posting continues</li><li>Confirm the social plan for The Benton and The Kenzie</li><li>Raise Hills, Santa Fe and Overlook reviews with the site teams</li></ol></div></div></div>
+<p class="footer">Carbon Residential · Organic Brief · Oct 22 – 29, 2026 · 5</p>
+<aside class="notes">About 1 minute. Read last week&#x27;s actions as done or not done. Then the next steps, each with an owner and a date. Finish with the asks, and wait for a yes or no on each.</aside>
+</section>
+</div>
+<p id="hint">← → to move · N for notes · <a href="index.html">Detail Pack</a></p>
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var stage = document.getElementById('stage');
+  var i = Math.max(0, slides.findIndex(function(s){ return '#' + s.id === location.hash; }));
+  function show(n){ i = Math.min(slides.length - 1, Math.max(0, n));
+    slides.forEach(function(s, k){ s.classList.toggle('active', k === i); });
+    history.replaceState(null, '', '#' + slides[i].id); }
+  function fit(){ var s = Math.min(innerWidth / 1920, innerHeight / 1080);
+    stage.style.transform = 'translate(-50%,-50%) scale(' + s + ')'; stage.style.transformOrigin = 'center center'; }
+  document.addEventListener('keydown', function(e){
+    if (['ArrowRight','PageDown',' '].indexOf(e.key) > -1) { e.preventDefault(); show(i + 1); }
+    if (['ArrowLeft','PageUp'].indexOf(e.key) > -1) { e.preventDefault(); show(i - 1); }
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(slides.length - 1);
+    if (e.key === 'n' || e.key === 'N') document.body.classList.toggle('show-notes');
+  });
+  document.addEventListener('click', function(e){ if (e.target.closest('a')) return;
+    show(e.clientX > innerWidth / 3 ? i + 1 : i - 1); });
+  addEventListener('resize', fit); fit(); show(i);
+})();
+</script>
+</body>
+</html>
