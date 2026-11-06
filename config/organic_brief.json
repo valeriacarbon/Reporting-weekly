@@ -10,7 +10,9 @@
 
   "scoreboard": {
     "_readme": "Engagement rate = interactions / denominator. 'impressions' uses views_by_channel (always available); 'reach' uses the sum of social_posts[].reach per platform (only if the run wrote social_posts).",
-    "engagement_rate_denominator": "impressions"
+    "engagement_rate_denominator": "impressions",
+    "_top_channel_readme": "Slide 1 title 'Our top channel this week was X' picks the platform with the highest value of this metric: impressions | er | followers_gained | posts | reach.",
+    "top_channel_metric": "impressions"
   },
 
   "social_wins": {

@@ -30,12 +30,29 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "data"
 DEFAULT_CONFIG = REPO_ROOT / "config" / "organic_brief.json"
 
+# Same channel colors as the Detail Pack's light mode (template.html).
 CHANNEL_COLORS = {
-    "Facebook": "#3987e5",
-    "TikTok": "#199e70",
-    "Instagram": "#d55181",
-    "Google Business": "#c98500",
+    "Facebook": "#2a78d6",
+    "TikTok": "#1baf7a",
+    "Instagram": "#e87ba4",
+    "Google Business": "#eda100",
 }
+
+# Simple inline platform glyphs (currentColor), so no external assets are needed.
+CHANNEL_ICONS = {
+    "Facebook": '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/>'
+                '<path d="M13.4 19.5v-6h2l.3-2.4h-2.3V9.6c0-.7.2-1.2 1.2-1.2h1.2V6.3c-.2 0-1-.1-1.8-.1-1.8 0-3 1.1-3 3.1v1.8h-2v2.4h2v6z" fill="#fff"/></svg>',
+    "Instagram": '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6.5" fill="currentColor"/>'
+                 '<rect x="5.5" y="5.5" width="13" height="13" rx="4" fill="none" stroke="#fff" stroke-width="1.8"/>'
+                 '<circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="16.3" cy="7.7" r="1" fill="#fff"/></svg>',
+    "TikTok": '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6.5" fill="currentColor"/>'
+              '<path d="M13.2 5.5h2.3c.2 1.6 1.2 2.7 2.8 2.9v2.3c-1.1 0-2-.3-2.8-.8v4.6c0 2.4-1.8 4-4 4s-4-1.7-4-4 1.9-4.1 4.4-3.9v2.4c-1.1-.3-2 .4-2 1.5 0 .9.7 1.6 1.6 1.6 1 0 1.7-.7 1.7-1.8z" fill="#fff"/></svg>',
+}
+
+
+def icon(channel, cls="ico"):
+    color = CHANNEL_COLORS.get(channel, "#898781")
+    return f'<span class="{cls}" style="color:{color}" title="{esc(channel)}">{CHANNEL_ICONS.get(channel, "")}</span>'
 
 WEEK_FILE_RE = re.compile(r"^week-(\d{4}-\d{2}-\d{2})\.json$")
 
@@ -197,6 +214,63 @@ def scoreboard_metrics(data, platforms, cfg):
     return out
 
 
+def kpi_card(label, cur, prev, chips_html, show_wow=True):
+    wow_html = (f'<div class="kpi-wow">{wow(cur, prev)}<span class="tile-prev">vs last wk {fmt(prev) if prev is not None else "—"}</span></div>'
+                if show_wow else '<div class="kpi-wow"><span class="tile-prev">this week</span></div>')
+    return (f'<div class="kpi"><div class="kpi-label">{esc(label)}</div>'
+            f'<div class="kpi-value">{fmt(cur)}</div>{wow_html}'
+            f'<div class="kpi-chips">{chips_html}</div></div>')
+
+
+def chips(values, platforms):
+    return "".join(
+        f'<span class="pchip">{icon(c)}<b>{fmt(values.get(c))}</b></span>' for c in platforms
+    )
+
+
+def top_channel(ctx):
+    cfg = ctx["config"]
+    platforms = cfg["social_platforms"]
+    metric = cfg.get("scoreboard", {}).get("top_channel_metric", "impressions")
+    m = scoreboard_metrics(ctx["data"], platforms, cfg.get("scoreboard", {}))
+    vals = {c: (m or {}).get(metric, {}).get(c) for c in platforms}
+    vals = {c: v for c, v in vals.items() if v is not None}
+    return max(vals, key=vals.get) if vals else None
+
+
+def overview_title(ctx):
+    ch = top_channel(ctx)
+    return f"Our top channel this week was {ch}" if ch else "Top channel this week: No data"
+
+
+def slide_overview(ctx):
+    """Slide 1: Detail-Pack-style KPI cards, social platforms only."""
+    cfg = ctx["config"]
+    platforms = cfg["social_platforms"]
+    data, prev = ctx["data"], ctx["prev"]
+
+    def per(d, key, field="current"):
+        return {c: channel_value((d or {}).get(key), c, field) for c in platforms}
+
+    def tot(vals):
+        v = list(vals.values())
+        return sum(v) if v and all(x is not None for x in v) else None
+
+    fol, fol_p = per(data, "followers_by_channel"), per(prev, "followers_by_channel")
+    posts = per(data, "posts_by_channel")
+    eng, eng_p = per(data, "engagement_by_channel"), per(prev, "engagement_by_channel")
+    views, views_p = per(data, "views_by_channel"), per(prev, "views_by_channel")
+    if all(tot(x) is None for x in (fol, posts, eng, views)):
+        return no_data()
+    cards = [
+        kpi_card("Followers", tot(fol), tot(fol_p), chips(fol, platforms)),
+        kpi_card("Posts this week", tot(posts), None, chips(posts, platforms), show_wow=False),
+        kpi_card("Engagement", tot(eng), tot(eng_p), chips(eng, platforms)),
+        kpi_card("Views", tot(views), tot(views_p), chips(views, platforms)),
+    ]
+    return f'<div class="kpis">{"".join(cards)}</div>'
+
+
 def slide_scoreboard(ctx):
     cfg = ctx["config"]
     platforms = cfg["social_platforms"]
@@ -213,7 +287,9 @@ def slide_scoreboard(ctx):
     ]
     cols = platforms + ["Total"]
     head = "".join(
-        f"<th>{platform_tag(c) if c != 'Total' else '<b>Total</b>'}</th>" for c in cols
+        (f'<th class="ph" style="--c:{CHANNEL_COLORS[c]}">{icon(c)}<span>{esc(c)}</span></th>' if c != "Total"
+         else '<th class="ph tot"><span>Total</span></th>')
+        for c in cols
     )
     body = []
     any_value = False
@@ -224,11 +300,18 @@ def slide_scoreboard(ctx):
             p = prev[key].get(c) if prev else None
             any_value = any_value or v is not None
             k = "signed" if kind == "signed_or_int" and v is not None else ("int" if kind == "signed_or_int" else kind)
+            color = CHANNEL_COLORS.get(c, "#52514e")
             if v is None:
-                cells.append('<td class="cell"><span class="nd">No data</span></td>')
+                cells.append(f'<td class="cell" style="--c:{color}"><span class="nd">No data</span></td>')
+            elif c == "Total":
+                cells.append(f'<td class="cell total"><div class="v">{fmt(v, k)}</div>{wow(v, p)}</td>')
             else:
-                cls = " total" if c == "Total" else ""
-                cells.append(f'<td class="cell{cls}"><div class="v">{fmt(v, k)}</div>{wow(v, p)}</td>')
+                peers = [abs(cur[key].get(x) or 0) for x in platforms]
+                w = abs(v) / max(peers) * 100 if max(peers) else 0
+                cells.append(
+                    f'<td class="cell" style="--c:{color}"><div class="v">{fmt(v, k)}</div>'
+                    f'<div class="bar"><i style="width:{w:.0f}%"></i></div>{wow(v, p)}</td>'
+                )
         body.append(f'<tr><th class="rowh">{label}</th>{"".join(cells)}</tr>')
     if not any_value:
         return no_data()
@@ -451,7 +534,8 @@ def slide_url(ctx):
 # --------------------------------------------------------------------------
 
 SLIDES = [
-    ("Social Scoreboard", "TikTok · Facebook · Instagram — portfolio-wide", slide_scoreboard),
+    (overview_title, "Social at a glance · TikTok · Facebook · Instagram — portfolio-wide", slide_overview),
+    ("Social Scoreboard", "By platform · this week vs last week", slide_scoreboard),
     ("Social Wins", "Top posts of the week by engagement rate", slide_wins),
     ("Google My Business", "Portfolio-wide + top properties", slide_gmb),
     ("Organic URL Tracking", "FB Groups (FBGP) + GMB tracked links", slide_url),
@@ -475,6 +559,12 @@ def build(data_path: Path, config_path: Path):
     total = len(SLIDES)
     sections = []
     for i, (title, subtitle, fn) in enumerate(SLIDES, 1):
+        if callable(title):
+            try:
+                title = title(ctx)
+            except Exception as e:
+                log.append(f"slide {i} title: ERROR {e!r}")
+                title = "No data"
         try:
             body = fn(ctx)
         except Exception as e:  # a broken source must not fail the deck
@@ -509,16 +599,16 @@ TEMPLATE = """<!doctype html>
 <title>{{TITLE}}</title>
 <style>
   :root {
-    color-scheme: dark;
-    --page:#0d0d0d; --surface:#17171a; --surface-2:#1e1e22; --ink:#fff; --ink-2:#c3c2b7;
-    --mute:#8a8781; --rule:#2c2c2a; --good:#0ca30c; --bad:#e66767; --flat:#898781; --accent:#3987e5;
+    color-scheme: light;
+    --page:#e9e8e3; --surface:#ffffff; --surface-2:#f9f9f7; --ink:#0b0b0b; --ink-2:#52514e;
+    --mute:#898781; --rule:#e1e0d9; --track:#ecebe6; --good:#006300; --bad:#e34948; --flat:#898781; --accent:#2a78d6;
   }
   * { box-sizing:border-box; margin:0; padding:0; }
   html, body { background:var(--page); color:var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif; }
   body { scroll-snap-type:y mandatory; overflow-y:scroll; height:100vh; }
   .slide { height:100vh; display:flex; align-items:center; justify-content:center; scroll-snap-align:start; padding:1vh 0; }
-  .frame { width:min(98vw, 174vh); aspect-ratio:16/9; background:var(--surface); border:1px solid var(--rule);
+  .frame { width:min(98vw, 174vh); aspect-ratio:16/9; background:var(--surface); border:1px solid var(--rule); box-shadow:0 1px 3px rgba(0,0,0,.06);
     border-radius:1.2cqw; container-type:inline-size; display:flex; flex-direction:column; padding:2.6cqw 3.2cqw 1.6cqw; overflow:hidden; }
   header { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--rule); padding-bottom:1.2cqw; }
   h1 { font-size:3.4cqw; font-weight:700; letter-spacing:-0.02em; }
@@ -575,6 +665,25 @@ TEMPLATE = """<!doctype html>
   .win-label, .win-sub { font-size:1cqw; color:var(--mute); margin-top:.3cqw; }
   .win-wow { display:flex; gap:.6cqw; align-items:center; margin-top:.4cqw; }
   .url-table { min-height:0; }
+  /* slide 1: Detail-Pack-style KPI cards */
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:1.4cqw; }
+  .kpi { background:var(--surface-2); border:1px solid var(--rule); border-radius:1cqw; padding:1.8cqw 1.8cqw 1.6cqw; }
+  .kpi-label { font-size:1.15cqw; text-transform:uppercase; letter-spacing:.07em; color:var(--mute); font-weight:600; }
+  .kpi-value { font-size:5cqw; font-weight:750; letter-spacing:-0.02em; line-height:1.1; margin:.6cqw 0 .5cqw; }
+  .kpi-wow { display:flex; gap:.6cqw; align-items:center; min-height:2cqw; }
+  .kpi-chips { display:flex; flex-direction:column; gap:.6cqw; margin-top:1.4cqw; padding-top:1.2cqw; border-top:1px solid var(--rule); }
+  .pchip { display:flex; align-items:center; gap:.7cqw; font-size:1.6cqw; }
+  .pchip b { font-weight:700; }
+  .ico { display:inline-flex; width:2cqw; height:2cqw; flex-shrink:0; } .ico svg { width:100%; height:100%; }
+  h1 .ico { width:3.4cqw; height:3.4cqw; vertical-align:-0.4cqw; margin-left:.6cqw; }
+  /* slide 2: platform-coded table */
+  table.score th.ph { text-align:right; font-size:1.35cqw; color:var(--ink); border-bottom:.35cqw solid var(--c, var(--ink-2)); }
+  table.score th.ph .ico { width:1.9cqw; height:1.9cqw; vertical-align:middle; margin-right:.5cqw; }
+  table.score th.ph span { vertical-align:middle; font-weight:700; }
+  table.score th.ph.tot { --c: var(--ink-2); }
+  table.score td.cell:not(.total) { background:color-mix(in srgb, var(--c) 6%, transparent); }
+  table.score .bar { height:.45cqw; background:var(--track); border-radius:.3cqw; margin:.35cqw 0 .45cqw auto; width:70%; overflow:hidden; }
+  table.score .bar i { display:block; height:100%; background:var(--c); border-radius:.3cqw; }
   .more { font-size:1cqw; color:var(--mute); margin-top:.4cqw; }
   @media print {
     @page { size: 13.333in 7.5in; margin:0; }
