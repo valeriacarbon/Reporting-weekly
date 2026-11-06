@@ -365,11 +365,11 @@ SCORE_PANELS = {
 
 
 def slide_scoreboard(ctx):
-    return score_panels(ctx, ["followers", "posts"])
+    return score_panels(ctx, ["followers", "posts", "engagement"])
 
 
 def slide_scoreboard_reach(ctx):
-    return score_panels(ctx, ["views", "engagement"], cards=True)
+    return score_panels(ctx, ["views"], cards=True)
 
 
 def score_panels(ctx, keys, cards=False):
@@ -726,8 +726,8 @@ def slide_url_breakdown(ctx):
 
 SLIDES = [
     ("Top channels", top_channels_html, slide_overview),
-    ("Social Scoreboard", "Followers gained & posts by channel · this week vs last week", slide_scoreboard),
-    ("Social Scoreboard — reach & engagement", "Views & engagement by channel (GMB included) · top 3 brands", slide_scoreboard_reach),
+    ("Social Scoreboard", "Followers gained, posts & engagement by channel · this week vs last week", slide_scoreboard),
+    ("Social Scoreboard — views", "Views by channel (GMB included) · top 3 brands", slide_scoreboard_reach),
     ("Google My Business", "Portfolio-wide + top properties", slide_gmb),
     ("Organic URL Tracking", "FB Groups · Google Business · Facebook · Instagram — tracked links", slide_url),
     ("Organic URL Tracking — by property", "Clicks and leads per property, by source", slide_url_breakdown),
@@ -849,19 +849,17 @@ TEMPLATE = """<!doctype html>
   .gname { font-size:1.55cqw; font-weight:700; margin-bottom:.5cqw; display:flex; align-items:baseline; gap:.6cqw; }
   .gname .score { margin-left:auto; font-size:.95cqw; color:var(--mute); font-weight:500; }
   .rank-s { color:var(--accent); }
-  .prows { display:grid; grid-template-rows:1fr 1fr; gap:1.2cqw; flex:1; min-height:0; }
-  .prow { display:grid; grid-template-columns:1.25fr 1fr; gap:1.2cqw; min-height:0; }
-  .prow .panel { padding:.8cqw 1cqw .5cqw; }
-  .prow .p-total { margin:.2cqw 0 .4cqw; }
-  .prow .val { font-size:1.25cqw; } .prow .ctag .ico { width:1.5cqw; height:1.5cqw; } .prow .ctag { margin-top:.3cqw; }
-  .prow .track { min-height:2cqw; }
-  .bcard { background:var(--surface-2); border:1px solid var(--rule); border-radius:1cqw; padding:.9cqw 1.3cqw; display:flex; flex-direction:column; justify-content:center; gap:.2cqw; }
-  .bi { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:1cqw; padding:.5cqw 0; border-top:1px solid var(--rule); }
-  .bi .rank-s { font-weight:800; font-size:1.5cqw; }
-  .bi-name { font-size:1.45cqw; font-weight:700; }
-  .bi-ch { display:flex; align-items:center; gap:.4cqw; font-size:1.05cqw; color:var(--ink-2); margin-top:.15cqw; }
-  .bi-ch .ico { width:1.4cqw; height:1.4cqw; } .bi-ch span { font-weight:600; }
-  .bi-v { font-size:2.2cqw; font-weight:800; }
+  .prows { display:flex; flex-direction:column; flex:1; min-height:0; }
+  .prow { flex:1; display:grid; grid-template-columns:1fr 21cqw; gap:1.2cqw; align-items:end; min-height:0; }
+  .prow .panel { height:100%; }
+  .bcard { background:var(--surface-2); border:1px solid var(--rule); border-radius:.8cqw; padding:.7cqw 1cqw; display:flex; flex-direction:column; gap:.1cqw; }
+  .bcard .p-title { font-size:.9cqw; margin-bottom:.2cqw; }
+  .bi { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:.6cqw; padding:.35cqw 0; border-top:1px solid var(--rule); }
+  .bi .rank-s { font-weight:800; font-size:1cqw; }
+  .bi-name { font-size:1.05cqw; font-weight:700; }
+  .bi-ch { display:flex; align-items:center; gap:.3cqw; font-size:.85cqw; color:var(--ink-2); margin-top:.1cqw; }
+  .bi-ch .ico { width:1.1cqw; height:1.1cqw; } .bi-ch span { font-weight:600; }
+  .bi-v { font-size:1.3cqw; font-weight:800; }
   .gm { display:grid; grid-template-columns:auto auto 1fr; align-items:baseline; gap:.8cqw; padding:.5cqw 0; border-top:1px solid var(--rule); }
   .gm-l { font-size:1.1cqw; text-transform:uppercase; letter-spacing:.06em; color:var(--mute); font-weight:600; min-width:5cqw; }
   .gm-v { font-size:2.4cqw; font-weight:800; }

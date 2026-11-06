@@ -889,14 +889,11 @@ It never modifies `index.html`.
    (`kpis.*`), per-channel icon + value (Google Business on every card except
    Followers). Posts has no WoW.
 2. **Social Scoreboard**: vertical bars per channel for Followers gained
-   (social only) and Posts — totals = Detail Pack `kpis`.
-3. **Social Scoreboard — reach & engagement**: Views and Engagement bars
-   (Google Business included), each next to a "Top 3 brands" card with the
-   brand's total and top channel. Views per brand = `properties[].views` /
-   `views_channels`. Engagement per brand = `properties[].engagement` + that
-   property's GMB clicks; its top channel needs `properties[].engagement_channels`
-   (`{"Facebook": FBEV34, "Instagram": IGEV38, "TikTok": TKEV06}` weekly SUMs,
-   must add up to `engagement.current`) — write it every run.
+   (social only), Posts and Engagement (count, Google Business included) —
+   totals = Detail Pack `kpis`.
+3. **Social Scoreboard — views**: Views bars (Google Business included) with a
+   small "Top 3 brands in views" legend card (brand total + top channel, from
+   `properties[].views` / `views_channels`).
 4. **GMB**: portfolio tiles (Views, Searches, Website clicks, Phone clicks,
    Direction clicks, Posts published) + top 3 GMB properties showing Reach and
    Clicks totals with their top source (2 when within `even_within_pct`).
