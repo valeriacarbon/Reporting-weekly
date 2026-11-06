@@ -859,14 +859,73 @@ structural template — same keys, same nesting). Set:
 ## Step 8 — Build, commit, push
 
 ```
-python3 scripts/build_report.py data/week-<end-date>.json
-git add data/week-<end-date>.json index.html
+python3 scripts/run_weekly_build.py data/week-<end-date>.json
+git add data/week-<end-date>.json index.html organic-brief_<end-date>.html logs/weekly-run.log
 git commit -m "Weekly update: <week_label>"
 git push origin main
 ```
 
+`run_weekly_build.py` runs `build_report.py` (the Detail Pack, `index.html`,
+unchanged) first, then `build_brief.py` (the Organic Brief, see below), and
+appends both steps' output to `logs/weekly-run.log`. Exit codes: `0` both
+OK, `1` Detail Pack failed (Brief skipped), `2` Detail Pack OK but the Brief
+failed — still commit and push the Detail Pack in that case and say so in
+the run summary.
+
 No PR, no approval step — push straight to `main` so GitHub Pages
 (`https://valeriacarbon.github.io/Reporting-weekly/`) picks it up.
+
+## Organic Brief (`organic-brief_YYYY-MM-DD.html`) — built every run, after the Detail Pack
+
+A 4-slide, 16:9 HTML deck (arrow keys to move, print to PDF at 13.333×7.5in)
+saved at the repo root next to `index.html`, dated with the data file's
+week-end date. Built by `scripts/build_brief.py` from the same
+`data/week-*.json` file; "last week" is the previous dated `data/week-*.json`.
+It never modifies `index.html`.
+
+1. **Social Scoreboard** (TikTok/Facebook/Instagram + Total): Reach,
+   Impressions (`views_by_channel`), Engagement rate (`engagement_by_channel`
+   / impressions or reach, set in config), Followers gained
+   (`followers_by_channel[].delta`), Posts published (`posts_by_channel`).
+2. **Social Wins**: top posts by engagement rate, from `social_posts` (below).
+3. **GMB**: `google_business` tiles (Views = reach_search + reach_maps,
+   Searches = reach_search, website/phone/directions clicks, posts) + top GMB
+   properties from `gbp_by_property`. Property-level WoW compares against the
+   data file whose `gbp_window.current` equals this file's `gbp_window.prior`;
+   if none exists it shows "no prior wk".
+4. **Organic URL Tracking**: `url_tracking` (FBGP) and `gmb_url_tracking`
+   clicks/leads, total organic leads, by-property table.
+
+**Tuning:** `config/organic_brief.json` holds the wins ranking (metric,
+denominator, minimum reach, top N), the GMB top-property weights, the
+engagement-rate denominator, and which GA4 fields count as clicks/leads.
+
+**Missing data never fails the build** — a missing key renders "No data" on
+that cell/slide and the log line counts them.
+
+### `social_posts` — write this every run (feeds Reach on slide 1 and all of slide 2)
+
+Post-level data isn't in the dashboard's data shape, so add a top-level
+`social_posts` array to the weekly data file. Pull per property, per network
+with `getAnalyticsDataByMetrics` on the **`posts`** connector (one network
+per call, same window as Step 1, keep only posts dated inside the window):
+
+| Network | fields |
+|---|---|
+| facebook | `FBPO01` date, `FBPO06` link, `FBPO05` image, `FBPO12` reach, `FBPO11` impressions, `FBPO13`+`FBPO08`+`FBPO14` reactions+comments+shares |
+| instagram | `IGPO01` date, `IGPO06` url, `IGPO05` image, `IGPO14` reach, `IGPO28` views, `IGPO12` interactions |
+| tiktok | `TKPO01` date, `TKPO03` url, `TKPO04` cover image, `TKPO11` reach, `TKPO07` views, `TKPO08`+`TKPO09`+`TKPO10` likes+comments+shares |
+
+```json
+"social_posts": [
+  {"property": "Berry Falls", "platform": "Instagram", "date": "2026-11-03",
+   "url": "https://...", "thumbnail": "https://...",
+   "reach": 812, "views": 1034, "interactions": 41}
+]
+```
+
+If the posts connector returns nothing, leave `social_posts` out — slide 2
+shows "No data" and slide 1's Reach row shows "No data". Never invent values.
 
 ## Do NOT
 

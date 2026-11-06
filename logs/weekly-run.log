@@ -1,0 +1,17 @@
+2026-11-06T00:04:26Z === weekly build start: data/week-2026-10-29.json ===
+2026-11-06T00:04:26Z [detail-pack] OK
+2026-11-06T00:04:26Z   [GBP_CURRENT] posts window:   2026-10-16 .. 2026-10-22
+2026-11-06T00:04:26Z   [GBP_CURRENT] metrics window: 2026-10-16 .. 2026-10-22
+2026-11-06T00:04:26Z   [GBP_PRIOR] posts window:   2026-10-09 .. 2026-10-15
+2026-11-06T00:04:26Z   [GBP_PRIOR] metrics window: 2026-10-09 .. 2026-10-15
+2026-11-06T00:04:26Z   wrote /home/user/Reporting-weekly/index.html
+2026-11-06T00:04:26Z [organic-brief] OK
+2026-11-06T00:04:26Z   [brief] this week: week-2026-10-29.json (Oct 22 – 29, 2026)
+2026-11-06T00:04:26Z   [brief] last week: week-2026-10-22.json
+2026-11-06T00:04:26Z   [brief] GBP property comparison file: NONE (property WoW shows no prior wk)
+2026-11-06T00:04:26Z   [brief] slide 1 (Social Scoreboard): ok (4 'No data' cell(s))
+2026-11-06T00:04:26Z   [brief] slide 2 (Social Wins): ok (1 'No data' cell(s))
+2026-11-06T00:04:26Z   [brief] slide 3 (Google My Business): ok
+2026-11-06T00:04:26Z   [brief] slide 4 (Organic URL Tracking): ok
+2026-11-06T00:04:26Z   [brief] wrote organic-brief_2026-10-29.html
+2026-11-06T00:04:26Z === weekly build end: Detail Pack OK, Organic Brief OK ===

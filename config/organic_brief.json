@@ -1,0 +1,44 @@
+{
+  "_readme": "Tuning knobs for the Organic Brief (scripts/build_brief.py). Edit and re-run; no code changes needed. Keys starting with _ are comments.",
+
+  "output": {
+    "_readme": "Brief is written next to the Detail Pack (index.html) at the repo root as <prefix><YYYY-MM-DD>.html, date = the data file's week-end date.",
+    "prefix": "organic-brief_"
+  },
+
+  "social_platforms": ["TikTok", "Facebook", "Instagram"],
+
+  "scoreboard": {
+    "_readme": "Engagement rate = interactions / denominator. 'impressions' uses views_by_channel (always available); 'reach' uses the sum of social_posts[].reach per platform (only if the run wrote social_posts).",
+    "engagement_rate_denominator": "impressions"
+  },
+
+  "social_wins": {
+    "_readme": "Top posts of the week, read from the data file's social_posts array. rate = sort_metric / denominator_metric. Posts with denominator below min_denominator are skipped so a 3-view post with 2 likes can't win.",
+    "top_n": 3,
+    "sort_metric": "interactions",
+    "denominator_metric": "reach",
+    "fallback_denominator_metric": "views",
+    "min_denominator": 100,
+    "tiebreak_metric": "interactions"
+  },
+
+  "gmb_top_properties": {
+    "_readme": "Score = sum(weight * metric) over gbp_by_property. Highest score wins. Metrics shown on the slide are the weighted ones, in this order.",
+    "top_n": 3,
+    "weights": {
+      "website_clicks": 3,
+      "phone_clicks": 3,
+      "directions_clicks": 2,
+      "reach_search": 0.1,
+      "reach_maps": 0.1
+    }
+  },
+
+  "url_tracking": {
+    "_readme": "Which GA4 field counts as 'clicks' and which as 'leads' for each source. max_property_rows caps the by-property table (rows with any activity, sorted by leads then clicks).",
+    "fbgp": {"section_key": "url_tracking", "clicks_field": "sessions", "leads_field": "tours"},
+    "gmb": {"section_key": "gmb_url_tracking", "clicks_field": "sessions", "leads_field": "key_events"},
+    "max_property_rows": 8
+  }
+}
