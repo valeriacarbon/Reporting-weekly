@@ -160,6 +160,17 @@ def wow(cur, prev):
     return f'<span class="chip {cls}">▼ {abs(pct):.1f}%</span>'
 
 
+def gain_chip(v):
+    """Net change chip: green ▲ +N when gained, red ▼ only when actually lost, flat at 0."""
+    if v is None:
+        return '<span class="chip na">N/A</span>'
+    if v > 0:
+        return f'<span class="chip up">▲ +{v:,}</span>'
+    if v < 0:
+        return f'<span class="chip down">▼ {v:,}</span>'
+    return '<span class="chip flat">– 0</span>'
+
+
 def no_data(msg="N/A"):
     return f'<div class="nodata">{esc(msg)}</div>'
 
@@ -399,14 +410,17 @@ def score_panels(ctx, keys, cards=False):
         for c in chans:
             v, p = vals[c], pvals[c]
             h = (max(v, 0) / peak * 100) if v is not None else 0
-            chip = wow(v, p) if (show_wow and v is not None) else ""
+            if field == "delta":   # Followers gained: arrow = did we gain or lose followers (same as the Detail Pack)
+                chip = gain_chip(v)
+            else:
+                chip = wow(v, p) if (show_wow and v is not None) else ""
             bars.append(
                 f'<div class="col" style="--c:{CHANNEL_COLORS[c]}">'
                 f'<div class="val">{fmt(v, kind) if v is not None else "N/A"}</div>'
                 f'<div class="track"><div class="fill" style="height:{h:.1f}%"></div></div>'
                 f'<div class="ctag">{icon(c)}</div><div class="cwow">{chip}</div></div>'
             )
-        tot_wow = wow(tot, tot_p) if show_wow else ""
+        tot_wow = gain_chip(tot) if field == "delta" else (wow(tot, tot_p) if show_wow else "")
         panels.append(
             f'<div class="panel"><div class="p-title">{esc(label)}</div>'
             f'<div class="p-total">Total <b>{fmt(tot, kind) if tot is not None else "N/A"}</b> {tot_wow}</div>'

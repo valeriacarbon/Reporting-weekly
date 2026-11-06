@@ -903,7 +903,10 @@ It never modifies `index.html`.
    source (FB Groups purple, GMB yellow, Facebook blue, Instagram pink) with
    each source's number under the bar and leads as colored pills.
 
-WoW rule: rises are green ▲; drops of up to `neutral_drop_pct` (2%) are blue
+Followers gained: green ▲ +N when followers were gained, red ▼ only when followers
+were lost (same as the Detail Pack) — never compared against last week's gain.
+
+WoW rule (other metrics): rises are green ▲; drops of up to `neutral_drop_pct` (2%) are blue
 ▼ (neutral); bigger drops are red ▼.
 
 Anything unavailable shows **N/A**; a property the GA4 export lists as
