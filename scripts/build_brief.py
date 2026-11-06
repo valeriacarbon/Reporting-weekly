@@ -632,7 +632,6 @@ def slide_url_breakdown(ctx):
 SLIDES = [
     ("Top channels", top_channels_html, slide_overview),
     ("Social Scoreboard", "By platform · this week vs last week", slide_scoreboard),
-    ("Social Wins", "Top posts of the week by engagement rate", slide_wins),
     ("Google My Business", "Portfolio-wide + top properties", slide_gmb),
     ("Organic URL Tracking", "FB Groups · Google Business · Facebook · Instagram — tracked links", slide_url),
     ("Organic URL Tracking — by property", "Clicks (sessions) and leads (key events) per source", slide_url_breakdown),
