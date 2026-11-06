@@ -877,7 +877,7 @@ No PR, no approval step — push straight to `main` so GitHub Pages
 
 ## Organic Brief (`organic-brief_YYYY-MM-DD.html`) — built every run, after the Detail Pack
 
-A 5-slide, 16:9, light-mode HTML deck (arrow keys to move, print to PDF at
+A 6-slide, 16:9, light-mode HTML deck (arrow keys to move, print to PDF at
 13.333×7.5in) saved at the repo root next to `index.html`, dated with the
 data file's week-end date. Built by `scripts/build_brief.py` from the same
 `data/week-*.json` file; "last week" is the previous dated `data/week-*.json`.
@@ -888,15 +888,21 @@ It never modifies `index.html`.
    tie. Cards = the Detail Pack's four KPI tiles with the same numbers
    (`kpis.*`), per-channel icon + value (Google Business on every card except
    Followers). Posts has no WoW.
-2. **Social Scoreboard**: vertical bars per channel for Views, Engagement
-   (count), Followers gained, Posts — totals = Detail Pack `kpis`; Google
-   Business included except Followers.
-3. **GMB**: portfolio tiles (Views, Searches, Website clicks, Phone clicks,
+2. **Social Scoreboard**: vertical bars per channel for Followers gained
+   (social only) and Posts — totals = Detail Pack `kpis`.
+3. **Social Scoreboard — reach & engagement**: Views and Engagement bars
+   (Google Business included), each next to a "Top 3 brands" card with the
+   brand's total and top channel. Views per brand = `properties[].views` /
+   `views_channels`. Engagement per brand = `properties[].engagement` + that
+   property's GMB clicks; its top channel needs `properties[].engagement_channels`
+   (`{"Facebook": FBEV34, "Instagram": IGEV38, "TikTok": TKEV06}` weekly SUMs,
+   must add up to `engagement.current`) — write it every run.
+4. **GMB**: portfolio tiles (Views, Searches, Website clicks, Phone clicks,
    Direction clicks, Posts published) + top 3 GMB properties showing Reach and
    Clicks totals with their top source (2 when within `even_within_pct`).
-4. **Organic URL Tracking**: clicks/leads per source + total organic leads (no
+5. **Organic URL Tracking**: clicks/leads per source + total organic leads (no
    previous-week comparison).
-5. **Organic URL Tracking — by property**: stacked vertical bars of clicks by
+6. **Organic URL Tracking — by property**: stacked vertical bars of clicks by
    source (FB Groups purple, GMB yellow, Facebook blue, Instagram pink) with
    each source's number under the bar and leads as colored pills.
 

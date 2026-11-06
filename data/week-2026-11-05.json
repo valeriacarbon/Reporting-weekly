@@ -302,7 +302,11 @@
         "TikTok": 1556,
         "Google Business": 782
       },
-      "top_channel": "TikTok"
+      "top_channel": "TikTok",
+      "engagement_channels": {
+        "Facebook": 1,
+        "TikTok": 66
+      }
     },
     {
       "name": "The Benton",
@@ -332,7 +336,10 @@
         "TikTok": 1758,
         "Google Business": 118
       },
-      "top_channel": "TikTok"
+      "top_channel": "TikTok",
+      "engagement_channels": {
+        "TikTok": 7
+      }
     },
     {
       "name": "The Lamar Lofts",
@@ -362,7 +369,10 @@
         "TikTok": 1649,
         "Google Business": 557
       },
-      "top_channel": "TikTok"
+      "top_channel": "TikTok",
+      "engagement_channels": {
+        "TikTok": 73
+      }
     },
     {
       "name": "The Landings at North Ingleside",
@@ -393,7 +403,11 @@
         "TikTok": 468,
         "Google Business": 689
       },
-      "top_channel": "Google Business"
+      "top_channel": "Google Business",
+      "engagement_channels": {
+        "Instagram": 1,
+        "TikTok": 6
+      }
     },
     {
       "name": "The Kenzie",
@@ -423,7 +437,10 @@
         "TikTok": 1731,
         "Google Business": 363
       },
-      "top_channel": "TikTok"
+      "top_channel": "TikTok",
+      "engagement_channels": {
+        "TikTok": 30
+      }
     },
     {
       "name": "Westminster Club",
@@ -452,7 +469,10 @@
         "TikTok": 248,
         "Google Business": 231
       },
-      "top_channel": "TikTok"
+      "top_channel": "TikTok",
+      "engagement_channels": {
+        "TikTok": 9
+      }
     },
     {
       "name": "Claxton Pointe & Pecan Ridge",
@@ -480,7 +500,10 @@
         "Instagram": 1517,
         "Google Business": 428
       },
-      "top_channel": "Instagram"
+      "top_channel": "Instagram",
+      "engagement_channels": {
+        "Facebook": 2
+      }
     },
     {
       "name": "Berry Falls",
@@ -509,7 +532,8 @@
         "Instagram": 318,
         "Google Business": 434
       },
-      "top_channel": "Google Business"
+      "top_channel": "Google Business",
+      "engagement_channels": {}
     },
     {
       "name": "Ingleside Terrace",
@@ -540,7 +564,10 @@
         "TikTok": 350,
         "Google Business": 309
       },
-      "top_channel": "Instagram"
+      "top_channel": "Instagram",
+      "engagement_channels": {
+        "TikTok": 2
+      }
     },
     {
       "name": "Hills at Hoover",
@@ -569,7 +596,8 @@
         "Instagram": 566,
         "Google Business": 441
       },
-      "top_channel": "Instagram"
+      "top_channel": "Instagram",
+      "engagement_channels": {}
     },
     {
       "name": "Residences at the Overlook",
@@ -600,7 +628,10 @@
         "TikTok": 154,
         "Google Business": 276
       },
-      "top_channel": "Instagram"
+      "top_channel": "Instagram",
+      "engagement_channels": {
+        "Facebook": 1
+      }
     },
     {
       "name": "Santa Fe",
@@ -629,7 +660,11 @@
         "Instagram": 22,
         "Google Business": 1058
       },
-      "top_channel": "Google Business"
+      "top_channel": "Google Business",
+      "engagement_channels": {
+        "Facebook": 1,
+        "Instagram": 1
+      }
     },
     {
       "name": "Villa Siena",
@@ -658,7 +693,10 @@
         "Instagram": 44,
         "Google Business": 839
       },
-      "top_channel": "Google Business"
+      "top_channel": "Google Business",
+      "engagement_channels": {
+        "Facebook": 1
+      }
     },
     {
       "name": "Capri Palms",
@@ -683,7 +721,10 @@
       "views_channels": {
         "TikTok": 915
       },
-      "top_channel": "TikTok"
+      "top_channel": "TikTok",
+      "engagement_channels": {
+        "TikTok": 66
+      }
     }
   ],
   "url_tracking": {
