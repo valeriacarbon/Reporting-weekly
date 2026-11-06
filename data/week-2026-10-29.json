@@ -691,16 +691,16 @@
   ],
   "url_tracking": {
     "views": {
-      "current": 33,
-      "delta": -195
+      "current": 36,
+      "delta": -192
     },
     "sessions": {
-      "current": 14,
-      "delta": -24
+      "current": 15,
+      "delta": -23
     },
     "engaged_sessions": {
-      "current": 12,
-      "delta": -17
+      "current": 14,
+      "delta": -15
     },
     "tours": {
       "current": 0,
@@ -730,9 +730,9 @@
       },
       {
         "name": "The Landings at North Ingleside",
-        "views": 5,
-        "sessions": 2,
-        "engaged_sessions": 2,
+        "views": 8,
+        "sessions": 3,
+        "engaged_sessions": 3,
         "tours": 0
       },
       {
@@ -774,7 +774,7 @@
         "name": "Hills at Hoover",
         "views": 5,
         "sessions": 2,
-        "engaged_sessions": 1,
+        "engaged_sessions": 2,
         "tours": 0
       },
       {
@@ -799,7 +799,7 @@
         "tours": 0
       }
     ],
-    "note": "Real GA4 export received 2026-10-30 (Organic_Links_Performance_13.pdf), window Oct 22 – 29, 2026 — matches this run's own week exactly, so applied directly. Replaces the Oct 8-15, 2026 figures that had been carried forward unchanged across the last two weekly files; the large drop vs last week's displayed number (228→33 views) is that stale-baseline replacement, not a real week-over-week collapse."
+    "note": "Real GA4 export received 2026-10-30 (Organic_Links_Performance_13.pdf), window Oct 22 - 29, 2026 -- matches this run's own week exactly, so applied directly. CORRECTED 2026-11-06: a second, re-synced export for the same window (Organic_Links_Performance_14.pdf, received after Val manually triggered a fresh GMB/GA4 sync) showed The Landings at North Ingleside (5->8 views) and Hills at Hoover (engaged_sessions 1->2) had picked up a few more attributed sessions since the first export -- corrected here. All other properties matched exactly between both exports, including Claxton Pointe & Pecan Ridge and The Lamar Lofts, which were independently re-verified twice (rendering the PDF to images both times) to genuinely have No data this window, not a reading error. Delta is still vs the Oct 15-22, 2026 file's 228/38/29/0 baseline (the stale Oct 8-15 figures that had been carried forward unchanged for two prior weekly files) -- not a real one-week collapse."
   },
   "gmb_url_tracking": {
     "views": {
