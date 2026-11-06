@@ -877,7 +877,7 @@ No PR, no approval step — push straight to `main` so GitHub Pages
 
 ## Organic Brief (`organic-brief_YYYY-MM-DD.html`) — built every run, after the Detail Pack
 
-A 5-slide, 16:9, light-mode HTML deck (arrow keys to move, print to PDF at
+A 6-slide, 16:9, light-mode HTML deck (arrow keys to move, print to PDF at
 13.333×7.5in) saved at the repo root next to `index.html`, dated with the
 data file's week-end date. Built by `scripts/build_brief.py` from the same
 `data/week-*.json` file; "last week" is the previous dated `data/week-*.json`.
@@ -895,8 +895,42 @@ It never modifies `index.html`.
    extra post is close to #3 (ratio in config). Each card: screenshot
    (thumbnail) or a placeholder with type + context, plus "Why it worked".
 4. **GMB**: `google_business` tiles + top GMB properties from `gbp_by_property`.
-5. **Organic URL Tracking**: FBGP + GMB clicks/leads tiles with WoW; the
-   by-property table has values only (no arrows).
+5. **Organic URL Tracking**: one card per source (FB Groups, Google Business,
+   Facebook, Instagram) with clicks (GA4 sessions) and leads (GA4 key events)
+   + WoW, plus total organic leads.
+6. **Organic URL Tracking — by property**: clicks/leads per source per
+   property, values only (no arrows).
+
+Anything unavailable shows **N/A**; a property the GA4 export lists as
+"No data" is recorded as **0**.
+
+### `organic_links` — GA4 "Organic Links Performance" export (slides 5–6)
+
+Val's weekly GA4 PDF has four sections — FB Groups (`fbgroups / organic`),
+GMB (`GMB / organic` or `GMB / GMB`), Facebook (`facebook / organic`),
+Instagram (`instagram / organic`) — each listing every property with Views,
+Sessions, Engaged sessions, Key events. Write it to the data file as:
+
+```json
+"organic_links": {
+  "window_label": "Oct 22 – 29, 2026",
+  "note": "...",
+  "sources": {
+    "fbgp":      {"views": 0, "sessions": 0, "engaged_sessions": 0, "key_events": 0,
+                  "by_property": [{"name": "Berry Falls", "views": 3, "sessions": 2,
+                                   "engaged_sessions": 2, "key_events": 0}, ...]},
+    "gmb": {...}, "facebook": {...}, "instagram": {...}
+  }
+}
+```
+
+Use dashboard property names, one row per property (a "No data" property is
+all zeros; "Aztec Villa" rows go to Capri Palms). This block is Brief-only:
+**do not** copy it into `url_tracking` / `gmb_url_tracking` — those keep their
+own rules (GBP window matching etc.) for the Detail Pack. Week-over-week only
+compares against the previous file's `organic_links`; if that's missing it's
+N/A. If no export arrived this week, leave the key out (slides fall back to
+the Detail Pack's FBGP/GMB sections).
 
 **Tuning:** `config/organic_brief.json` — top-channel metrics, wins ranking
 (top properties, metric, denominator, min reach, 3→5 rule), GMB top-property

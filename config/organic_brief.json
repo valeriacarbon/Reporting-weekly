@@ -38,18 +38,40 @@
     }
   },
   "url_tracking": {
-    "_readme": "Which GA4 field counts as 'clicks' and which as 'leads' for each source. max_property_rows caps the by-property table (rows with any activity, sorted by leads then clicks).",
-    "fbgp": {
-      "section_key": "url_tracking",
-      "clicks_field": "sessions",
-      "leads_field": "tours"
-    },
-    "gmb": {
-      "section_key": "gmb_url_tracking",
-      "clicks_field": "sessions",
-      "leads_field": "key_events"
-    },
-    "max_property_rows": 8
+    "_readme": "Slides 5-6. Reads the GA4 'organic_links' block (one entry per source) and falls back to the Detail Pack's legacy url_tracking / gmb_url_tracking sections for older files. clicks_field / leads_field name the GA4 columns. Week-over-week only compares against a prior week's organic_links (a real GA4 reading); otherwise N/A.",
+    "organic_links_key": "organic_links",
+    "clicks_field": "sessions",
+    "leads_field": "key_events",
+    "sources": [
+      {
+        "key": "fbgp",
+        "label": "FB Groups",
+        "short": "FBGP",
+        "color": "#5b6bd6",
+        "legacy_section": "url_tracking",
+        "legacy_leads_field": "tours"
+      },
+      {
+        "key": "gmb",
+        "label": "Google Business",
+        "short": "GMB",
+        "color": "#eda100",
+        "legacy_section": "gmb_url_tracking",
+        "legacy_leads_field": "key_events"
+      },
+      {
+        "key": "facebook",
+        "label": "Facebook",
+        "short": "Facebook",
+        "icon": "Facebook"
+      },
+      {
+        "key": "instagram",
+        "label": "Instagram",
+        "short": "Instagram",
+        "icon": "Instagram"
+      }
+    ]
   },
   "top_channels": {
     "_readme": "Slide 1 header 'Top channels'. Each entry = [label, metric]; metric is one of impressions | _interactions | er | followers_gained | posts | reach. Equal values show as 'Even'.",

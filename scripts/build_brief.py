@@ -15,7 +15,7 @@ Every number comes from the data layer:
   - GBP property comparison = the data file whose gbp_window.current equals
     this file's gbp_window.prior (GBP runs on its own lagged window)
 Ranking logic lives in config/organic_brief.json. A slide whose source is
-missing renders "No data" instead of failing the build.
+missing renders "N/A" instead of failing the build.
 """
 import argparse
 import html
@@ -125,7 +125,7 @@ def num(v):
 
 def fmt(v, kind="int"):
     if v is None:
-        return "No data"
+        return "N/A"
     if kind == "pct":
         return f"{v * 100:.1f}%"
     if kind == "signed":
@@ -138,9 +138,9 @@ def fmt(v, kind="int"):
 def wow(cur, prev):
     """▲/▼ + % change chip, this week vs last week."""
     if cur is None:
-        return '<span class="chip na">No data</span>'
+        return '<span class="chip na">N/A</span>'
     if prev is None:
-        return '<span class="chip na">no prior wk</span>'
+        return '<span class="chip na">N/A</span>'
     if prev == 0:
         if cur == 0:
             return '<span class="chip flat">– 0%</span>'
@@ -153,7 +153,7 @@ def wow(cur, prev):
     return f'<span class="chip {cls}">{arrow} {abs(pct):.1f}%</span>'
 
 
-def no_data(msg="No data"):
+def no_data(msg="N/A"):
     return f'<div class="nodata">{esc(msg)}</div>'
 
 
@@ -250,7 +250,7 @@ def top_channels_html(ctx):
     pills = []
     for label, winners, _ in top_channels(ctx):
         if not winners:
-            who = '<span class="nd">No data</span>'
+            who = '<span class="nd">N/A</span>'
         elif len(winners) == 1:
             who = f'{icon(winners[0])}<b>{esc(winners[0])}</b>'
         else:
@@ -308,7 +308,7 @@ def slide_scoreboard(ctx):
         tot, tot_p = cur[key].get("Total"), (prev[key].get("Total") if prev else None)
         if all(v is None for v in vals.values()):
             panels.append(f'<div class="panel"><div class="p-title">{esc(label)}</div>'
-                          f'<div class="p-nodata">No data</div></div>')
+                          f'<div class="p-nodata">N/A</div></div>')
             continue
         any_value = True
         peak = max([abs(v) for v in vals.values() if v is not None] + [0]) or 1
@@ -320,14 +320,14 @@ def slide_scoreboard(ctx):
             chip = wow(v, p) if (show_wow and v is not None) else ""
             bars.append(
                 f'<div class="col" style="--c:{CHANNEL_COLORS[c]}">'
-                f'<div class="val">{fmt(v, kind) if v is not None else "No data"}</div>'
+                f'<div class="val">{fmt(v, kind) if v is not None else "N/A"}</div>'
                 f'<div class="track"><div class="fill" style="height:{h:.1f}%"></div></div>'
                 f'<div class="ctag">{icon(c)}</div><div class="cwow">{chip}</div></div>'
             )
         tot_wow = wow(tot, tot_p) if show_wow else ""
         panels.append(
             f'<div class="panel"><div class="p-title">{esc(label)}</div>'
-            f'<div class="p-total">Total <b>{fmt(tot, kind) if tot is not None else "No data"}</b> {tot_wow}</div>'
+            f'<div class="p-total">Total <b>{fmt(tot, kind) if tot is not None else "N/A"}</b> {tot_wow}</div>'
             f'<div class="bars">{"".join(bars)}</div></div>'
         )
     if not any_value:
@@ -391,26 +391,28 @@ def slide_wins(ctx):
     platforms = cfg["social_platforms"]
     top = rank_posts(ctx["data"], cfg, platforms)
     if not top:
-        return no_data("No data — no post-level metrics (social_posts) in this week's data file")
+        return no_data("N/A — no post-level metrics (social_posts) in this week's data file")
     prev_top = rank_posts(ctx["prev"], cfg, platforms) or []
     sort_m = cfg.get("social_wins", {}).get("sort_metric", "interactions")
     cards = []
     for i, p in enumerate(top):
         ptype = p.get("type") or "Post"
         context = p.get("context") or (p.get("caption") or "")[:110]
-        thumb = p.get("thumbnail")
+        # Screenshot when one loads (local copy first, then Metricool's image URL);
+        # the placeholder (type + context) sits underneath and shows if it doesn't.
+        thumb = p.get("thumbnail") or p.get("image_url")
+        visual = (f'<div class="ph-box"><div class="ph-type">{esc(ptype)}</div>'
+                  f'<div class="ph-ctx">{esc(context) or "No caption"}</div>'
+                  f'<div class="ph-date">{esc(p.get("date", ""))}</div></div>')
         if thumb:
-            visual = f'<img src="{esc(thumb)}" alt="{esc(context)}" loading="lazy" referrerpolicy="no-referrer">'
-        else:
-            visual = (f'<div class="ph-box"><div class="ph-type">{esc(ptype)}</div>'
-                      f'<div class="ph-ctx">{esc(context) or "No caption"}</div>'
-                      f'<div class="ph-date">{esc(p.get("date", ""))}</div></div>')
+            visual += (f'<img class="shot" src="{esc(thumb)}" alt="{esc(context)}" referrerpolicy="no-referrer" '
+                       f'onerror="this.remove()">')
         if p.get("url"):
             visual = f'<a href="{esc(p["url"])}" target="_blank" rel="noopener">{visual}</a>'
         prev_rate = prev_top[i]["_rate"] if i < len(prev_top) else None
         wow_html = (f'<div class="win-wow">{wow(p["_rate"], prev_rate)}<span class="tile-prev">vs last wk #{i + 1}</span></div>'
                     if prev_rate is not None else "")
-        why = f'<div class="why"><b>Why it worked:</b> {esc(p["why"])}</div>' if p.get("why") else ""
+        why = f'<div class="why"><b>Why it likely worked:</b> {esc(p["why"])}</div>' if p.get("why") else ""
         cards.append(
             '<div class="win">'
             f'<div class="thumb">{visual}<span class="rank">#{i + 1}</span><span class="ptype">{esc(ptype)}</span></div>'
@@ -499,81 +501,128 @@ def slide_gmb(ctx):
 # slide 4 — Organic URL Tracking
 # --------------------------------------------------------------------------
 
-def section_pair(sec, field):
-    m = sec.get(field) if isinstance(sec, dict) else None
-    if not isinstance(m, dict) or num(m.get("current")) is None:
-        return None, None
-    cur, d = m["current"], num(m.get("delta"))
-    return cur, (cur - d if d is not None else None)
+def link_source(data, src, ucfg):
+    """Normalized {clicks, leads, rows{name:(clicks, leads)}, origin} for one organic-link source, or None.
+    Prefers the GA4 organic_links block; falls back to the Detail Pack's legacy url_tracking sections."""
+    if not data:
+        return None
+    cf, lf = ucfg.get("clicks_field", "sessions"), ucfg.get("leads_field", "key_events")
+    ol = ((data.get(ucfg.get("organic_links_key", "organic_links")) or {}).get("sources") or {}).get(src["key"])
+    if isinstance(ol, dict):
+        rows = {r.get("name"): (num(r.get(cf)) or 0, num(r.get(lf)) or 0) for r in ol.get("by_property", [])}
+        return {"clicks": num(ol.get(cf)), "leads": num(ol.get(lf)), "rows": rows, "origin": "organic_links",
+                "clicks_prev": None, "leads_prev": None}
+    sec = data.get(src.get("legacy_section") or "")
+    if not isinstance(sec, dict):
+        return None
+    llf = src.get("legacy_leads_field", lf)
+
+    def pair(field):
+        m = sec.get(field)
+        if not isinstance(m, dict) or num(m.get("current")) is None:
+            return None, None
+        d = num(m.get("delta"))
+        return m["current"], (m["current"] - d if d is not None else None)
+
+    c, cp = pair(cf)
+    l, lp = pair(llf)
+    rows = {r.get("name"): (num(r.get(cf)) or 0, num(r.get(llf)) or 0) for r in sec.get("by_property", [])}
+    return {"clicks": c, "leads": l, "rows": rows, "origin": "legacy", "clicks_prev": cp, "leads_prev": lp}
+
+
+def link_sources(ctx):
+    ucfg = ctx["config"].get("url_tracking", {})
+    out = []
+    for src in ucfg.get("sources", []):
+        cur = link_source(ctx["data"], src, ucfg)
+        if cur and cur["origin"] == "organic_links":
+            prev = link_source(ctx["prev"], src, ucfg)
+            if prev and prev["origin"] == "organic_links":   # only a real prior GA4 week counts
+                cur["clicks_prev"], cur["leads_prev"] = prev["clicks"], prev["leads"]
+        out.append((src, cur))
+    return out
+
+
+def source_badge(src):
+    if src.get("icon") in CHANNEL_ICONS:
+        return f'<span class="sb">{icon(src["icon"])}<b>{esc(src["label"])}</b></span>'
+    return (f'<span class="sb"><span class="sb-dot" style="background:{esc(src.get("color", "#898781"))}">'
+            f'{esc(src.get("short", "")[:1])}</span><b>{esc(src["label"])}</b></span>')
 
 
 def slide_url(ctx):
-    data, prev, cfg = ctx["data"], ctx["prev"], ctx["config"]
-    ucfg = cfg.get("url_tracking", {})
-    srcs = [("FBGP", ucfg.get("fbgp", {})), ("GMB", ucfg.get("gmb", {}))]
-    secs = {k: data.get(s.get("section_key")) for k, s in srcs}
-    prev_secs = {k: (prev or {}).get(s.get("section_key")) for k, s in srcs}
-    if not any(isinstance(v, dict) for v in secs.values()):
+    srcs = link_sources(ctx)
+    if not any(cur for _, cur in srcs):
         return no_data()
+    cards, leads, leads_p, labels = [], [], [], []
+    for src, cur in srcs:
+        color = src.get("color") or CHANNEL_COLORS.get(src.get("icon"), "#898781")
+        if cur is None:
+            body = '<div class="lc-na">N/A</div>'
+        else:
+            body = (
+                f'<div class="lc-row"><span class="lc-l">Clicks</span><span class="lc-v">{fmt(cur["clicks"])}</span>'
+                f'{wow(cur["clicks"], cur["clicks_prev"])}</div>'
+                f'<div class="lc-row"><span class="lc-l">Leads</span><span class="lc-v">{fmt(cur["leads"])}</span>'
+                f'{wow(cur["leads"], cur["leads_prev"])}</div>'
+            )
+            leads.append(cur["leads"])
+            leads_p.append(cur["leads_prev"])
+            labels.append(src.get("short", src["label"]))
+        cards.append(f'<div class="lcard" style="--c:{esc(color)}">{source_badge(src)}{body}</div>')
+    tot = sum(v for v in leads if v is not None) if leads else None
+    tot_p = sum(leads_p) if leads_p and all(v is not None for v in leads_p) else None
+    hero = (f'<div class="lhero"><div class="tile-label">Total organic leads</div>'
+            f'<div class="lhero-v">{fmt(tot)}</div><div class="tile-wow">{wow(tot, tot_p)}'
+            f'<span class="tile-prev">last wk {fmt(tot_p) if tot_p is not None else "N/A"}</span></div>'
+            f'<div class="tile-sub">{esc(" + ".join(labels))} · leads = GA4 key events · clicks = sessions</div></div>')
+    window = (ctx["data"].get(ctx["config"].get("url_tracking", {}).get("organic_links_key", "organic_links")) or {}).get("window_label")
+    note = f'<div class="more">GA4 window: {esc(window)}</div>' if window else ""
+    return f'<div class="lcards">{"".join(cards)}</div>{hero}{note}'
 
-    tiles, lead_cur, lead_prev = [], [], []
-    for k, s in srcs:
-        sec = secs[k]
-        c_c, c_p = section_pair(sec, s.get("clicks_field"))
-        l_c, l_p = section_pair(sec, s.get("leads_field"))
-        tiles.append(big_tile(f"{k} clicks", c_c, c_p, sub=s.get("clicks_field", "")))
-        tiles.append(big_tile(f"{k} leads", l_c, l_p, sub=s.get("leads_field", "")))
-        lead_cur.append(l_c)
-        lead_prev.append(l_p)
-    tot = sum(lead_cur) if all(v is not None for v in lead_cur) else None
-    tot_p = sum(lead_prev) if all(v is not None for v in lead_prev) else None
-    tiles.append(big_tile("Total organic leads", tot, tot_p, sub="FBGP + GMB").replace('class="tile"', 'class="tile hero"', 1))
 
-    # by-property table
+def slide_url_breakdown(ctx):
+    srcs = link_sources(ctx)
+    if not any(cur for _, cur in srcs):
+        return no_data()
     names = []
-    for sec in secs.values():
-        for r in (sec or {}).get("by_property", []) if isinstance(sec, dict) else []:
-            if r.get("name") not in names:
-                names.append(r.get("name"))
-    cur_rows = {k: by_name((secs[k] or {}).get("by_property")) if isinstance(secs[k], dict) else {} for k, _ in srcs}
-    prev_rows = {k: by_name((prev_secs[k] or {}).get("by_property")) if isinstance(prev_secs[k], dict) else {} for k, _ in srcs}
+    for p in ctx["data"].get("properties", []) or []:
+        names.append(p.get("name"))
+    for _, cur in srcs:
+        for n in (cur or {}).get("rows", {}):
+            if n not in names:
+                names.append(n)
 
-    def cell(k, s, name, field_key):
-        r = cur_rows[k].get(name)
-        if r is None:
-            return '<td class="cell"><span class="nd">No data</span></td>'
-        v = num(r.get(s.get(field_key)))
-        pr = prev_rows[k].get(name)
-        p = num(pr.get(s.get(field_key))) if pr else None
-        return f'<td class="cell"><div class="v">{fmt(v)}</div></td>'
+    def val(cur, n, i):
+        if cur is None:
+            return None
+        return cur["rows"].get(n, (0, 0))[i]
 
-    def activity(name):
-        leads = sum(num(cur_rows[k].get(name, {}).get(s.get("leads_field"))) or 0 for k, s in srcs)
-        clicks = sum(num(cur_rows[k].get(name, {}).get(s.get("clicks_field"))) or 0 for k, s in srcs)
-        return leads, clicks
+    def total(n):
+        l = sum(val(c, n, 1) or 0 for _, c in srcs)
+        k = sum(val(c, n, 0) or 0 for _, c in srcs)
+        return l, k
 
-    active = [n for n in names if activity(n) != (0, 0)]
-    active.sort(key=activity, reverse=True)
-    cap = int(ucfg.get("max_property_rows", 8))
-    shown, hidden = active[:cap], len(active) - min(len(active), cap)
-    if shown:
-        rows = "".join(
-            f'<tr><th class="rowh">{esc(n)}</th>'
-            + cell("FBGP", srcs[0][1], n, "clicks_field") + cell("FBGP", srcs[0][1], n, "leads_field")
-            + cell("GMB", srcs[1][1], n, "clicks_field") + cell("GMB", srcs[1][1], n, "leads_field")
-            + "</tr>"
-            for n in shown
-        )
-        more = f'<div class="more">+{hidden} more properties with activity (see Detail Pack)</div>' if hidden else ""
-        zero = len(names) - len(active)
-        zero_note = f'<div class="more">{zero} properties with no tracked activity not shown</div>' if zero else ""
-        table = (
-            '<table class="score small"><thead><tr><th class="lh">Property</th><th>FBGP clicks</th><th>FBGP leads</th>'
-            f'<th>GMB clicks</th><th>GMB leads</th></tr></thead><tbody>{rows}</tbody></table>{more}{zero_note}'
-        )
-    else:
-        table = no_data("No property-level activity")
-    return f'<div class="tiles five">{"".join(tiles)}</div><div class="url-table">{table}</div>'
+    names.sort(key=total, reverse=True)
+    g_head = "".join(
+        f'<th colspan="2" class="gh" style="--c:{esc(src.get("color") or CHANNEL_COLORS.get(src.get("icon"), "#898781"))}">{source_badge(src)}</th>'
+        for src, _ in srcs
+    )
+    s_head = "".join('<th class="shc">Clicks</th><th class="shl">Leads</th>' for _ in srcs)
+    rows = []
+    for n in names:
+        l, k = total(n)
+        cells = []
+        for _, cur in srcs:
+            for i in (0, 1):
+                v = val(cur, n, i)
+                cls = "z" if v == 0 else ""
+                cells.append(f'<td class="{cls} {"lead" if i else ""}">{"N/A" if v is None else fmt(v)}</td>')
+        rows.append(f'<tr><th class="rowh">{esc(n)}</th>{"".join(cells)}'
+                    f'<td class="tl">{fmt(l)}</td></tr>')
+    return (f'<table class="bd"><thead><tr><th></th>{g_head}<th class="gh tot">Total</th></tr>'
+            f'<tr><th class="lh">Property</th>{s_head}<th class="shl">Leads</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table>')
 
 
 # --------------------------------------------------------------------------
@@ -585,7 +634,8 @@ SLIDES = [
     ("Social Scoreboard", "By platform · this week vs last week", slide_scoreboard),
     ("Social Wins", "Top posts of the week by engagement rate", slide_wins),
     ("Google My Business", "Portfolio-wide + top properties", slide_gmb),
-    ("Organic URL Tracking", "FB Groups (FBGP) + GMB tracked links", slide_url),
+    ("Organic URL Tracking", "FB Groups · Google Business · Facebook · Instagram — tracked links", slide_url),
+    ("Organic URL Tracking — by property", "Clicks (sessions) and leads (key events) per source", slide_url_breakdown),
 ]
 
 
@@ -611,17 +661,17 @@ def build(data_path: Path, config_path: Path):
                 sub_html = subtitle(ctx)
             except Exception as e:
                 log.append(f"slide {i} subtitle: ERROR {e!r}")
-                sub_html = esc("No data")
+                sub_html = esc("N/A")
         else:
             sub_html = esc(subtitle)
         try:
             body = fn(ctx)
         except Exception as e:  # a broken source must not fail the deck
-            log.append(f"slide {i} ({title}): ERROR {e!r} -> rendered 'No data'")
+            log.append(f"slide {i} ({title}): ERROR {e!r} -> rendered 'N/A'")
             traceback.print_exc(file=sys.stderr)
             body = no_data()
-        nd = body.count("No data")
-        log.append(f"slide {i} ({title}): ok" + (f" ({nd} 'No data' cell(s))" if nd else ""))
+        nd = body.count("N/A")
+        log.append(f"slide {i} ({title}): ok" + (f" ({nd} 'N/A' cell(s))" if nd else ""))
         window = ""
         if fn is slide_gmb and data.get("gbp_window_label"):
             window = f'GBP window {esc(data["gbp_window_label"])} vs {esc(data.get("gbp_prev_window_label", "—"))}'
@@ -715,6 +765,8 @@ TEMPLATE = """<!doctype html>
   .win { background:var(--surface-2); border:1px solid var(--rule); border-radius:1cqw; padding:1.1cqw; }
   .thumb { position:relative; aspect-ratio:1/1; border-radius:.7cqw; overflow:hidden; background:var(--page); }
   .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+  .thumb img.shot { position:absolute; inset:0; }
+  .thumb a { display:block; width:100%; height:100%; color:inherit; text-decoration:none; }
   .noimg { width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--mute); font-size:1.2cqw; }
   .rank { position:absolute; top:.6cqw; left:.6cqw; background:rgba(0,0,0,.7); color:#fff; font-weight:800; font-size:1.4cqw; padding:.1cqw .6cqw; border-radius:.5cqw; }
   .win-meta { display:flex; align-items:center; gap:.7cqw; margin-top:.8cqw; } .prop { font-size:1.35cqw; font-weight:600; }
@@ -723,6 +775,31 @@ TEMPLATE = """<!doctype html>
   .win-label, .win-sub { font-size:1cqw; color:var(--mute); margin-top:.3cqw; }
   .win-wow { display:flex; gap:.6cqw; align-items:center; margin-top:.4cqw; }
   .url-table { min-height:0; }
+  .lcards { display:grid; grid-template-columns:repeat(4,1fr); gap:1.2cqw; }
+  .lcard { background:var(--surface-2); border:1px solid var(--rule); border-top:.4cqw solid var(--c); border-radius:1cqw; padding:1.2cqw 1.4cqw; }
+  .sb { display:inline-flex; align-items:center; gap:.6cqw; font-size:1.4cqw; }
+  .sb .ico { width:2cqw; height:2cqw; }
+  .sb-dot { width:2cqw; height:2cqw; border-radius:50%; color:#fff; font-weight:800; font-size:1.1cqw; display:inline-flex; align-items:center; justify-content:center; }
+  .lc-row { display:grid; grid-template-columns:auto 1fr auto; align-items:baseline; gap:.8cqw; margin-top:1cqw; }
+  .lc-l { font-size:1.1cqw; text-transform:uppercase; letter-spacing:.06em; color:var(--mute); font-weight:600; }
+  .lc-v { font-size:3cqw; font-weight:800; text-align:right; letter-spacing:-0.02em; }
+  .lc-na { font-size:2.4cqw; color:var(--mute); margin-top:1.4cqw; }
+  .lhero { background:var(--surface-2); border:1px solid var(--accent); border-radius:1cqw; padding:1.2cqw 1.6cqw; display:grid; grid-template-columns:auto auto 1fr; align-items:center; gap:2cqw; }
+  .lhero .tile-label { font-size:1.5cqw; }
+  .lhero-v { font-size:4.4cqw; font-weight:800; }
+  .lhero .tile-sub { text-align:right; font-size:1.05cqw; }
+  table.bd { width:100%; border-collapse:collapse; font-size:1.2cqw; }
+  table.bd th, table.bd td { padding:.38cqw .7cqw; border-bottom:1px solid var(--rule); text-align:right; }
+  table.bd th.gh { text-align:center; border-bottom:.35cqw solid var(--c, var(--ink-2)); padding-bottom:.5cqw; }
+  table.bd th.gh .sb { font-size:1.15cqw; } table.bd th.gh .ico, table.bd th.gh .sb-dot { width:1.6cqw; height:1.6cqw; font-size:.9cqw; }
+  table.bd th.gh.tot { --c: var(--ink-2); font-size:1.15cqw; }
+  table.bd th.lh { text-align:left; color:var(--mute); font-weight:600; }
+  table.bd th.shc, table.bd th.shl { font-size:.95cqw; color:var(--mute); font-weight:600; text-transform:uppercase; letter-spacing:.05em; }
+  table.bd th.shl { border-right:1px solid var(--rule); }
+  table.bd td.lead { font-weight:750; border-right:1px solid var(--rule); }
+  table.bd td.z { color:#c3c2b7; }
+  table.bd th.rowh { text-align:left; font-weight:600; color:var(--ink); white-space:nowrap; }
+  table.bd td.tl { font-weight:800; font-size:1.35cqw; background:var(--surface-2); }
   /* slide 1 header: top channels */
   .tcs { display:flex; gap:1cqw; margin-top:.8cqw; flex-wrap:wrap; }
   .tc { display:inline-flex; align-items:center; gap:.6cqw; background:var(--surface-2); border:1px solid var(--rule);
