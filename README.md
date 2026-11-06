@@ -40,7 +40,7 @@ data/week-2026-08-06.json   this week's snapshot (transcribed from the PDF you s
 scripts/template.html       the HTML/CSS shell with {{PLACEHOLDER}} slots
 scripts/build_report.py     reads a data JSON, computes chart geometry, writes index.html
 index.html                  the generated dashboard (Detail Pack) — this is what GitHub Pages serves
-scripts/build_brief.py      builds organic-brief_YYYY-MM-DD.html (6-slide Organic Brief) from the same data file
+scripts/build_brief.py      builds organic-brief_YYYY-MM-DD.html (5-slide Organic Brief) from the same data file
 scripts/run_weekly_build.py runs the Detail Pack build, then the Brief, logs to logs/weekly-run.log
 config/organic_brief.json   ranking/tuning for the Brief (wins, top GMB properties, clicks/leads fields)
 ```

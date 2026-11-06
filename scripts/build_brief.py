@@ -47,7 +47,11 @@ CHANNEL_ICONS = {
                  '<circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="16.3" cy="7.7" r="1" fill="#fff"/></svg>',
     "TikTok": '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6.5" fill="currentColor"/>'
               '<path d="M13.2 5.5h2.3c.2 1.6 1.2 2.7 2.8 2.9v2.3c-1.1 0-2-.3-2.8-.8v4.6c0 2.4-1.8 4-4 4s-4-1.7-4-4 1.9-4.1 4.4-3.9v2.4c-1.1-.3-2 .4-2 1.5 0 .9.7 1.6 1.6 1.6 1 0 1.7-.7 1.7-1.8z" fill="#fff"/></svg>',
+    "Google Business": '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6.5" fill="currentColor"/>'
+                       '<path d="M17.6 11.2h-5.4v2.3h3.1c-.3 1.5-1.6 2.5-3.3 2.5a3.9 3.9 0 1 1 2.6-6.9l1.7-1.7A6.3 6.3 0 1 0 12 18.4c3.4 0 5.8-2.4 5.8-5.9 0-.4 0-.9-.2-1.3z" fill="#fff"/></svg>',
 }
+
+CHANNEL_SHORT = {"Google Business": "GMB"}
 
 
 def icon(channel, cls="ico"):
@@ -135,11 +139,12 @@ def fmt(v, kind="int"):
     return f"{int(round(v)):,}"
 
 
+NEUTRAL_DROP_PCT = 2.0   # drops up to this % are neutral (blue), set from config
+
+
 def wow(cur, prev):
-    """▲/▼ + % change chip, this week vs last week."""
-    if cur is None:
-        return '<span class="chip na">N/A</span>'
-    if prev is None:
+    """▲/▼ + % change chip, this week vs last week. Small drops (<= NEUTRAL_DROP_PCT) are neutral blue."""
+    if cur is None or prev is None:
         return '<span class="chip na">N/A</span>'
     if prev == 0:
         if cur == 0:
@@ -149,8 +154,10 @@ def wow(cur, prev):
     pct = (cur - prev) / abs(prev) * 100
     if abs(pct) < 0.05:
         return '<span class="chip flat">– 0%</span>'
-    arrow, cls = ("▲", "up") if pct > 0 else ("▼", "down")
-    return f'<span class="chip {cls}">{arrow} {abs(pct):.1f}%</span>'
+    if pct > 0:
+        return f'<span class="chip up">▲ {pct:.1f}%</span>'
+    cls = "neutral" if abs(pct) <= NEUTRAL_DROP_PCT else "down"
+    return f'<span class="chip {cls}">▼ {abs(pct):.1f}%</span>'
 
 
 def no_data(msg="N/A"):
@@ -215,28 +222,60 @@ def scoreboard_metrics(data, platforms, cfg):
 
 
 def kpi_card(label, cur, prev, chips_html, show_wow=True):
-    wow_html = (f'<div class="kpi-wow">{wow(cur, prev)}<span class="tile-prev">vs last wk {fmt(prev) if prev is not None else "—"}</span></div>'
+    wow_html = (f'<div class="kpi-wow">{wow(cur, prev)}<span class="tile-prev">vs last wk {fmt(prev) if prev is not None else "N/A"}</span></div>'
                 if show_wow else '<div class="kpi-wow"><span class="tile-prev">this week</span></div>')
     return (f'<div class="kpi"><div class="kpi-label">{esc(label)}</div>'
             f'<div class="kpi-value">{fmt(cur)}</div>{wow_html}'
             f'<div class="kpi-chips">{chips_html}</div></div>')
 
 
-def chips(values, platforms):
+def chips(values, channels):
     return "".join(
-        f'<span class="pchip">{icon(c)}<b>{fmt(values.get(c))}</b></span>' for c in platforms
+        f'<span class="pchip">{icon(c)}<b>{fmt(values.get(c))}</b></span>' for c in channels
     )
 
 
+# The four Detail Pack KPIs. Followers is social-only; Posts / Engagement / Views
+# include Google Business exactly like the Detail Pack (kpis + *_by_channel).
+def kpi_defs(cfg):
+    social = cfg["social_platforms"]
+    allc = cfg.get("channels", social + ["Google Business"])
+    return [
+        # label, kpi key, by-channel key, channel field, channels, show WoW
+        ("Followers", "followers", "followers_by_channel", "current", social, True),
+        ("Posts this week", "posts", "posts_by_channel", "current", allc, False),
+        ("Engagement", "engagement", "engagement_by_channel", "current", allc, True),
+        ("Views", "views", "views_by_channel", "current", allc, True),
+    ]
+
+
+def kpi_pair(data, key, field="current"):
+    m = ((data or {}).get("kpis") or {}).get(key)
+    if not isinstance(m, dict) or num(m.get("current")) is None:
+        return None, None
+    if field == "delta":
+        return num(m.get("delta")), None
+    d = num(m.get("delta"))
+    return m["current"], (m["current"] - d if d is not None else None)
+
+
+def per_channel(data, list_key, field, channels):
+    return {c: channel_value((data or {}).get(list_key), c, field) for c in channels}
+
+
 def top_channels(ctx):
-    """{label: (winners list, value)} for views / engagement / followers. Ties keep every winner."""
+    """[(label, winners, value)] — ties keep every winner."""
     cfg = ctx["config"]
-    platforms = cfg["social_platforms"]
-    tcfg = cfg.get("top_channels", {})
-    m = scoreboard_metrics(ctx["data"], platforms, cfg.get("scoreboard", {})) or {}
+    social = cfg["social_platforms"]
+    allc = cfg.get("channels", social + ["Google Business"])
+    cats = cfg.get("top_channels", {}).get("categories") or [
+        ["Views", "views_by_channel", "current", "all"],
+        ["Engagement", "engagement_by_channel", "current", "all"],
+        ["Followers", "followers_by_channel", "delta", "social"],
+    ]
     out = []
-    for label, key in tcfg.get("categories", [["Views", "impressions"], ["Engagement", "_interactions"], ["Followers", "followers_gained"]]):
-        vals = {c: m.get(key, {}).get(c) for c in platforms}
+    for label, list_key, field, scope in cats:
+        vals = per_channel(ctx["data"], list_key, field, allc if scope == "all" else social)
         vals = {c: v for c, v in vals.items() if v is not None}
         if not vals:
             out.append((label, [], None))
@@ -260,62 +299,47 @@ def top_channels_html(ctx):
 
 
 def slide_overview(ctx):
-    """Slide 1: Detail-Pack-style KPI cards, social platforms only."""
-    cfg = ctx["config"]
-    platforms = cfg["social_platforms"]
-    data, prev = ctx["data"], ctx["prev"]
-
-    def per(d, key, field="current"):
-        return {c: channel_value((d or {}).get(key), c, field) for c in platforms}
-
-    def tot(vals):
-        v = list(vals.values())
-        return sum(v) if v and all(x is not None for x in v) else None
-
-    fol, fol_p = per(data, "followers_by_channel"), per(prev, "followers_by_channel")
-    posts = per(data, "posts_by_channel")
-    eng, eng_p = per(data, "engagement_by_channel"), per(prev, "engagement_by_channel")
-    views, views_p = per(data, "views_by_channel"), per(prev, "views_by_channel")
-    if all(tot(x) is None for x in (fol, posts, eng, views)):
+    """Slide 1: the Detail Pack's four KPI tiles, same numbers, with per-channel icons."""
+    cfg, data = ctx["config"], ctx["data"]
+    cards, any_value = [], False
+    for label, key, list_key, field, chans, show in kpi_defs(cfg):
+        cur, prev = kpi_pair(data, key)
+        any_value = any_value or cur is not None
+        cards.append(kpi_card(label, cur, prev, chips(per_channel(data, list_key, field, chans), chans), show_wow=show))
+    if not any_value:
         return no_data()
-    cards = [
-        kpi_card("Followers", tot(fol), tot(fol_p), chips(fol, platforms)),
-        kpi_card("Posts this week", tot(posts), None, chips(posts, platforms), show_wow=False),
-        kpi_card("Engagement", tot(eng), tot(eng_p), chips(eng, platforms)),
-        kpi_card("Views", tot(views), tot(views_p), chips(views, platforms)),
-    ]
     return f'<div class="kpis">{"".join(cards)}</div>'
 
 
 def slide_scoreboard(ctx):
-    """Small-multiple vertical bar charts, one panel per KPI, one bar per platform."""
-    cfg = ctx["config"]
-    platforms = cfg["social_platforms"]
-    cur = scoreboard_metrics(ctx["data"], platforms, cfg.get("scoreboard", {}))
-    prev = scoreboard_metrics(ctx["prev"], platforms, cfg.get("scoreboard", {}))
-    if cur is None:
-        return no_data()
+    """Vertical bar charts, one panel per KPI, one bar per channel (GBP everywhere except Followers)."""
+    cfg, data, prev = ctx["config"], ctx["data"], ctx["prev"]
+    social = cfg["social_platforms"]
+    allc = cfg.get("channels", social + ["Google Business"])
     panels_def = [
-        ("Reach", "reach", "int", True),
-        ("Impressions", "impressions", "int", True),
-        ("Engagement rate", "er", "pct", True),
-        ("Followers gained", "followers_gained", "signed", True),
-        ("Posts published", "posts", "int", False),
+        # label, kpi key, list key, field, channels, kind, show WoW
+        ("Views", "views", "views_by_channel", "current", allc, "int", True),
+        ("Engagement", "engagement", "engagement_by_channel", "current", allc, "int", True),
+        ("Followers gained", "followers", "followers_by_channel", "delta", social, "signed", True),
+        ("Posts published", "posts", "posts_by_channel", "current", allc, "int", False),
     ]
     panels, any_value = [], False
-    for label, key, kind, show_wow in panels_def:
-        vals = {c: cur[key].get(c) for c in platforms}
-        tot, tot_p = cur[key].get("Total"), (prev[key].get("Total") if prev else None)
+    for label, key, list_key, field, chans, kind, show_wow in panels_def:
+        vals = per_channel(data, list_key, field, chans)
+        pvals = per_channel(prev, list_key, field, chans)
+        if field == "delta":
+            tot, _ = kpi_pair(data, key, "delta")
+            tot_p, _ = kpi_pair(prev, key, "delta")
+        else:
+            tot, tot_p = kpi_pair(data, key)
         if all(v is None for v in vals.values()):
-            panels.append(f'<div class="panel"><div class="p-title">{esc(label)}</div>'
-                          f'<div class="p-nodata">N/A</div></div>')
+            panels.append(f'<div class="panel"><div class="p-title">{esc(label)}</div><div class="p-nodata">N/A</div></div>')
             continue
         any_value = True
         peak = max([abs(v) for v in vals.values() if v is not None] + [0]) or 1
         bars = []
-        for c in platforms:
-            v = vals[c]
-            p = prev[key].get(c) if prev else None
+        for c in chans:
+            v, p = vals[c], pvals[c]
             h = (max(v, 0) / peak * 100) if v is not None else 0
             chip = wow(v, p) if (show_wow and v is not None) else ""
             bars.append(
@@ -328,11 +352,11 @@ def slide_scoreboard(ctx):
         panels.append(
             f'<div class="panel"><div class="p-title">{esc(label)}</div>'
             f'<div class="p-total">Total <b>{fmt(tot, kind) if tot is not None else "N/A"}</b> {tot_wow}</div>'
-            f'<div class="bars">{"".join(bars)}</div></div>'
+            f'<div class="bars" style="grid-template-columns:repeat({len(chans)},1fr)">{"".join(bars)}</div></div>'
         )
     if not any_value:
         return no_data()
-    legend = "".join(f'<span class="lg">{icon(c)}{esc(c)}</span>' for c in platforms)
+    legend = "".join(f'<span class="lg">{icon(c)}{esc(c)}</span>' for c in allc)
     return f'<div class="legend">{legend}</div><div class="panels">{"".join(panels)}</div>'
 
 
@@ -452,8 +476,8 @@ def slide_gmb(ctx):
             ("Views", views, views_p, "search + maps reach"),
             ("Searches", rs, rs_p, "reach · search"),
             ("Website clicks", *gb_pair(gb, "website_clicks"), ""),
-            ("Calls", *gb_pair(gb, "phone_clicks"), ""),
-            ("Direction requests", *gb_pair(gb, "directions_clicks"), ""),
+            ("Phone clicks", *gb_pair(gb, "phone_clicks"), ""),
+            ("Direction clicks", *gb_pair(gb, "directions_clicks"), ""),
             ("Posts published", *gb_pair(gb, "posts_published"), ""),
         ]
         parts.append(
@@ -468,30 +492,30 @@ def slide_gmb(ctx):
     if not isinstance(props, list) or not props or not weights:
         parts.append(f'<div class="half">{no_data()}</div>')
     else:
-        prior_path = gbp_prior_file(data)
-        prior_rows = by_name(load_json(prior_path).get("gbp_by_property")) if prior_path else {}
-
         def score(r):
             return sum(w * (num(r.get(m)) or 0) for m, w in weights.items())
 
+        even = float(gcfg.get("even_within_pct", 10)) / 100
+
+        def summary(r, label, fields):
+            vals = {name: num(r.get(f)) or 0 for name, f in fields}
+            total = sum(vals.values())
+            ranked = sorted(vals.items(), key=lambda kv: kv[1], reverse=True)
+            tops = [ranked[0]]
+            if len(ranked) > 1 and ranked[0][1] > 0 and ranked[1][1] >= ranked[0][1] * (1 - even):
+                tops.append(ranked[1])
+            src = " & ".join(f"{n} {fmt(v)}" for n, v in tops) if total else "—"
+            return (f'<div class="gm"><span class="gm-l">{esc(label)}</span><span class="gm-v">{fmt(total)}</span>'
+                    f'<span class="gm-s">top source: <b>{esc(src)}</b></span></div>')
+
         top = sorted(props, key=score, reverse=True)[: int(gcfg.get("top_n", 3))]
-        labels = {
-            "website_clicks": "Website clicks", "phone_clicks": "Calls",
-            "directions_clicks": "Directions", "reach_search": "Searches",
-            "reach_maps": "Maps reach", "posts_published": "Posts",
-        }
         cards = []
         for i, r in enumerate(top):
-            pr = prior_rows.get(r.get("name"))
-            mets = "".join(
-                f'<div class="m"><span class="ml">{esc(labels.get(m, m))}</span>'
-                f'<span class="mv">{fmt(num(r.get(m)))}</span>'
-                f'{wow(num(r.get(m)), num(pr.get(m)) if pr else None)}</div>'
-                for m in weights
-            )
             cards.append(
-                f'<div class="gcard"><div class="gname"><span class="rank-s">#{i + 1}</span>{esc(r.get("name"))}'
-                f'<span class="score">score {fmt(score(r))}</span></div>{mets}</div>'
+                f'<div class="gcard"><div class="gname"><span class="rank-s">#{i + 1}</span>{esc(r.get("name"))}</div>'
+                + summary(r, "Reach", [("Search", "reach_search"), ("Maps", "reach_maps")])
+                + summary(r, "Clicks", [("Website", "website_clicks"), ("Phone", "phone_clicks"), ("Directions", "directions_clicks")])
+                + "</div>"
             )
         parts.append(f'<div class="half"><div class="half-title">Top {len(top)} GMB properties</div><div class="gcards">{"".join(cards)}</div></div>')
     return "".join(parts)
@@ -561,10 +585,8 @@ def slide_url(ctx):
             body = '<div class="lc-na">N/A</div>'
         else:
             body = (
-                f'<div class="lc-row"><span class="lc-l">Clicks</span><span class="lc-v">{fmt(cur["clicks"])}</span>'
-                f'{wow(cur["clicks"], cur["clicks_prev"])}</div>'
-                f'<div class="lc-row"><span class="lc-l">Leads</span><span class="lc-v">{fmt(cur["leads"])}</span>'
-                f'{wow(cur["leads"], cur["leads_prev"])}</div>'
+                f'<div class="lc-row"><span class="lc-l">Clicks</span><span class="lc-v">{fmt(cur["clicks"])}</span></div>'
+                f'<div class="lc-row"><span class="lc-l">Leads</span><span class="lc-v">{fmt(cur["leads"])}</span></div>'
             )
             leads.append(cur["leads"])
             leads_p.append(cur["leads_prev"])
@@ -573,56 +595,64 @@ def slide_url(ctx):
     tot = sum(v for v in leads if v is not None) if leads else None
     tot_p = sum(leads_p) if leads_p and all(v is not None for v in leads_p) else None
     hero = (f'<div class="lhero"><div class="tile-label">Total organic leads</div>'
-            f'<div class="lhero-v">{fmt(tot)}</div><div class="tile-wow">{wow(tot, tot_p)}'
-            f'<span class="tile-prev">last wk {fmt(tot_p) if tot_p is not None else "N/A"}</span></div>'
+            f'<div class="lhero-v">{fmt(tot)}</div><div></div>'
             f'<div class="tile-sub">{esc(" + ".join(labels))} · leads = GA4 key events · clicks = sessions</div></div>')
     window = (ctx["data"].get(ctx["config"].get("url_tracking", {}).get("organic_links_key", "organic_links")) or {}).get("window_label")
     note = f'<div class="more">GA4 window: {esc(window)}</div>' if window else ""
     return f'<div class="lcards">{"".join(cards)}</div>{hero}{note}'
 
 
-def slide_url_breakdown(ctx):
-    srcs = link_sources(ctx)
-    if not any(cur for _, cur in srcs):
-        return no_data()
-    names = []
-    for p in ctx["data"].get("properties", []) or []:
-        names.append(p.get("name"))
-    for _, cur in srcs:
-        for n in (cur or {}).get("rows", {}):
-            if n not in names:
-                names.append(n)
+def src_color(src):
+    return src.get("color") or CHANNEL_COLORS.get(src.get("icon"), "#898781")
 
-    def val(cur, n, i):
-        if cur is None:
-            return None
+
+def slide_url_breakdown(ctx):
+    """Per property: stacked vertical bar of clicks by source, every source's number
+    written under it, and leads by source as colored pills."""
+    srcs = [(s, c) for s, c in link_sources(ctx) if c]
+    if not srcs:
+        return no_data()
+    names = [p.get("name") for p in ctx["data"].get("properties", []) or []]
+    for _, cur in srcs:
+        names += [n for n in cur["rows"] if n not in names]
+
+    def v(cur, n, i):
         return cur["rows"].get(n, (0, 0))[i]
 
-    def total(n):
-        l = sum(val(c, n, 1) or 0 for _, c in srcs)
-        k = sum(val(c, n, 0) or 0 for _, c in srcs)
-        return l, k
+    def totals(n):
+        return sum(v(c, n, 1) for _, c in srcs), sum(v(c, n, 0) for _, c in srcs)
 
-    names.sort(key=total, reverse=True)
-    g_head = "".join(
-        f'<th colspan="2" class="gh" style="--c:{esc(src.get("color") or CHANNEL_COLORS.get(src.get("icon"), "#898781"))}">{source_badge(src)}</th>'
-        for src, _ in srcs
-    )
-    s_head = "".join('<th class="shc">Clicks</th><th class="shl">Leads</th>' for _ in srcs)
-    rows = []
+    names = [n for n in names if totals(n) != (0, 0)]
+    names.sort(key=totals, reverse=True)
+    zero = len(set(p.get("name") for p in ctx["data"].get("properties", []) or [])) - len(names)
+    peak = max([totals(n)[1] for n in names] + [1])
+    cols = []
     for n in names:
-        l, k = total(n)
-        cells = []
-        for _, cur in srcs:
-            for i in (0, 1):
-                v = val(cur, n, i)
-                cls = "z" if v == 0 else ""
-                cells.append(f'<td class="{cls} {"lead" if i else ""}">{"N/A" if v is None else fmt(v)}</td>')
-        rows.append(f'<tr><th class="rowh">{esc(n)}</th>{"".join(cells)}'
-                    f'<td class="tl">{fmt(l)}</td></tr>')
-    return (f'<table class="bd"><thead><tr><th></th>{g_head}<th class="gh tot">Total</th></tr>'
-            f'<tr><th class="lh">Property</th>{s_head}<th class="shl">Leads</th></tr></thead>'
-            f'<tbody>{"".join(rows)}</tbody></table>')
+        leads, clicks = totals(n)
+        segs = "".join(
+            f'<div class="seg" style="height:{v(c, n, 0) / peak * 100:.2f}%;background:{src_color(s)}" '
+            f'title="{esc(s["label"])}: {v(c, n, 0)} clicks"></div>'
+            for s, c in reversed(srcs) if v(c, n, 0)
+        )
+        click_nums = "".join(
+            f'<span class="cn" style="--c:{src_color(s)}"><i></i>{fmt(v(c, n, 0))}</span>'
+            for s, c in srcs if v(c, n, 0)
+        )
+        lead_pills = "".join(
+            f'<span class="lp" style="background:{src_color(s)}">{fmt(v(c, n, 1))}</span>'
+            for s, c in srcs if v(c, n, 1)
+        ) or '<span class="lp0">0</span>'
+        cols.append(
+            f'<div class="pc"><div class="pc-tot">{fmt(clicks)}</div>'
+            f'<div class="pc-bar">{segs}</div>'
+            f'<div class="pc-name">{esc(n)}</div>'
+            f'<div class="pc-clicks">{click_nums}</div>'
+            f'<div class="pc-leads"><span class="pc-ll">Leads</span>{lead_pills}</div></div>'
+        )
+    legend = "".join(f'<span class="lg"><i style="background:{src_color(s)}"></i>{esc(s["label"])}</span>' for s, _ in srcs)
+    zero_note = f'<span class="more">{zero} propert{"y" if zero == 1 else "ies"} with 0 clicks and 0 leads not shown</span>' if zero else ""
+    return (f'<div class="legend lgs"><span class="lg-k">Bars = clicks (sessions) by source · colored pills = leads (key events) by source</span>{legend}</div>'
+            f'<div class="pchart" style="grid-template-columns:repeat({len(names)},1fr)">{"".join(cols)}</div>{zero_note}')
 
 
 # --------------------------------------------------------------------------
@@ -631,10 +661,10 @@ def slide_url_breakdown(ctx):
 
 SLIDES = [
     ("Top channels", top_channels_html, slide_overview),
-    ("Social Scoreboard", "By platform · this week vs last week", slide_scoreboard),
+    ("Social Scoreboard", "By channel · this week vs last week · same numbers as the Detail Pack", slide_scoreboard),
     ("Google My Business", "Portfolio-wide + top properties", slide_gmb),
     ("Organic URL Tracking", "FB Groups · Google Business · Facebook · Instagram — tracked links", slide_url),
-    ("Organic URL Tracking — by property", "Clicks (sessions) and leads (key events) per source", slide_url_breakdown),
+    ("Organic URL Tracking — by property", "Clicks and leads per property, by source", slide_url_breakdown),
 ]
 
 
@@ -651,6 +681,8 @@ def build(data_path: Path, config_path: Path):
     gp = gbp_prior_file(data)
     log.append(f"GBP property comparison file: {gp.name if gp else 'NONE (property WoW shows no prior wk)'}")
 
+    global NEUTRAL_DROP_PCT
+    NEUTRAL_DROP_PCT = float(config.get("neutral_drop_pct", NEUTRAL_DROP_PCT))
     ctx = {"data": data, "prev": prev, "config": config}
     total = len(SLIDES)
     sections = []
@@ -717,6 +749,7 @@ TEMPLATE = """<!doctype html>
   .chip { display:inline-block; font-size:1.05cqw; font-weight:700; padding:.15cqw .55cqw; border-radius:.5cqw; white-space:nowrap; }
   .chip.up { color:var(--good); background:color-mix(in srgb, var(--good) 15%, transparent); }
   .chip.down { color:var(--bad); background:color-mix(in srgb, var(--bad) 15%, transparent); }
+  .chip.neutral { color:var(--accent); background:color-mix(in srgb, var(--accent) 13%, transparent); }
   .chip.flat, .chip.na { color:var(--flat); background:color-mix(in srgb, var(--flat) 15%, transparent); }
   .tag { display:inline-block; font-size:1.05cqw; font-weight:700; padding:.2cqw .7cqw; border-radius:.5cqw;
     color:var(--c); background:color-mix(in srgb, var(--c) 18%, transparent); text-transform:uppercase; letter-spacing:.04em; }
@@ -750,6 +783,10 @@ TEMPLATE = """<!doctype html>
   .gname { font-size:1.55cqw; font-weight:700; margin-bottom:.5cqw; display:flex; align-items:baseline; gap:.6cqw; }
   .gname .score { margin-left:auto; font-size:.95cqw; color:var(--mute); font-weight:500; }
   .rank-s { color:var(--accent); }
+  .gm { display:grid; grid-template-columns:auto auto 1fr; align-items:baseline; gap:.8cqw; padding:.5cqw 0; border-top:1px solid var(--rule); }
+  .gm-l { font-size:1.1cqw; text-transform:uppercase; letter-spacing:.06em; color:var(--mute); font-weight:600; min-width:5cqw; }
+  .gm-v { font-size:2.4cqw; font-weight:800; }
+  .gm-s { font-size:1.1cqw; color:var(--ink-2); text-align:right; }
   .m { display:grid; grid-template-columns:1fr auto auto; gap:.6cqw; align-items:center; padding:.2cqw 0; font-size:1.15cqw; }
   .ml { color:var(--ink-2); } .mv { font-weight:700; font-size:1.35cqw; }
   .wins { display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
@@ -774,6 +811,22 @@ TEMPLATE = """<!doctype html>
   .win-label, .win-sub { font-size:1cqw; color:var(--mute); margin-top:.3cqw; }
   .win-wow { display:flex; gap:.6cqw; align-items:center; margin-top:.4cqw; }
   .url-table { min-height:0; }
+  .lgs { align-items:center; flex-wrap:wrap; } .lg-k { margin-right:auto; color:var(--mute); font-size:1.1cqw; }
+  .lg i { display:inline-block; width:1.2cqw; height:1.2cqw; border-radius:.3cqw; }
+  .pchart { display:grid; gap:.6cqw; flex:1; min-height:0; }
+  .pc { display:flex; flex-direction:column; align-items:center; min-height:0; }
+  .pc-tot { font-size:1.4cqw; font-weight:800; }
+  .pc-bar { flex:1; width:62%; display:flex; flex-direction:column; justify-content:flex-end; border-bottom:2px solid var(--rule); min-height:6cqw; }
+  .seg { width:100%; min-height:3px; border-top:1px solid var(--surface); }
+  .seg:first-child { border-radius:.4cqw .4cqw 0 0; }
+  .pc-name { font-size:1cqw; font-weight:700; text-align:center; line-height:1.15; margin-top:.5cqw; min-height:2.3cqw; }
+  .pc-clicks { display:flex; flex-wrap:wrap; justify-content:center; gap:.15cqw .4cqw; margin-top:.3cqw; min-height:1.3cqw; }
+  .cn { display:inline-flex; align-items:center; gap:.2cqw; font-size:.95cqw; font-weight:600; color:var(--ink-2); }
+  .cn i { width:.7cqw; height:.7cqw; border-radius:50%; background:var(--c); display:inline-block; }
+  .pc-leads { display:flex; align-items:center; gap:.25cqw; margin-top:.5cqw; padding-top:.4cqw; border-top:1px dashed var(--rule); }
+  .pc-ll { font-size:.8cqw; text-transform:uppercase; letter-spacing:.05em; color:var(--mute); margin-right:.15cqw; }
+  .lp { color:#fff; font-weight:800; font-size:1cqw; min-width:1.6cqw; text-align:center; border-radius:.4cqw; padding:.05cqw .3cqw; }
+  .lp0 { color:var(--mute); font-weight:700; font-size:1cqw; }
   .lcards { display:grid; grid-template-columns:repeat(4,1fr); gap:1.2cqw; }
   .lcard { background:var(--surface-2); border:1px solid var(--rule); border-top:.4cqw solid var(--c); border-radius:1cqw; padding:1.2cqw 1.4cqw; }
   .sb { display:inline-flex; align-items:center; gap:.6cqw; font-size:1.4cqw; }
@@ -810,13 +863,13 @@ TEMPLATE = """<!doctype html>
   .legend { display:flex; gap:1.8cqw; justify-content:flex-end; font-size:1.2cqw; color:var(--ink-2); }
   .lg { display:inline-flex; align-items:center; gap:.5cqw; font-weight:600; }
   .lg .ico { width:1.6cqw; height:1.6cqw; }
-  .panels { display:grid; grid-template-columns:repeat(5,1fr); gap:1.2cqw; flex:1; min-height:0; }
+  .panels { display:grid; grid-template-columns:repeat(4,1fr); gap:1.2cqw; flex:1; min-height:0; }
   .panel { background:var(--surface-2); border:1px solid var(--rule); border-radius:1cqw; padding:1.1cqw 1cqw .8cqw; display:flex; flex-direction:column; min-height:0; }
   .p-title { font-size:1.1cqw; text-transform:uppercase; letter-spacing:.06em; color:var(--mute); font-weight:700; }
   .p-total { font-size:1.15cqw; color:var(--ink-2); margin:.4cqw 0 .8cqw; display:flex; gap:.5cqw; align-items:center; flex-wrap:wrap; }
   .p-total b { color:var(--ink); font-size:1.6cqw; }
   .p-nodata { flex:1; display:flex; align-items:center; justify-content:center; color:var(--mute); font-size:1.6cqw; border:2px dashed var(--rule); border-radius:.8cqw; }
-  .bars { flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:.7cqw; min-height:0; }
+  .bars { flex:1; display:grid; gap:.6cqw; min-height:0; }
   .col { display:flex; flex-direction:column; align-items:center; min-height:0; }
   .val { font-size:1.45cqw; font-weight:750; margin-bottom:.3cqw; white-space:nowrap; }
   .track { flex:1; width:72%; display:flex; align-items:flex-end; border-bottom:2px solid var(--rule); min-height:4cqw; }

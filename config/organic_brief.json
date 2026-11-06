@@ -9,6 +9,14 @@
     "Facebook",
     "Instagram"
   ],
+  "channels": [
+    "TikTok",
+    "Facebook",
+    "Instagram",
+    "Google Business"
+  ],
+  "_neutral_readme": "Week-over-week drops up to this % show a blue (neutral) ▼ instead of red.",
+  "neutral_drop_pct": 2,
   "scoreboard": {
     "_readme": "Engagement rate = interactions / denominator. 'impressions' uses views_by_channel (always available); 'reach' uses the sum of social_posts[].reach per platform (only if the run wrote social_posts).",
     "engagement_rate_denominator": "impressions"
@@ -27,7 +35,7 @@
     "tiebreak_metric": "interactions"
   },
   "gmb_top_properties": {
-    "_readme": "Score = sum(weight * metric) over gbp_by_property. Highest score wins. Metrics shown on the slide are the weighted ones, in this order.",
+    "_readme": "Ranking score = sum(weight * metric) over gbp_by_property. Cards show Reach (search+maps) and Clicks (website+phone+directions) with their top source; a 2nd source is shown when within even_within_pct of the top one.",
     "top_n": 3,
     "weights": {
       "website_clicks": 3,
@@ -35,7 +43,8 @@
       "directions_clicks": 2,
       "reach_search": 0.1,
       "reach_maps": 0.1
-    }
+    },
+    "even_within_pct": 10
   },
   "url_tracking": {
     "_readme": "Slides 5-6. Reads the GA4 'organic_links' block (one entry per source) and falls back to the Detail Pack's legacy url_tracking / gmb_url_tracking sections for older files. clicks_field / leads_field name the GA4 columns. Week-over-week only compares against a prior week's organic_links (a real GA4 reading); otherwise N/A.",
@@ -47,7 +56,7 @@
         "key": "fbgp",
         "label": "FB Groups",
         "short": "FBGP",
-        "color": "#5b6bd6",
+        "color": "#8a4fd6",
         "legacy_section": "url_tracking",
         "legacy_leads_field": "tours"
       },
@@ -74,19 +83,25 @@
     ]
   },
   "top_channels": {
-    "_readme": "Slide 1 header 'Top channels'. Each entry = [label, metric]; metric is one of impressions | _interactions | er | followers_gained | posts | reach. Equal values show as 'Even'.",
+    "_readme": "Slide 1 header. Each entry = [label, *_by_channel key, field (current|delta), scope (all = incl. Google Business | social)]. Equal values show as 'Even'.",
     "categories": [
       [
         "Views",
-        "impressions"
+        "views_by_channel",
+        "current",
+        "all"
       ],
       [
         "Engagement",
-        "_interactions"
+        "engagement_by_channel",
+        "current",
+        "all"
       ],
       [
         "Followers",
-        "followers_gained"
+        "followers_by_channel",
+        "delta",
+        "social"
       ]
     ]
   }

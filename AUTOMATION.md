@@ -877,29 +877,31 @@ No PR, no approval step — push straight to `main` so GitHub Pages
 
 ## Organic Brief (`organic-brief_YYYY-MM-DD.html`) — built every run, after the Detail Pack
 
-A 6-slide, 16:9, light-mode HTML deck (arrow keys to move, print to PDF at
+A 5-slide, 16:9, light-mode HTML deck (arrow keys to move, print to PDF at
 13.333×7.5in) saved at the repo root next to `index.html`, dated with the
 data file's week-end date. Built by `scripts/build_brief.py` from the same
 `data/week-*.json` file; "last week" is the previous dated `data/week-*.json`.
 It never modifies `index.html`.
 
-1. **Top channels** (TikTok/Facebook/Instagram only): header names the top
-   platform in Views, Engagement and Followers gained ("Even" on a tie), then
-   Detail-Pack-style cards: Followers, Posts this week (no WoW — not a fixed
-   metric), Engagement, Views, each with per-platform icon + value.
-2. **Social Scoreboard**: vertical bar charts per KPI (Reach, Impressions,
-   Engagement rate, Followers gained, Posts), one bar per platform in its
-   channel color + icon, WoW chip per bar and on the total (none on Posts).
-3. **Social Wins**: top posts by engagement rate from `social_posts` (below),
-   limited to the week's top properties overall. Always 3; up to 5 when the
-   extra post is close to #3 (ratio in config). Each card: screenshot
-   (thumbnail) or a placeholder with type + context, plus "Why it worked".
-4. **GMB**: `google_business` tiles + top GMB properties from `gbp_by_property`.
-5. **Organic URL Tracking**: one card per source (FB Groups, Google Business,
-   Facebook, Instagram) with clicks (GA4 sessions) and leads (GA4 key events)
-   + WoW, plus total organic leads.
-6. **Organic URL Tracking — by property**: clicks/leads per source per
-   property, values only (no arrows).
+1. **Top channels**: header names the top channel in Views and Engagement
+   (Google Business included) and Followers gained (social only), "Even" on a
+   tie. Cards = the Detail Pack's four KPI tiles with the same numbers
+   (`kpis.*`), per-channel icon + value (Google Business on every card except
+   Followers). Posts has no WoW.
+2. **Social Scoreboard**: vertical bars per channel for Views, Engagement
+   (count), Followers gained, Posts — totals = Detail Pack `kpis`; Google
+   Business included except Followers.
+3. **GMB**: portfolio tiles (Views, Searches, Website clicks, Phone clicks,
+   Direction clicks, Posts published) + top 3 GMB properties showing Reach and
+   Clicks totals with their top source (2 when within `even_within_pct`).
+4. **Organic URL Tracking**: clicks/leads per source + total organic leads (no
+   previous-week comparison).
+5. **Organic URL Tracking — by property**: stacked vertical bars of clicks by
+   source (FB Groups purple, GMB yellow, Facebook blue, Instagram pink) with
+   each source's number under the bar and leads as colored pills.
+
+WoW rule: rises are green ▲; drops of up to `neutral_drop_pct` (2%) are blue
+▼ (neutral); bigger drops are red ▼.
 
 Anything unavailable shows **N/A**; a property the GA4 export lists as
 "No data" is recorded as **0**.
