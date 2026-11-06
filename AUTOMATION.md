@@ -860,7 +860,7 @@ structural template — same keys, same nesting). Set:
 
 ```
 python3 scripts/run_weekly_build.py data/week-<end-date>.json
-git add data/week-<end-date>.json index.html organic-brief_<end-date>.html logs/weekly-run.log
+git add data/week-<end-date>.json index.html organic-brief_<end-date>.html logs/weekly-run.log assets/brief/<end-date>/
 git commit -m "Weekly update: <week_label>"
 git push origin main
 ```
@@ -877,55 +877,69 @@ No PR, no approval step — push straight to `main` so GitHub Pages
 
 ## Organic Brief (`organic-brief_YYYY-MM-DD.html`) — built every run, after the Detail Pack
 
-A 4-slide, 16:9 HTML deck (arrow keys to move, print to PDF at 13.333×7.5in)
-saved at the repo root next to `index.html`, dated with the data file's
-week-end date. Built by `scripts/build_brief.py` from the same
+A 5-slide, 16:9, light-mode HTML deck (arrow keys to move, print to PDF at
+13.333×7.5in) saved at the repo root next to `index.html`, dated with the
+data file's week-end date. Built by `scripts/build_brief.py` from the same
 `data/week-*.json` file; "last week" is the previous dated `data/week-*.json`.
 It never modifies `index.html`.
 
-1. **Social Scoreboard** (TikTok/Facebook/Instagram + Total): Reach,
-   Impressions (`views_by_channel`), Engagement rate (`engagement_by_channel`
-   / impressions or reach, set in config), Followers gained
-   (`followers_by_channel[].delta`), Posts published (`posts_by_channel`).
-2. **Social Wins**: top posts by engagement rate, from `social_posts` (below).
-3. **GMB**: `google_business` tiles (Views = reach_search + reach_maps,
-   Searches = reach_search, website/phone/directions clicks, posts) + top GMB
-   properties from `gbp_by_property`. Property-level WoW compares against the
-   data file whose `gbp_window.current` equals this file's `gbp_window.prior`;
-   if none exists it shows "no prior wk".
-4. **Organic URL Tracking**: `url_tracking` (FBGP) and `gmb_url_tracking`
-   clicks/leads, total organic leads, by-property table.
+1. **Top channels** (TikTok/Facebook/Instagram only): header names the top
+   platform in Views, Engagement and Followers gained ("Even" on a tie), then
+   Detail-Pack-style cards: Followers, Posts this week (no WoW — not a fixed
+   metric), Engagement, Views, each with per-platform icon + value.
+2. **Social Scoreboard**: vertical bar charts per KPI (Reach, Impressions,
+   Engagement rate, Followers gained, Posts), one bar per platform in its
+   channel color + icon, WoW chip per bar and on the total (none on Posts).
+3. **Social Wins**: top posts by engagement rate from `social_posts` (below),
+   limited to the week's top properties overall. Always 3; up to 5 when the
+   extra post is close to #3 (ratio in config). Each card: screenshot
+   (thumbnail) or a placeholder with type + context, plus "Why it worked".
+4. **GMB**: `google_business` tiles + top GMB properties from `gbp_by_property`.
+5. **Organic URL Tracking**: FBGP + GMB clicks/leads tiles with WoW; the
+   by-property table has values only (no arrows).
 
-**Tuning:** `config/organic_brief.json` holds the wins ranking (metric,
-denominator, minimum reach, top N), the GMB top-property weights, the
-engagement-rate denominator, and which GA4 fields count as clicks/leads.
+**Tuning:** `config/organic_brief.json` — top-channel metrics, wins ranking
+(top properties, metric, denominator, min reach, 3→5 rule), GMB top-property
+weights, engagement-rate denominator, GA4 clicks/leads fields.
 
-**Missing data never fails the build** — a missing key renders "No data" on
-that cell/slide and the log line counts them.
+**Missing data never fails the build** — a missing key renders "No data".
 
-### `social_posts` — write this every run (feeds Reach on slide 1 and all of slide 2)
+### `social_posts` — write this every run (feeds Reach on slide 2 and all of slide 3)
 
-Post-level data isn't in the dashboard's data shape, so add a top-level
-`social_posts` array to the weekly data file. Pull per property, per network
-with `getAnalyticsDataByMetrics` on the **`posts`** connector (one network
-per call, same window as Step 1, keep only posts dated inside the window):
+Pull per property, per network, with `getAnalyticsDataByMetrics` (one
+connector per call, Step 1 window, drop rows dated outside it):
 
-| Network | fields |
+| Source | fields |
 |---|---|
-| facebook | `FBPO01` date, `FBPO06` link, `FBPO05` image, `FBPO12` reach, `FBPO11` impressions, `FBPO13`+`FBPO08`+`FBPO14` reactions+comments+shares |
-| instagram | `IGPO01` date, `IGPO06` url, `IGPO05` image, `IGPO14` reach, `IGPO28` views, `IGPO12` interactions |
-| tiktok | `TKPO01` date, `TKPO03` url, `TKPO04` cover image, `TKPO11` reach, `TKPO07` views, `TKPO08`+`TKPO09`+`TKPO10` likes+comments+shares |
+| TikTok `posts` | `TKPO01` date, `TKPO03` url, `TKPO04` cover, `TKPO05` description, `TKPO07` views, `TKPO08`+`TKPO09`+`TKPO10` likes+comments+shares, `TKPO11` reach, `TKPO22` type |
+| Instagram `reels` | `IGRE01` date, `IGRE03` caption, `IGRE05` image, `IGRE06` url, `IGRE09` interactions, `IGRE11` reach, `IGRE23` views |
+| Instagram `posts` | `IGPO01` date, `IGPO03` caption, `IGPO05` image, `IGPO06` url, `IGPO07` type, `IGPO12` interactions, `IGPO14` reach, `IGPO28` views |
+| Facebook `posts` | `FBPO01` date, `FBPO03` text, `FBPO05` image, `FBPO06` link, `FBPO07` type, `FBPO13`+`FBPO08`+`FBPO14` reactions+comments+shares, `FBPO11` impressions (views), `FBPO12` reach |
+| Facebook `reels` | `FBRE01` date, `FBRE05` content, `FBRE04` thumbnail, `FBRE06` url, `FBRE07` actions (interactions), `FBRE10` views, `FBRE11` reach |
+
+Download each image into `assets/brief/<end-date>/` and store that
+repo-relative path as `thumbnail` (Instagram CDN links expire within days;
+the downloaded copy keeps the deck working). If a download fails, leave
+`thumbnail` empty — the slide shows the placeholder instead.
+
+For the posts that land on the Social Wins slide, also write two short
+fields: `context` (what the post is, so Val can spot it: e.g. "Reel: lake
+view walk-through, 1-bed from $900") and `why` (one sentence on why people
+likely engaged — hook, offer, format, CTA — based on the caption, type and
+numbers; it's an inference, keep it plain).
 
 ```json
 "social_posts": [
-  {"property": "Berry Falls", "platform": "Instagram", "date": "2026-11-03",
-   "url": "https://...", "thumbnail": "https://...",
-   "reach": 812, "views": 1034, "interactions": 41}
+  {"property": "Lakeside/Lakeview", "platform": "TikTok", "type": "Video",
+   "date": "2026-10-28", "url": "https://...", "image_url": "https://...",
+   "thumbnail": "assets/brief/2026-10-29/tiktok-5481589-2026-10-28-1.jpg",
+   "caption": "...", "reach": 1092, "views": 1197, "interactions": 86,
+   "context": "...", "why": "..."}
 ]
 ```
 
-If the posts connector returns nothing, leave `social_posts` out — slide 2
-shows "No data" and slide 1's Reach row shows "No data". Never invent values.
+If every connector returns nothing, leave `social_posts` out — slide 3 and
+the Reach chart show "No data". Never invent values.
 
 ## Do NOT
 

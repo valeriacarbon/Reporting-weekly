@@ -228,19 +228,35 @@ def chips(values, platforms):
     )
 
 
-def top_channel(ctx):
+def top_channels(ctx):
+    """{label: (winners list, value)} for views / engagement / followers. Ties keep every winner."""
     cfg = ctx["config"]
     platforms = cfg["social_platforms"]
-    metric = cfg.get("scoreboard", {}).get("top_channel_metric", "impressions")
-    m = scoreboard_metrics(ctx["data"], platforms, cfg.get("scoreboard", {}))
-    vals = {c: (m or {}).get(metric, {}).get(c) for c in platforms}
-    vals = {c: v for c, v in vals.items() if v is not None}
-    return max(vals, key=vals.get) if vals else None
+    tcfg = cfg.get("top_channels", {})
+    m = scoreboard_metrics(ctx["data"], platforms, cfg.get("scoreboard", {})) or {}
+    out = []
+    for label, key in tcfg.get("categories", [["Views", "impressions"], ["Engagement", "_interactions"], ["Followers", "followers_gained"]]):
+        vals = {c: m.get(key, {}).get(c) for c in platforms}
+        vals = {c: v for c, v in vals.items() if v is not None}
+        if not vals:
+            out.append((label, [], None))
+            continue
+        best = max(vals.values())
+        out.append((label, [c for c, v in vals.items() if v == best], best))
+    return out
 
 
-def overview_title(ctx):
-    ch = top_channel(ctx)
-    return f"Our top channel this week was {ch}" if ch else "Top channel this week: No data"
+def top_channels_html(ctx):
+    pills = []
+    for label, winners, _ in top_channels(ctx):
+        if not winners:
+            who = '<span class="nd">No data</span>'
+        elif len(winners) == 1:
+            who = f'{icon(winners[0])}<b>{esc(winners[0])}</b>'
+        else:
+            who = "".join(icon(w) for w in winners) + f'<b>Even: {esc(" & ".join(winners))}</b>'
+        pills.append(f'<span class="tc"><span class="tc-l">{esc(label)}</span>{who}</span>')
+    return f'<div class="tcs">{"".join(pills)}</div>'
 
 
 def slide_overview(ctx):
@@ -272,50 +288,52 @@ def slide_overview(ctx):
 
 
 def slide_scoreboard(ctx):
+    """Small-multiple vertical bar charts, one panel per KPI, one bar per platform."""
     cfg = ctx["config"]
     platforms = cfg["social_platforms"]
     cur = scoreboard_metrics(ctx["data"], platforms, cfg.get("scoreboard", {}))
     prev = scoreboard_metrics(ctx["prev"], platforms, cfg.get("scoreboard", {}))
     if cur is None:
         return no_data()
-    rows = [
-        ("Reach", "reach", "int"),
-        ("Impressions", "impressions", "int"),
-        (f"Engagement rate <small>(interactions / {cur['_denom_label']})</small>", "er", "pct"),
-        ("Followers gained", "followers_gained", "signed_or_int"),
-        ("Posts published", "posts", "int"),
+    panels_def = [
+        ("Reach", "reach", "int", True),
+        ("Impressions", "impressions", "int", True),
+        ("Engagement rate", "er", "pct", True),
+        ("Followers gained", "followers_gained", "signed", True),
+        ("Posts published", "posts", "int", False),
     ]
-    cols = platforms + ["Total"]
-    head = "".join(
-        (f'<th class="ph" style="--c:{CHANNEL_COLORS[c]}">{icon(c)}<span>{esc(c)}</span></th>' if c != "Total"
-         else '<th class="ph tot"><span>Total</span></th>')
-        for c in cols
-    )
-    body = []
-    any_value = False
-    for label, key, kind in rows:
-        cells = []
-        for c in cols:
-            v = cur[key].get(c)
+    panels, any_value = [], False
+    for label, key, kind, show_wow in panels_def:
+        vals = {c: cur[key].get(c) for c in platforms}
+        tot, tot_p = cur[key].get("Total"), (prev[key].get("Total") if prev else None)
+        if all(v is None for v in vals.values()):
+            panels.append(f'<div class="panel"><div class="p-title">{esc(label)}</div>'
+                          f'<div class="p-nodata">No data</div></div>')
+            continue
+        any_value = True
+        peak = max([abs(v) for v in vals.values() if v is not None] + [0]) or 1
+        bars = []
+        for c in platforms:
+            v = vals[c]
             p = prev[key].get(c) if prev else None
-            any_value = any_value or v is not None
-            k = "signed" if kind == "signed_or_int" and v is not None else ("int" if kind == "signed_or_int" else kind)
-            color = CHANNEL_COLORS.get(c, "#52514e")
-            if v is None:
-                cells.append(f'<td class="cell" style="--c:{color}"><span class="nd">No data</span></td>')
-            elif c == "Total":
-                cells.append(f'<td class="cell total"><div class="v">{fmt(v, k)}</div>{wow(v, p)}</td>')
-            else:
-                peers = [abs(cur[key].get(x) or 0) for x in platforms]
-                w = abs(v) / max(peers) * 100 if max(peers) else 0
-                cells.append(
-                    f'<td class="cell" style="--c:{color}"><div class="v">{fmt(v, k)}</div>'
-                    f'<div class="bar"><i style="width:{w:.0f}%"></i></div>{wow(v, p)}</td>'
-                )
-        body.append(f'<tr><th class="rowh">{label}</th>{"".join(cells)}</tr>')
+            h = (max(v, 0) / peak * 100) if v is not None else 0
+            chip = wow(v, p) if (show_wow and v is not None) else ""
+            bars.append(
+                f'<div class="col" style="--c:{CHANNEL_COLORS[c]}">'
+                f'<div class="val">{fmt(v, kind) if v is not None else "No data"}</div>'
+                f'<div class="track"><div class="fill" style="height:{h:.1f}%"></div></div>'
+                f'<div class="ctag">{icon(c)}</div><div class="cwow">{chip}</div></div>'
+            )
+        tot_wow = wow(tot, tot_p) if show_wow else ""
+        panels.append(
+            f'<div class="panel"><div class="p-title">{esc(label)}</div>'
+            f'<div class="p-total">Total <b>{fmt(tot, kind) if tot is not None else "No data"}</b> {tot_wow}</div>'
+            f'<div class="bars">{"".join(bars)}</div></div>'
+        )
     if not any_value:
         return no_data()
-    return f'<table class="score"><thead><tr><th></th>{head}</tr></thead><tbody>{"".join(body)}</tbody></table>'
+    legend = "".join(f'<span class="lg">{icon(c)}{esc(c)}</span>' for c in platforms)
+    return f'<div class="legend">{legend}</div><div class="panels">{"".join(panels)}</div>'
 
 
 # --------------------------------------------------------------------------
@@ -332,9 +350,20 @@ def rank_posts(data, cfg, platforms):
     fb_m = wcfg.get("fallback_denominator_metric")
     min_den = wcfg.get("min_denominator", 0) or 0
     tie = wcfg.get("tiebreak_metric", sort_m)
+
+    # Only posts from the week's top properties overall (0 = all properties).
+    k = int(wcfg.get("top_properties", 0) or 0)
+    allowed = None
+    if k and isinstance(data.get("properties"), list):
+        pm = wcfg.get("property_rank_metric", "engagement")
+        ranked_props = sorted(data["properties"], key=lambda p: num((p.get(pm) or {}).get("current")) or 0, reverse=True)
+        allowed = {p.get("name") for p in ranked_props[:k]}
+
     ranked = []
     for p in posts:
         if p.get("platform") not in platforms:
+            continue
+        if allowed is not None and p.get("property") not in allowed:
             continue
         numer = num(p.get(sort_m))
         den, den_used = num(p.get(den_m)), den_m
@@ -344,7 +373,17 @@ def rank_posts(data, cfg, platforms):
             continue
         ranked.append(dict(p, _rate=numer / den, _den_used=den_used, _numer=numer, _den=den))
     ranked.sort(key=lambda r: (r["_rate"], num(r.get(tie)) or 0), reverse=True)
-    return ranked[: int(wcfg.get("top_n", 3))]
+
+    # Always top_n (3); up to max_n (5) only if the extra post is close enough to #3.
+    n, mx = int(wcfg.get("top_n", 3)), int(wcfg.get("max_n", 5))
+    ratio = float(wcfg.get("extra_if_rate_at_least_ratio_of_last", 0.85))
+    top = ranked[:n]
+    for r in ranked[n:mx]:
+        if top and r["_rate"] >= top[-1]["_rate"] * ratio and r["_rate"] >= top[n - 1]["_rate"] * ratio:
+            top.append(r)
+        else:
+            break
+    return top
 
 
 def slide_wins(ctx):
@@ -357,23 +396,31 @@ def slide_wins(ctx):
     sort_m = cfg.get("social_wins", {}).get("sort_metric", "interactions")
     cards = []
     for i, p in enumerate(top):
+        ptype = p.get("type") or "Post"
+        context = p.get("context") or (p.get("caption") or "")[:110]
         thumb = p.get("thumbnail")
-        img = (f'<img src="{esc(thumb)}" alt="" loading="lazy" referrerpolicy="no-referrer">'
-               if thumb else '<div class="noimg">No thumbnail</div>')
+        if thumb:
+            visual = f'<img src="{esc(thumb)}" alt="{esc(context)}" loading="lazy" referrerpolicy="no-referrer">'
+        else:
+            visual = (f'<div class="ph-box"><div class="ph-type">{esc(ptype)}</div>'
+                      f'<div class="ph-ctx">{esc(context) or "No caption"}</div>'
+                      f'<div class="ph-date">{esc(p.get("date", ""))}</div></div>')
         if p.get("url"):
-            img = f'<a href="{esc(p["url"])}" target="_blank" rel="noopener">{img}</a>'
+            visual = f'<a href="{esc(p["url"])}" target="_blank" rel="noopener">{visual}</a>'
         prev_rate = prev_top[i]["_rate"] if i < len(prev_top) else None
+        wow_html = (f'<div class="win-wow">{wow(p["_rate"], prev_rate)}<span class="tile-prev">vs last wk #{i + 1}</span></div>'
+                    if prev_rate is not None else "")
+        why = f'<div class="why"><b>Why it worked:</b> {esc(p["why"])}</div>' if p.get("why") else ""
         cards.append(
             '<div class="win">'
-            f'<div class="thumb">{img}<span class="rank">#{i + 1}</span></div>'
-            f'<div class="win-meta">{platform_tag(p.get("platform"))}<span class="prop">{esc(p.get("property", "—"))}</span></div>'
-            f'<div class="win-big">{fmt(p["_rate"], "pct")}</div>'
-            f'<div class="win-label">engagement rate ({esc(sort_m)} / {esc(p["_den_used"])})</div>'
-            f'<div class="win-wow">{wow(p["_rate"], prev_rate)}<span class="tile-prev">vs last wk #{i + 1}: {fmt(prev_rate, "pct") if prev_rate is not None else "—"}</span></div>'
+            f'<div class="thumb">{visual}<span class="rank">#{i + 1}</span><span class="ptype">{esc(ptype)}</span></div>'
+            f'<div class="win-meta">{icon(p.get("platform"))}<span class="prop">{esc(p.get("property", "—"))}</span></div>'
+            f'<div class="win-big">{fmt(p["_rate"], "pct")} <span class="win-label">engagement rate</span></div>'
+            f'{wow_html}'
             f'<div class="win-sub">{fmt(p["_numer"])} {esc(sort_m)} · {fmt(p["_den"])} {esc(p["_den_used"])}</div>'
-            "</div>"
+            f'{why}</div>'
         )
-    return f'<div class="wins">{"".join(cards)}</div>'
+    return f'<div class="wins n{len(cards)}">{"".join(cards)}</div>'
 
 
 # --------------------------------------------------------------------------
@@ -498,7 +545,7 @@ def slide_url(ctx):
         v = num(r.get(s.get(field_key)))
         pr = prev_rows[k].get(name)
         p = num(pr.get(s.get(field_key))) if pr else None
-        return f'<td class="cell"><div class="v">{fmt(v)}</div>{wow(v, p)}</td>'
+        return f'<td class="cell"><div class="v">{fmt(v)}</div></td>'
 
     def activity(name):
         leads = sum(num(cur_rows[k].get(name, {}).get(s.get("leads_field"))) or 0 for k, s in srcs)
@@ -534,7 +581,7 @@ def slide_url(ctx):
 # --------------------------------------------------------------------------
 
 SLIDES = [
-    (overview_title, "Social at a glance · TikTok · Facebook · Instagram — portfolio-wide", slide_overview),
+    ("Top channels", top_channels_html, slide_overview),
     ("Social Scoreboard", "By platform · this week vs last week", slide_scoreboard),
     ("Social Wins", "Top posts of the week by engagement rate", slide_wins),
     ("Google My Business", "Portfolio-wide + top properties", slide_gmb),
@@ -559,12 +606,14 @@ def build(data_path: Path, config_path: Path):
     total = len(SLIDES)
     sections = []
     for i, (title, subtitle, fn) in enumerate(SLIDES, 1):
-        if callable(title):
+        if callable(subtitle):
             try:
-                title = title(ctx)
+                sub_html = subtitle(ctx)
             except Exception as e:
-                log.append(f"slide {i} title: ERROR {e!r}")
-                title = "No data"
+                log.append(f"slide {i} subtitle: ERROR {e!r}")
+                sub_html = esc("No data")
+        else:
+            sub_html = esc(subtitle)
         try:
             body = fn(ctx)
         except Exception as e:  # a broken source must not fail the deck
@@ -578,7 +627,7 @@ def build(data_path: Path, config_path: Path):
             window = f'GBP window {esc(data["gbp_window_label"])} vs {esc(data.get("gbp_prev_window_label", "—"))}'
         sections.append(
             f'<section class="slide" id="s{i}"><div class="frame">'
-            f'<header><div><h1>{esc(title)}</h1><div class="sub">{esc(subtitle)}</div></div>'
+            f'<header><div><h1>{esc(title)}</h1><div class="sub">{sub_html}</div></div>'
             f'<div class="meta"><div class="wk">{esc(data.get("week_label", ""))}</div>'
             f'<div class="vs">vs {esc(data.get("prev_week_label", "last week"))}</div></div></header>'
             f'<main>{body}</main>'
@@ -654,18 +703,50 @@ TEMPLATE = """<!doctype html>
   .rank-s { color:var(--accent); }
   .m { display:grid; grid-template-columns:1fr auto auto; gap:.6cqw; align-items:center; padding:.2cqw 0; font-size:1.15cqw; }
   .ml { color:var(--ink-2); } .mv { font-weight:700; font-size:1.35cqw; }
-  .wins { display:grid; grid-template-columns:repeat(3,1fr); gap:1.6cqw; }
+  .wins { display:grid; grid-template-columns:repeat(3,1fr); gap:1.4cqw; }
+  .wins.n4 { grid-template-columns:repeat(4,1fr); } .wins.n5 { grid-template-columns:repeat(5,1fr); gap:1cqw; }
+  .ptype { position:absolute; top:.6cqw; right:.6cqw; background:rgba(255,255,255,.92); color:#0b0b0b; font-weight:700; font-size:1cqw; padding:.15cqw .55cqw; border-radius:.5cqw; }
+  .ph-box { width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; gap:.6cqw; padding:1.4cqw; background:var(--surface-2); border:2px dashed var(--rule); border-radius:.7cqw; }
+  .ph-type { font-size:1.6cqw; font-weight:800; }
+  .ph-ctx { font-size:1.15cqw; color:var(--ink-2); line-height:1.35; }
+  .ph-date { font-size:.95cqw; color:var(--mute); }
+  .why { font-size:1.05cqw; color:var(--ink-2); line-height:1.35; margin-top:.6cqw; padding-top:.6cqw; border-top:1px solid var(--rule); }
+  .win-meta .ico { width:1.8cqw; height:1.8cqw; }
   .win { background:var(--surface-2); border:1px solid var(--rule); border-radius:1cqw; padding:1.1cqw; }
-  .thumb { position:relative; aspect-ratio:4/3; border-radius:.7cqw; overflow:hidden; background:var(--page); }
+  .thumb { position:relative; aspect-ratio:1/1; border-radius:.7cqw; overflow:hidden; background:var(--page); }
   .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
   .noimg { width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--mute); font-size:1.2cqw; }
   .rank { position:absolute; top:.6cqw; left:.6cqw; background:rgba(0,0,0,.7); color:#fff; font-weight:800; font-size:1.4cqw; padding:.1cqw .6cqw; border-radius:.5cqw; }
   .win-meta { display:flex; align-items:center; gap:.7cqw; margin-top:.8cqw; } .prop { font-size:1.35cqw; font-weight:600; }
-  .win-big { font-size:3.6cqw; font-weight:800; margin-top:.4cqw; line-height:1; }
+  .win-big { font-size:3cqw; font-weight:800; margin-top:.4cqw; line-height:1; }
+  .win-big .win-label { font-size:1cqw; font-weight:500; }
   .win-label, .win-sub { font-size:1cqw; color:var(--mute); margin-top:.3cqw; }
   .win-wow { display:flex; gap:.6cqw; align-items:center; margin-top:.4cqw; }
   .url-table { min-height:0; }
-  /* slide 1: Detail-Pack-style KPI cards */
+  /* slide 1 header: top channels */
+  .tcs { display:flex; gap:1cqw; margin-top:.8cqw; flex-wrap:wrap; }
+  .tc { display:inline-flex; align-items:center; gap:.6cqw; background:var(--surface-2); border:1px solid var(--rule);
+    border-radius:5cqw; padding:.45cqw 1.1cqw .45cqw .6cqw; font-size:1.45cqw; color:var(--ink); }
+  .tc-l { font-size:1.05cqw; text-transform:uppercase; letter-spacing:.06em; color:var(--mute); font-weight:600;
+    background:var(--surface); border-radius:3cqw; padding:.15cqw .7cqw; }
+  .tc .ico { width:2cqw; height:2cqw; margin-right:-.2cqw; }
+  /* slide 2: small-multiple vertical bars */
+  .legend { display:flex; gap:1.8cqw; justify-content:flex-end; font-size:1.2cqw; color:var(--ink-2); }
+  .lg { display:inline-flex; align-items:center; gap:.5cqw; font-weight:600; }
+  .lg .ico { width:1.6cqw; height:1.6cqw; }
+  .panels { display:grid; grid-template-columns:repeat(5,1fr); gap:1.2cqw; flex:1; min-height:0; }
+  .panel { background:var(--surface-2); border:1px solid var(--rule); border-radius:1cqw; padding:1.1cqw 1cqw .8cqw; display:flex; flex-direction:column; min-height:0; }
+  .p-title { font-size:1.1cqw; text-transform:uppercase; letter-spacing:.06em; color:var(--mute); font-weight:700; }
+  .p-total { font-size:1.15cqw; color:var(--ink-2); margin:.4cqw 0 .8cqw; display:flex; gap:.5cqw; align-items:center; flex-wrap:wrap; }
+  .p-total b { color:var(--ink); font-size:1.6cqw; }
+  .p-nodata { flex:1; display:flex; align-items:center; justify-content:center; color:var(--mute); font-size:1.6cqw; border:2px dashed var(--rule); border-radius:.8cqw; }
+  .bars { flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:.7cqw; min-height:0; }
+  .col { display:flex; flex-direction:column; align-items:center; min-height:0; }
+  .val { font-size:1.45cqw; font-weight:750; margin-bottom:.3cqw; white-space:nowrap; }
+  .track { flex:1; width:72%; display:flex; align-items:flex-end; border-bottom:2px solid var(--rule); min-height:4cqw; }
+  .fill { width:100%; background:var(--c); border-radius:.5cqw .5cqw 0 0; min-height:2px; }
+  .ctag { margin-top:.5cqw; } .ctag .ico { width:1.8cqw; height:1.8cqw; }
+  .cwow { margin-top:.3cqw; min-height:1.6cqw; } .cwow .chip { font-size:.85cqw; padding:.1cqw .35cqw; }
   .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:1.4cqw; }
   .kpi { background:var(--surface-2); border:1px solid var(--rule); border-radius:1cqw; padding:1.8cqw 1.8cqw 1.6cqw; }
   .kpi-label { font-size:1.15cqw; text-transform:uppercase; letter-spacing:.07em; color:var(--mute); font-weight:600; }
