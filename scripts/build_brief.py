@@ -311,18 +311,76 @@ def slide_overview(ctx):
     return f'<div class="kpis">{"".join(cards)}</div>'
 
 
+def brand_rows(ctx, metric):
+    """[(name, total, {channel: value})] per property for 'views' or 'engagement', same data as the Detail Pack.
+    Engagement adds each property's GMB clicks (website + phone + directions), matching how the
+    portfolio Engagement KPI folds GMB in."""
+    data, cfg = ctx["data"], ctx["config"]
+    gbp = by_name(data.get("gbp_by_property"))
+    out = []
+    for p in data.get("properties", []) or []:
+        name = p.get("name")
+        if metric == "views":
+            total = num((p.get("views") or {}).get("current"))
+            chans = dict(p.get("views_channels") or {})
+        else:
+            total = num((p.get("engagement") or {}).get("current"))
+            chans = dict(p.get("engagement_channels") or {})
+            if cfg.get("brand_engagement_includes_gmb", True) and name in gbp:
+                g = gbp[name]
+                clicks = sum(num(g.get(f)) or 0 for f in ("website_clicks", "phone_clicks", "directions_clicks"))
+                total = (total or 0) + clicks
+                chans["Google Business"] = clicks
+        if total is not None:
+            out.append((name, total, chans))
+    out.sort(key=lambda r: r[1], reverse=True)
+    return out
+
+
+def top_brands_card(ctx, metric, title):
+    n = int(ctx["config"].get("top_brands_n", 3))
+    rows = brand_rows(ctx, metric)[:n]
+    if not rows:
+        return f'<div class="bcard"><div class="p-title">{esc(title)}</div><div class="p-nodata">N/A</div></div>'
+    items = []
+    for i, (name, total, chans) in enumerate(rows, 1):
+        if chans:
+            best = max(chans.values())
+            winners = [c for c, v in chans.items() if v == best]
+            ch = "".join(icon(c) for c in winners) + f'<span>{esc(" & ".join(CHANNEL_SHORT.get(c, c) for c in winners))} {fmt(best)}</span>'
+        else:
+            ch = '<span class="nd">N/A</span>'
+        items.append(f'<div class="bi"><span class="rank-s">#{i}</span><div class="bi-main"><div class="bi-name">{esc(name)}</div>'
+                     f'<div class="bi-ch">top channel: {ch}</div></div><div class="bi-v">{fmt(total)}</div></div>')
+    return f'<div class="bcard"><div class="p-title">{esc(title)}</div>{"".join(items)}</div>'
+
+
+SCORE_PANELS = {
+    # key: (label, kpi key, list key, field, scope, kind, show WoW)
+    "views": ("Views", "views", "views_by_channel", "current", "all", "int", True),
+    "engagement": ("Engagement", "engagement", "engagement_by_channel", "current", "all", "int", True),
+    "followers": ("Followers gained", "followers", "followers_by_channel", "delta", "social", "signed", True),
+    "posts": ("Posts published", "posts", "posts_by_channel", "current", "all", "int", False),
+}
+
+
 def slide_scoreboard(ctx):
+    return score_panels(ctx, ["followers", "posts"])
+
+
+def slide_scoreboard_reach(ctx):
+    return score_panels(ctx, ["views", "engagement"], cards=True)
+
+
+def score_panels(ctx, keys, cards=False):
     """Vertical bar charts, one panel per KPI, one bar per channel (GBP everywhere except Followers)."""
     cfg, data, prev = ctx["config"], ctx["data"], ctx["prev"]
     social = cfg["social_platforms"]
     allc = cfg.get("channels", social + ["Google Business"])
-    panels_def = [
-        # label, kpi key, list key, field, channels, kind, show WoW
-        ("Views", "views", "views_by_channel", "current", allc, "int", True),
-        ("Engagement", "engagement", "engagement_by_channel", "current", allc, "int", True),
-        ("Followers gained", "followers", "followers_by_channel", "delta", social, "signed", True),
-        ("Posts published", "posts", "posts_by_channel", "current", allc, "int", False),
-    ]
+    panels_def = []
+    for k in keys:
+        label, key, list_key, field, scope, kind, show = SCORE_PANELS[k]
+        panels_def.append((label, key, list_key, field, allc if scope == "all" else social, kind, show))
     panels, any_value = [], False
     for label, key, list_key, field, chans, kind, show_wow in panels_def:
         vals = per_channel(data, list_key, field, chans)
@@ -356,8 +414,15 @@ def slide_scoreboard(ctx):
         )
     if not any_value:
         return no_data()
-    legend = "".join(f'<span class="lg">{icon(c)}{esc(c)}</span>' for c in allc)
-    return f'<div class="legend">{legend}</div><div class="panels">{"".join(panels)}</div>'
+    used = [c for c in allc if any(c in d[4] for d in panels_def)]
+    legend = "".join(f'<span class="lg">{icon(c)}{esc(c)}</span>' for c in used)
+    if cards:
+        rows = "".join(
+            f'<div class="prow">{panel}{top_brands_card(ctx, k, f"Top 3 brands in {SCORE_PANELS[k][0].lower()}")}</div>'
+            for panel, k in zip(panels, keys)
+        )
+        return f'<div class="legend">{legend}</div><div class="prows">{rows}</div>'
+    return f'<div class="legend">{legend}</div><div class="panels" style="grid-template-columns:repeat({len(panels)},1fr)">{"".join(panels)}</div>'
 
 
 # --------------------------------------------------------------------------
@@ -661,7 +726,8 @@ def slide_url_breakdown(ctx):
 
 SLIDES = [
     ("Top channels", top_channels_html, slide_overview),
-    ("Social Scoreboard", "By channel · this week vs last week · same numbers as the Detail Pack", slide_scoreboard),
+    ("Social Scoreboard", "Followers gained & posts by channel · this week vs last week", slide_scoreboard),
+    ("Social Scoreboard — reach & engagement", "Views & engagement by channel (GMB included) · top 3 brands", slide_scoreboard_reach),
     ("Google My Business", "Portfolio-wide + top properties", slide_gmb),
     ("Organic URL Tracking", "FB Groups · Google Business · Facebook · Instagram — tracked links", slide_url),
     ("Organic URL Tracking — by property", "Clicks and leads per property, by source", slide_url_breakdown),
@@ -783,6 +849,19 @@ TEMPLATE = """<!doctype html>
   .gname { font-size:1.55cqw; font-weight:700; margin-bottom:.5cqw; display:flex; align-items:baseline; gap:.6cqw; }
   .gname .score { margin-left:auto; font-size:.95cqw; color:var(--mute); font-weight:500; }
   .rank-s { color:var(--accent); }
+  .prows { display:grid; grid-template-rows:1fr 1fr; gap:1.2cqw; flex:1; min-height:0; }
+  .prow { display:grid; grid-template-columns:1.25fr 1fr; gap:1.2cqw; min-height:0; }
+  .prow .panel { padding:.8cqw 1cqw .5cqw; }
+  .prow .p-total { margin:.2cqw 0 .4cqw; }
+  .prow .val { font-size:1.25cqw; } .prow .ctag .ico { width:1.5cqw; height:1.5cqw; } .prow .ctag { margin-top:.3cqw; }
+  .prow .track { min-height:2cqw; }
+  .bcard { background:var(--surface-2); border:1px solid var(--rule); border-radius:1cqw; padding:.9cqw 1.3cqw; display:flex; flex-direction:column; justify-content:center; gap:.2cqw; }
+  .bi { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:1cqw; padding:.5cqw 0; border-top:1px solid var(--rule); }
+  .bi .rank-s { font-weight:800; font-size:1.5cqw; }
+  .bi-name { font-size:1.45cqw; font-weight:700; }
+  .bi-ch { display:flex; align-items:center; gap:.4cqw; font-size:1.05cqw; color:var(--ink-2); margin-top:.15cqw; }
+  .bi-ch .ico { width:1.4cqw; height:1.4cqw; } .bi-ch span { font-weight:600; }
+  .bi-v { font-size:2.2cqw; font-weight:800; }
   .gm { display:grid; grid-template-columns:auto auto 1fr; align-items:baseline; gap:.8cqw; padding:.5cqw 0; border-top:1px solid var(--rule); }
   .gm-l { font-size:1.1cqw; text-transform:uppercase; letter-spacing:.06em; color:var(--mute); font-weight:600; min-width:5cqw; }
   .gm-v { font-size:2.4cqw; font-weight:800; }

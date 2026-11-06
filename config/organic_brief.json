@@ -104,5 +104,8 @@
         "social"
       ]
     ]
-  }
+  },
+  "_top_brands_readme": "Social Scoreboard reach & engagement slide: top N brands by Views (properties[].views, top channel from views_channels) and by Engagement (properties[].engagement + that property's GMB clicks when brand_engagement_includes_gmb; top channel from properties[].engagement_channels).",
+  "top_brands_n": 3,
+  "brand_engagement_includes_gmb": true
 }
