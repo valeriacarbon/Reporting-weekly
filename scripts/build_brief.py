@@ -362,7 +362,7 @@ def top_brands_card(ctx, metric, title):
         else:
             ch = '<span class="nd">N/A</span>'
         items.append(f'<div class="bi"><span class="rank-s">#{i}</span><div class="bi-main"><div class="bi-name">{esc(name)}</div>'
-                     f'<div class="bi-ch">top channel: {ch}</div></div><div class="bi-v">{fmt(total)}</div></div>')
+                     f'<div class="bi-ch">top: {ch}</div></div><div class="bi-v">{fmt(total)}</div></div>')
     return f'<div class="bcard"><div class="p-title">{esc(title)}</div>{"".join(items)}</div>'
 
 
@@ -676,8 +676,10 @@ def slide_url(ctx):
     hero = (f'<div class="lhero"><div class="tile-label">Total organic leads</div>'
             f'<div class="lhero-v">{fmt(tot)}</div><div></div>'
             f'<div class="tile-sub">{esc(" + ".join(labels))} · leads = GA4 key events · clicks = sessions</div></div>')
-    window = (ctx["data"].get(ctx["config"].get("url_tracking", {}).get("organic_links_key", "organic_links")) or {}).get("window_label")
-    note = f'<div class="more">GA4 window: {esc(window)}</div>' if window else ""
+    ol = ctx["data"].get(ctx["config"].get("url_tracking", {}).get("organic_links_key", "organic_links")) or {}
+    window = ol.get("window_label")
+    carried = " — no new GA4 export this week, carried forward (same as the Detail Pack)" if ol.get("carried_from") else ""
+    note = f'<div class="more">GA4 window: {esc(window)}{carried}</div>' if window else ""
     return f'<div class="lcards">{"".join(cards)}</div>{hero}{note}'
 
 
@@ -763,6 +765,21 @@ def build(data_path: Path, config_path: Path):
 
     global NEUTRAL_DROP_PCT
     NEUTRAL_DROP_PCT = float(config.get("neutral_drop_pct", NEUTRAL_DROP_PCT))
+    # No new GA4 export this week -> carry forward the last organic_links reading,
+    # same policy the Detail Pack uses for its URL Tracking sections.
+    ol_key = config.get("url_tracking", {}).get("organic_links_key", "organic_links")
+    if ol_key not in data:
+        for pth in reversed([f for f in week_files() if week_date(f) < week_date(data_path)]):
+            older = load_json(pth).get(ol_key)
+            if isinstance(older, dict):
+                data = dict(data)
+                data[ol_key] = dict(older, carried_from=pth.name)
+                log.append(f"organic_links: none this week, carried forward from {pth.name} ({older.get('window_label', '?')})")
+                break
+        prev_has = isinstance((prev or {}).get(ol_key), dict)
+        if prev_has and data.get(ol_key, {}).get("carried_from"):
+            prev = dict(prev)
+            prev.pop(ol_key)   # never compare a carried-forward reading against itself
     ctx = {"data": data, "prev": prev, "config": config}
     total = len(SLIDES)
     sections = []
@@ -871,7 +888,7 @@ TEMPLATE = """<!doctype html>
   .bi { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:.6cqw; padding:.35cqw 0; border-top:1px solid var(--rule); }
   .bi .rank-s { font-weight:800; font-size:1cqw; }
   .bi-name { font-size:1.05cqw; font-weight:700; }
-  .bi-ch { display:flex; align-items:center; gap:.3cqw; font-size:.85cqw; color:var(--ink-2); margin-top:.1cqw; }
+  .bi-ch { display:flex; align-items:center; gap:.3cqw; white-space:nowrap; font-size:.85cqw; color:var(--ink-2); margin-top:.1cqw; }
   .bi-ch .ico { width:1.1cqw; height:1.1cqw; } .bi-ch span { font-weight:600; }
   .bi-v { font-size:1.3cqw; font-weight:800; }
   .gm { display:grid; grid-template-columns:auto auto 1fr; align-items:baseline; gap:.8cqw; padding:.5cqw 0; border-top:1px solid var(--rule); }

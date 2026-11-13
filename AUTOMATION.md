@@ -920,6 +920,22 @@ No PR, no approval step — push straight to `main` so GitHub Pages
 
 ## Organic Brief (`organic-brief_YYYY-MM-DD.html`) — built every run, after the Detail Pack
 
+**How it triggers (automatic, no agent step needed):** the GitHub Action
+`.github/workflows/organic-brief.yml` runs on every push to `main` that adds
+or changes a `data/week-*.json` file — i.e. right after the Friday run (Step 8)
+has pushed the new data file + `index.html`. It builds
+`organic-brief_<end-date>.html` and `.pdf` from the latest data file, appends
+to `logs/weekly-run.log`, and commits them back to `main` (live next to the
+Detail Pack on GitHub Pages:
+`https://valeriacarbon.github.io/Reporting-weekly/organic-brief_<end-date>.html`).
+Same-week corrections to the data file rebuild it. It can also be run by hand
+from the repo's Actions tab ("Organic Brief" → Run workflow). Running
+`scripts/run_weekly_build.py` locally still works and produces the same files.
+
+If no new GA4 export arrived this week, the URL Tracking slides carry forward
+the most recent `organic_links` reading (and say so on the slide), the same
+carry-forward policy the Detail Pack uses.
+
 A 6-slide, 16:9, light-mode HTML deck (arrow keys to move, print to PDF at
 13.333×7.5in) saved at the repo root next to `index.html`, dated with the
 data file's week-end date. Built by `scripts/build_brief.py` from the same
