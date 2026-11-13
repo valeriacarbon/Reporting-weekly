@@ -1365,6 +1365,11 @@
       "channel": "FB Groups",
       "title": "Continue FB Groups posting",
       "detail": "Monitor this week's actions (bitly links) for the next WWU."
+    },
+    {
+      "channel": "Social media",
+      "title": "Start tracking the top performers across the portfolio from November content",
+      "detail": "So we can implement them in December content (social media organization)."
     }
   ],
   "top_content": {
