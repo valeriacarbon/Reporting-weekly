@@ -719,6 +719,52 @@ right move when this happens (see `week-2026-10-15.json`'s
 GBP_CURRENT/GBP_PRIOR forward one week using the old GBP_CURRENT's
 already-verified numbers as the new GBP_PRIOR baseline).
 
+**The lag is empirically ~1 week, not multi-week, and there is now an
+automated recurring check so Val doesn't have to notice and ask (added
+2026-11-13).** Pattern confirmed directly by Val across several weeks of
+this report (and again on 2026-11-13, when GBP_CURRENT had been stuck at
+Oct 23-29 for one Friday run and she reported "la ventana del jueves 5
+hacia atras esta llena" — re-verified live and she was exactly right, Oct
+30-Nov 5 was fully complete): **Metricool typically only has the single
+most-recent completed week still syncing; everything older than that is
+done.** So a window that fails the completeness test on a given Friday
+should very likely pass within the next few days, and almost certainly by
+the following Friday. This is NOT a guarantee (genuine multi-week stalls
+have happened, see "false alarm" section above, and the retry/row-count
+rules still apply exactly as written) — it's a prior to act on, not an
+excuse to skip verification.
+
+Before this date, closing that gap required Val to personally notice the
+published window looked stale, ask for a re-check, and wait for a reply —
+which happened repeatedly (2026-10-16, 2026-10-27, 2026-11-13) and is
+exactly the kind of recurring manual toil this file exists to eliminate.
+**The fix: a recurring scheduled trigger ("GBP window auto-advance check",
+daily, 15:00 UTC / 9am America/Mexico_City, offset from the main Friday
+7am run so the two never overlap) now runs this same live
+re-verification automatically every day, with no approval step** — same
+unattended-publish policy as the main Friday run (see "What this run
+does" at the top of this file). Each firing:
+
+1. Reads the latest published `data/week-*.json` and its `gbp_window`.
+2. Tests the week immediately AFTER the stored `gbp_window.current` for
+   completeness, using individual single-field pulls (not the 5-field
+   batch) per the retry rule above.
+3. If it passes, advances GBP_CURRENT/GBP_PRIOR, recomputes
+   `google_business`/`gbp_by_property`/the views proxy/the engagement
+   GBP-clicks total exactly as in every prior same-day correction this
+   session (see `week-2026-11-12.json`'s `generated_note` for the most
+   recent worked example), rebuilds, verifies the usual cross-checks, and
+   pushes to both `main` and the feature branch.
+4. If it still fails, it does nothing and stays quiet — this is a
+   silent daily check, not a daily status report. It only surfaces
+   something to Val when it actually publishes a correction.
+
+This does not replace the Friday run's own walk-back (which still must
+run every Friday regardless) — it just closes the gap in between, so a
+window that finishes syncing on, say, a Monday gets published Monday
+instead of sitting stale until the following Friday or until Val notices
+and asks.
+
 **Do not "fix" this by changing the window shape to Thursday-Thursday,
 Monday-Sunday, or Sunday-Saturday** (both suggested and rejected
 2026-10-16). Friday-Thursday is not arbitrary: GBP posts publish Friday
