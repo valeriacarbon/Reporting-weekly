@@ -761,6 +761,24 @@ def slide_url_breakdown(ctx):
             f'<div class="pchart" style="grid-template-columns:repeat({len(names)},1fr)">{"".join(cols)}</div>{zero_note}')
 
 
+def slide_next_steps(ctx):
+    """Next steps written by Val for the week (data file key next_steps), shown as-is."""
+    steps = ctx["data"].get("next_steps")
+    if not isinstance(steps, list) or not steps:
+        return no_data()
+    items = []
+    for i, st in enumerate(steps, 1):
+        if isinstance(st, str):
+            st = {"title": st}
+        chan = st.get("channel")
+        tag = f'<span class="ns-tag">{icon(chan)}{esc(chan)}</span>' if chan in CHANNEL_ICONS else (
+            f'<span class="ns-tag">{esc(chan)}</span>' if chan else "")
+        detail = f'<div class="ns-detail">{esc(st["detail"])}</div>' if st.get("detail") else ""
+        items.append(f'<div class="ns"><div class="ns-n">{i}</div><div class="ns-body">{tag}'
+                     f'<div class="ns-title">{esc(st.get("title", ""))}</div>{detail}</div></div>')
+    return f'<div class="nss">{"".join(items)}</div>'
+
+
 # --------------------------------------------------------------------------
 # assembly
 # --------------------------------------------------------------------------
@@ -772,6 +790,7 @@ SLIDES = [
     ("Google My Business", "Portfolio-wide + top properties", slide_gmb),
     ("Organic URL Tracking", "FB Groups · Google Business · Facebook · Instagram — Google Analytics", slide_url),
     ("Organic URL Tracking — by property", "Sessions and key events per property, by source", slide_url_breakdown),
+    ("Next steps", "For next week", slide_next_steps),
 ]
 
 
@@ -951,6 +970,13 @@ TEMPLATE = """<!doctype html>
   .win-label, .win-sub { font-size:1cqw; color:var(--mute); margin-top:.3cqw; }
   .win-wow { display:flex; gap:.6cqw; align-items:center; margin-top:.4cqw; }
   .url-table { min-height:0; }
+  .nss { display:flex; flex-direction:column; gap:2cqw; justify-content:center; flex:1; }
+  .ns { display:grid; grid-template-columns:5cqw 1fr; gap:2cqw; align-items:start; background:var(--surface-2); border:1px solid var(--rule); border-radius:1cqw; padding:2cqw 2.4cqw; }
+  .ns-n { width:5cqw; height:5cqw; border-radius:50%; background:var(--accent); color:#fff; font-size:2.6cqw; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .ns-tag { display:inline-flex; align-items:center; gap:.5cqw; font-size:1.1cqw; font-weight:700; color:var(--ink-2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.5cqw; }
+  .ns-tag .ico { width:1.8cqw; height:1.8cqw; }
+  .ns-title { font-size:2.3cqw; font-weight:750; line-height:1.25; }
+  .ns-detail { font-size:1.45cqw; color:var(--ink-2); line-height:1.4; margin-top:.6cqw; }
   .lgs { align-items:center; flex-wrap:wrap; } .lg-k { margin-right:auto; color:var(--mute); font-size:1.1cqw; }
   .lg i { display:inline-block; width:1.2cqw; height:1.2cqw; border-radius:.3cqw; }
   .pchart { display:grid; gap:.6cqw; flex:1; min-height:0; }
