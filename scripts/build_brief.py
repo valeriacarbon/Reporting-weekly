@@ -681,7 +681,7 @@ def slide_url(ctx):
         for lbl, v in totals.items()
     )
     legend = "".join(
-        f'<div class="ga4-def"><b>{esc(GA4_LABELS[f])}</b> {esc(GA4_DEFS[f])}</div>'
+        f'<div class="ga4-def"><b>{esc(GA4_LABELS[f])}</b><span>{esc(GA4_DEFS[f])}</span></div>'
         for f in ["views", "sessions", "engaged_sessions", "key_events", "tours"] if f in used
     )
     ol = ctx["data"].get(ctx["config"].get("url_tracking", {}).get("organic_links_key", "organic_links")) or {}
@@ -962,8 +962,9 @@ TEMPLATE = """<!doctype html>
   .ltots { display:grid; grid-template-columns:repeat(4,1fr); gap:1.2cqw; }
   .ltot { background:var(--surface-2); border:1px solid var(--accent); border-radius:.9cqw; padding:.7cqw 1.2cqw; display:flex; justify-content:space-between; align-items:baseline; }
   .ltot-l { font-size:1.1cqw; font-weight:600; color:var(--ink-2); } .ltot-v { font-size:2.4cqw; font-weight:800; }
-  .ga4-defs { display:grid; grid-template-columns:repeat(4,1fr); gap:1.2cqw; }
-  .ga4-def { font-size:.9cqw; color:var(--mute); line-height:1.35; } .ga4-def b { color:var(--ink-2); display:block; }
+  .ga4-defs { display:grid; grid-template-columns:repeat(4,1fr); gap:1.6cqw; background:var(--surface-2); border:1px solid var(--rule); border-radius:.8cqw; padding:1cqw 1.4cqw; }
+  .ga4-def { display:flex; gap:.7cqw; align-items:flex-start; font-size:.95cqw; color:var(--mute); line-height:1.35; }
+  .ga4-def b { color:var(--ink); text-transform:uppercase; font-weight:800; font-size:.95cqw; letter-spacing:.02em; flex-shrink:0; max-width:6.5cqw; }
   .lhero { background:var(--surface-2); border:1px solid var(--accent); border-radius:1cqw; padding:1.2cqw 1.6cqw; display:grid; grid-template-columns:auto auto 1fr; align-items:center; gap:2cqw; }
   .lhero .tile-label { font-size:1.5cqw; }
   .lhero-v { font-size:4.4cqw; font-weight:800; }
