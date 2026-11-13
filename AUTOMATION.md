@@ -1043,7 +1043,7 @@ Sessions, Engaged sessions, Key events. Write it to the data file as:
 ```
 
 Use dashboard property names, one row per property (a "No data" property is
-all zeros; "Aztec Villa" rows go to Capri Palms). This block is Brief-only:
+all zeros; GA4 "Aztec Villa" rows are NOT counted -- Capri Palms only posts on TikTok, per Val 2026-11-13, so any FB Groups / Facebook / Instagram GA4 rows for Aztec Villa are stray sessions and are left out). This block is Brief-only:
 **do not** copy it into `url_tracking` / `gmb_url_tracking` — those keep their
 own rules (GBP window matching etc.) for the Detail Pack. Week-over-week only
 compares against the previous file's `organic_links`; if that's missing it's

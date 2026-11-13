@@ -922,12 +922,12 @@
   },
   "organic_links": {
     "window_label": "Nov 5 – 12, 2026",
-    "note": "GA4 'Organic Links Performance' export (Organic_Links_Performance_15.pdf) shared by Val 2026-11-13, window Nov 5 – 12, 2026. Used only by the Organic Brief; the Detail Pack's url_tracking / gmb_url_tracking are unchanged. Metric names are GA4's: Views, Sessions, Engaged sessions, Key events (key events are NOT leads). 'No data' in the export = 0. 'Aztec Villa' rows folded into Capri Palms. Claxton Pecan and Lamar Lofts GMB rows are identical with '1-2/2' pagination in the export -- recorded as shown.",
+    "note": "GA4 'Organic Links Performance' export (Organic_Links_Performance_15.pdf) shared by Val 2026-11-13, window Nov 5 – 12, 2026. Used only by the Organic Brief; the Detail Pack's url_tracking / gmb_url_tracking are unchanged. Metric names are GA4's: Views, Sessions, Engaged sessions, Key events (key events are NOT leads). 'No data' in the export = 0. GA4's 'Aztec Villa' rows are NOT counted: Capri Palms only posts on TikTok (no FB Groups / Facebook / Instagram activity, per Val 2026-11-13), so those stray GA4 sessions are excluded rather than attributed to Capri Palms. Claxton Pecan and Lamar Lofts GMB rows are identical with '1-2/2' pagination in the export -- recorded as shown.",
     "sources": {
       "fbgp": {
         "ga4_source": "fbgroups / organic",
-        "views": 114,
-        "sessions": 60,
+        "views": 113,
+        "sessions": 59,
         "engaged_sessions": 32,
         "key_events": 0,
         "by_property": [
@@ -1024,8 +1024,8 @@
           },
           {
             "name": "Capri Palms",
-            "views": 1,
-            "sessions": 1,
+            "views": 0,
+            "sessions": 0,
             "engaged_sessions": 0,
             "key_events": 0
           }
