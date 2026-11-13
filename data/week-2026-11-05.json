@@ -1180,9 +1180,7 @@
             "key_events": 0
           }
         ],
-        "caveats": [
-          "Claxton Pointe & Pecan Ridge and The Lamar Lofts show identical GMB rows in the export (68 / 27 / 21 / 0) — verify in GA4 before presenting."
-        ]
+        "caveats": []
       },
       "facebook": {
         "ga4_source": "facebook / organic",
