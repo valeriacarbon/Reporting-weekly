@@ -604,46 +604,42 @@ def slide_gmb(ctx):
 # slide 4 — Organic URL Tracking
 # --------------------------------------------------------------------------
 
+# GA4 metric names exactly as the Detail Pack labels them. Never call these "leads" or "clicks".
+GA4_LABELS = {"views": "Views", "sessions": "Sessions", "engaged_sessions": "Engaged sessions",
+              "key_events": "Key events", "tours": "Tours"}
+GA4_DEFS = {   # copied from the Detail Pack's URL Tracking legend
+    "views": "The number of times the page was loaded/viewed, including repeat views from the same person or session.",
+    "sessions": "Total number of visits per person.",
+    "engaged_sessions": "A session that lasted 10+ seconds, visited more than one page, or triggered a conversion event.",
+    "key_events": "Conversion events tracked on the site (e.g. tour requests).",
+    "tours": "Tours booked.",
+}
+
+
 def link_source(data, src, ucfg):
-    """Normalized {clicks, leads, rows{name:(clicks, leads)}, origin} for one organic-link source, or None.
-    Prefers the GA4 organic_links block; falls back to the Detail Pack's legacy url_tracking sections."""
+    """{metrics{field: value}, rows{name: {field: value}}, fields, origin} for one organic-link source, or None.
+    Prefers the GA4 organic_links block; falls back to the Detail Pack's url_tracking / gmb_url_tracking."""
     if not data:
         return None
-    cf, lf = ucfg.get("clicks_field", "sessions"), ucfg.get("leads_field", "key_events")
+    fields = ucfg.get("fields", ["views", "sessions", "engaged_sessions", "key_events"])
     ol = ((data.get(ucfg.get("organic_links_key", "organic_links")) or {}).get("sources") or {}).get(src["key"])
     if isinstance(ol, dict):
-        rows = {r.get("name"): (num(r.get(cf)) or 0, num(r.get(lf)) or 0) for r in ol.get("by_property", [])}
-        return {"clicks": num(ol.get(cf)), "leads": num(ol.get(lf)), "rows": rows, "origin": "organic_links",
-                "clicks_prev": None, "leads_prev": None}
+        return {"metrics": {f: num(ol.get(f)) for f in fields},
+                "rows": {r.get("name"): {f: num(r.get(f)) or 0 for f in fields} for r in ol.get("by_property", [])},
+                "fields": fields, "origin": "organic_links"}
     sec = data.get(src.get("legacy_section") or "")
     if not isinstance(sec, dict):
         return None
-    llf = src.get("legacy_leads_field", lf)
-
-    def pair(field):
-        m = sec.get(field)
-        if not isinstance(m, dict) or num(m.get("current")) is None:
-            return None, None
-        d = num(m.get("delta"))
-        return m["current"], (m["current"] - d if d is not None else None)
-
-    c, cp = pair(cf)
-    l, lp = pair(llf)
-    rows = {r.get("name"): (num(r.get(cf)) or 0, num(r.get(llf)) or 0) for r in sec.get("by_property", [])}
-    return {"clicks": c, "leads": l, "rows": rows, "origin": "legacy", "clicks_prev": cp, "leads_prev": lp}
+    # the Detail Pack's FB Groups section names its 4th metric "tours"
+    lf = [src.get("legacy_events_field", f) if f == "key_events" else f for f in fields]
+    return {"metrics": {f: num((sec.get(f) or {}).get("current")) for f in lf},
+            "rows": {r.get("name"): {f: num(r.get(f)) or 0 for f in lf} for r in sec.get("by_property", [])},
+            "fields": lf, "origin": "legacy"}
 
 
 def link_sources(ctx):
     ucfg = ctx["config"].get("url_tracking", {})
-    out = []
-    for src in ucfg.get("sources", []):
-        cur = link_source(ctx["data"], src, ucfg)
-        if cur and cur["origin"] == "organic_links":
-            prev = link_source(ctx["prev"], src, ucfg)
-            if prev and prev["origin"] == "organic_links":   # only a real prior GA4 week counts
-                cur["clicks_prev"], cur["leads_prev"] = prev["clicks"], prev["leads"]
-        out.append((src, cur))
-    return out
+    return [(src, link_source(ctx["data"], src, ucfg)) for src in ucfg.get("sources", [])]
 
 
 def source_badge(src):
@@ -653,86 +649,103 @@ def source_badge(src):
             f'{esc(src.get("short", "")[:1])}</span><b>{esc(src["label"])}</b></span>')
 
 
-def slide_url(ctx):
-    srcs = link_sources(ctx)
-    if not any(cur for _, cur in srcs):
-        return no_data()
-    cards, leads, leads_p, labels = [], [], [], []
-    for src, cur in srcs:
-        color = src.get("color") or CHANNEL_COLORS.get(src.get("icon"), "#898781")
-        if cur is None:
-            body = '<div class="lc-na">N/A</div>'
-        else:
-            body = (
-                f'<div class="lc-row"><span class="lc-l">Clicks</span><span class="lc-v">{fmt(cur["clicks"])}</span></div>'
-                f'<div class="lc-row"><span class="lc-l">Leads</span><span class="lc-v">{fmt(cur["leads"])}</span></div>'
-            )
-            leads.append(cur["leads"])
-            leads_p.append(cur["leads_prev"])
-            labels.append(src.get("short", src["label"]))
-        cards.append(f'<div class="lcard" style="--c:{esc(color)}">{source_badge(src)}{body}</div>')
-    tot = sum(v for v in leads if v is not None) if leads else None
-    tot_p = sum(leads_p) if leads_p and all(v is not None for v in leads_p) else None
-    hero = (f'<div class="lhero"><div class="tile-label">Total organic leads</div>'
-            f'<div class="lhero-v">{fmt(tot)}</div><div></div>'
-            f'<div class="tile-sub">{esc(" + ".join(labels))} · leads = GA4 key events · clicks = sessions</div></div>')
-    ol = ctx["data"].get(ctx["config"].get("url_tracking", {}).get("organic_links_key", "organic_links")) or {}
-    window = ol.get("window_label")
-    carried = " — no new GA4 export this week, carried forward (same as the Detail Pack)" if ol.get("carried_from") else ""
-    note = f'<div class="more">GA4 window: {esc(window)}{carried}</div>' if window else ""
-    return f'<div class="lcards">{"".join(cards)}</div>{hero}{note}'
-
-
 def src_color(src):
     return src.get("color") or CHANNEL_COLORS.get(src.get("icon"), "#898781")
 
 
+def events_field(cur):
+    return cur["fields"][-1]    # key_events (or the Detail Pack's "tours" on a legacy fallback)
+
+
+def slide_url(ctx):
+    srcs = link_sources(ctx)
+    if not any(cur for _, cur in srcs):
+        return no_data()
+    cards, totals, used = [], {}, set()
+    for src, cur in srcs:
+        if cur is None:
+            body = '<div class="lc-na">N/A</div>'
+        else:
+            body = "".join(
+                f'<div class="lc-row"><span class="lc-l">{esc(GA4_LABELS.get(f, f))}</span>'
+                f'<span class="lc-v">{fmt(cur["metrics"][f])}</span></div>'
+                for f in cur["fields"]
+            )
+            for f in cur["fields"]:
+                used.add(f)
+                if cur["metrics"][f] is not None:
+                    totals[GA4_LABELS.get(f, f)] = totals.get(GA4_LABELS.get(f, f), 0) + cur["metrics"][f]
+        cards.append(f'<div class="lcard" style="--c:{esc(src_color(src))}">{source_badge(src)}{body}</div>')
+    tot_tiles = "".join(
+        f'<div class="ltot"><div class="ltot-l">Total {esc(lbl.lower())}</div><div class="ltot-v">{fmt(v)}</div></div>'
+        for lbl, v in totals.items()
+    )
+    legend = "".join(
+        f'<div class="ga4-def"><b>{esc(GA4_LABELS[f])}</b> {esc(GA4_DEFS[f])}</div>'
+        for f in ["views", "sessions", "engaged_sessions", "key_events", "tours"] if f in used
+    )
+    ol = ctx["data"].get(ctx["config"].get("url_tracking", {}).get("organic_links_key", "organic_links")) or {}
+    window = ol.get("window_label")
+    carried = " — no new GA4 export this week, carried forward (same as the Detail Pack)" if ol.get("carried_from") else ""
+    note = f'<div class="more">GA4 window: {esc(window)}{carried}</div>' if window else ""
+    return (f'<div class="lcards">{"".join(cards)}</div>'
+            f'<div class="ltots">{tot_tiles}</div><div class="ga4-defs">{legend}</div>{note}')
+
+
 def slide_url_breakdown(ctx):
-    """Per property: stacked vertical bar of clicks by source, every source's number
-    written under it, and leads by source as colored pills."""
+    """Per property: stacked vertical bar of Sessions by source, each source's number under it,
+    and Key events by source as colored pills."""
     srcs = [(s, c) for s, c in link_sources(ctx) if c]
     if not srcs:
         return no_data()
+    bar_f = ctx["config"].get("url_tracking", {}).get("bar_field", "sessions")
+    ev_label = GA4_LABELS.get(events_field(srcs[0][1]), "Key events")
     names = [p.get("name") for p in ctx["data"].get("properties", []) or []]
     for _, cur in srcs:
         names += [n for n in cur["rows"] if n not in names]
 
-    def v(cur, n, i):
-        return cur["rows"].get(n, (0, 0))[i]
+    def bar_v(cur, n):
+        return (cur["rows"].get(n) or {}).get(bar_f, 0)
+
+    def ev_v(cur, n):
+        return (cur["rows"].get(n) or {}).get(events_field(cur), 0)
 
     def totals(n):
-        return sum(v(c, n, 1) for _, c in srcs), sum(v(c, n, 0) for _, c in srcs)
+        return sum(ev_v(c, n) for _, c in srcs), sum(bar_v(c, n) for _, c in srcs)
 
+    all_names = list(names)
     names = [n for n in names if totals(n) != (0, 0)]
     names.sort(key=totals, reverse=True)
-    zero = len(set(p.get("name") for p in ctx["data"].get("properties", []) or [])) - len(names)
+    zero = len(set(all_names)) - len(names)
     peak = max([totals(n)[1] for n in names] + [1])
     cols = []
     for n in names:
-        leads, clicks = totals(n)
+        ev, bars = totals(n)
         segs = "".join(
-            f'<div class="seg" style="height:{v(c, n, 0) / peak * 100:.2f}%;background:{src_color(s)}" '
-            f'title="{esc(s["label"])}: {v(c, n, 0)} clicks"></div>'
-            for s, c in reversed(srcs) if v(c, n, 0)
+            f'<div class="seg" style="height:{bar_v(c, n) / peak * 100:.2f}%;background:{src_color(s)}" '
+            f'title="{esc(s["label"])}: {bar_v(c, n)} {esc(GA4_LABELS[bar_f].lower())}"></div>'
+            for s, c in reversed(srcs) if bar_v(c, n)
         )
-        click_nums = "".join(
-            f'<span class="cn" style="--c:{src_color(s)}"><i></i>{fmt(v(c, n, 0))}</span>'
-            for s, c in srcs if v(c, n, 0)
+        nums = "".join(
+            f'<span class="cn" style="--c:{src_color(s)}"><i></i>{fmt(bar_v(c, n))}</span>'
+            for s, c in srcs if bar_v(c, n)
         )
-        lead_pills = "".join(
-            f'<span class="lp" style="background:{src_color(s)}">{fmt(v(c, n, 1))}</span>'
-            for s, c in srcs if v(c, n, 1)
+        pills = "".join(
+            f'<span class="lp" style="background:{src_color(s)}">{fmt(ev_v(c, n))}</span>'
+            for s, c in srcs if ev_v(c, n)
         ) or '<span class="lp0">0</span>'
         cols.append(
-            f'<div class="pc"><div class="pc-tot">{fmt(clicks)}</div>'
+            f'<div class="pc"><div class="pc-tot">{fmt(bars)}</div>'
             f'<div class="pc-bar">{segs}</div>'
             f'<div class="pc-name">{esc(n)}</div>'
-            f'<div class="pc-clicks">{click_nums}</div>'
-            f'<div class="pc-leads"><span class="pc-ll">Leads</span>{lead_pills}</div></div>'
+            f'<div class="pc-clicks">{nums}</div>'
+            f'<div class="pc-leads"><span class="pc-ll">{esc(ev_label)}</span>{pills}</div></div>'
         )
     legend = "".join(f'<span class="lg"><i style="background:{src_color(s)}"></i>{esc(s["label"])}</span>' for s, _ in srcs)
-    zero_note = f'<span class="more">{zero} propert{"y" if zero == 1 else "ies"} with 0 clicks and 0 leads not shown</span>' if zero else ""
-    return (f'<div class="legend lgs"><span class="lg-k">Bars = clicks (sessions) by source · colored pills = leads (key events) by source</span>{legend}</div>'
+    zero_note = (f'<span class="more">{zero} propert{"y" if zero == 1 else "ies"} with 0 {GA4_LABELS[bar_f].lower()} '
+                 f'and 0 {ev_label.lower()} not shown</span>') if zero else ""
+    return (f'<div class="legend lgs"><span class="lg-k">Bars = {esc(GA4_LABELS[bar_f])} by source · '
+            f'colored pills = {esc(ev_label)} by source</span>{legend}</div>'
             f'<div class="pchart" style="grid-template-columns:repeat({len(names)},1fr)">{"".join(cols)}</div>{zero_note}')
 
 
@@ -745,8 +758,8 @@ SLIDES = [
     ("Social Scoreboard", "Followers gained, posts & engagement by channel · this week vs last week", slide_scoreboard),
     ("Social Scoreboard — views", "Views by channel (GMB included) · top 3 brands", slide_scoreboard_reach),
     ("Google My Business", "Portfolio-wide + top properties", slide_gmb),
-    ("Organic URL Tracking", "FB Groups · Google Business · Facebook · Instagram — tracked links", slide_url),
-    ("Organic URL Tracking — by property", "Clicks and leads per property, by source", slide_url_breakdown),
+    ("Organic URL Tracking", "FB Groups · Google Business · Facebook · Instagram — Google Analytics", slide_url),
+    ("Organic URL Tracking — by property", "Sessions and key events per property, by source", slide_url_breakdown),
 ]
 
 
@@ -931,7 +944,8 @@ TEMPLATE = """<!doctype html>
   .pc-clicks { display:flex; flex-wrap:wrap; justify-content:center; gap:.15cqw .4cqw; margin-top:.3cqw; min-height:1.3cqw; }
   .cn { display:inline-flex; align-items:center; gap:.2cqw; font-size:.95cqw; font-weight:600; color:var(--ink-2); }
   .cn i { width:.7cqw; height:.7cqw; border-radius:50%; background:var(--c); display:inline-block; }
-  .pc-leads { display:flex; align-items:center; gap:.25cqw; margin-top:.5cqw; padding-top:.4cqw; border-top:1px dashed var(--rule); }
+  .pc-leads { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:.25cqw; margin-top:.5cqw; padding-top:.4cqw; border-top:1px dashed var(--rule); width:100%; }
+  .pc-leads .pc-ll { width:100%; text-align:center; margin:0 0 .15cqw; white-space:nowrap; }
   .pc-ll { font-size:.8cqw; text-transform:uppercase; letter-spacing:.05em; color:var(--mute); margin-right:.15cqw; }
   .lp { color:#fff; font-weight:800; font-size:1cqw; min-width:1.6cqw; text-align:center; border-radius:.4cqw; padding:.05cqw .3cqw; }
   .lp0 { color:var(--mute); font-weight:700; font-size:1cqw; }
@@ -944,6 +958,12 @@ TEMPLATE = """<!doctype html>
   .lc-l { font-size:1.1cqw; text-transform:uppercase; letter-spacing:.06em; color:var(--mute); font-weight:600; }
   .lc-v { font-size:3cqw; font-weight:800; text-align:right; letter-spacing:-0.02em; }
   .lc-na { font-size:2.4cqw; color:var(--mute); margin-top:1.4cqw; }
+  .lcards .lc-row { margin-top:.55cqw; } .lcards .lc-v { font-size:2.2cqw; } .lcards .lc-l { font-size:.95cqw; }
+  .ltots { display:grid; grid-template-columns:repeat(4,1fr); gap:1.2cqw; }
+  .ltot { background:var(--surface-2); border:1px solid var(--accent); border-radius:.9cqw; padding:.7cqw 1.2cqw; display:flex; justify-content:space-between; align-items:baseline; }
+  .ltot-l { font-size:1.1cqw; font-weight:600; color:var(--ink-2); } .ltot-v { font-size:2.4cqw; font-weight:800; }
+  .ga4-defs { display:grid; grid-template-columns:repeat(4,1fr); gap:1.2cqw; }
+  .ga4-def { font-size:.9cqw; color:var(--mute); line-height:1.35; } .ga4-def b { color:var(--ink-2); display:block; }
   .lhero { background:var(--surface-2); border:1px solid var(--accent); border-radius:1cqw; padding:1.2cqw 1.6cqw; display:grid; grid-template-columns:auto auto 1fr; align-items:center; gap:2cqw; }
   .lhero .tile-label { font-size:1.5cqw; }
   .lhero-v { font-size:4.4cqw; font-weight:800; }

@@ -1002,11 +1002,16 @@ It never modifies `index.html`.
 4. **GMB**: portfolio tiles (Views, Searches, Website clicks, Phone clicks,
    Direction clicks, Posts published) + top 3 GMB properties showing Reach and
    Clicks totals with their top source (2 when within `even_within_pct`).
-5. **Organic URL Tracking**: clicks/leads per source + total organic leads (no
-   previous-week comparison).
-6. **Organic URL Tracking — by property**: stacked vertical bars of clicks by
-   source (FB Groups purple, GMB yellow, Facebook blue, Instagram pink) with
-   each source's number under the bar and leads as colored pills.
+5. **Organic URL Tracking**: per source (FB Groups, Google Business,
+   Facebook, Instagram) the GA4 metrics with the Detail Pack's exact labels —
+   Views, Sessions, Engaged sessions, Key events — plus portfolio totals and
+   the Detail Pack's definitions for each metric (no previous-week comparison).
+6. **Organic URL Tracking — by property**: stacked vertical bars of Sessions
+   by source (FB Groups purple, GMB yellow, Facebook blue, Instagram pink) with
+   each source's number under the bar, and Key events as colored pills.
+
+**Naming rule (do not break): GA4 "Key events" are NOT leads, and Sessions are
+NOT clicks.** Always use GA4's / the Detail Pack's metric names on these slides.
 
 Followers gained: green ▲ +N when followers were gained, red ▼ only when followers
 were lost (same as the Detail Pack) — never compared against last week's gain.
@@ -1047,7 +1052,7 @@ the Detail Pack's FBGP/GMB sections).
 
 **Tuning:** `config/organic_brief.json` — top-channel metrics, wins ranking
 (top properties, metric, denominator, min reach, 3→5 rule), GMB top-property
-weights, engagement-rate denominator, GA4 clicks/leads fields.
+weights, engagement-rate denominator, which GA4 fields are shown (`fields`) and which one is drawn as bars (`bar_field`).
 
 **Missing data never fails the build** — a missing key renders "No data".
 
