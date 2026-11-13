@@ -688,8 +688,18 @@ def slide_url(ctx):
     window = ol.get("window_label")
     carried = " — no new GA4 export this week, carried forward (same as the Detail Pack)" if ol.get("carried_from") else ""
     note = f'<div class="more">GA4 window: {esc(window)}{carried}</div>' if window else ""
+    note += capture_note(ol)
     return (f'<div class="lcards">{"".join(cards)}</div>'
             f'<div class="ltots">{tot_tiles}</div><div class="ga4-defs">{legend}</div>{note}')
+
+
+def capture_note(ol):
+    """Data caveats recorded with the GA4 export (e.g. rows the PDF export cut off)."""
+    out = []
+    for key, src in (ol.get("sources") or {}).items():
+        for c in src.get("caveats", []) or []:
+            out.append(f'<div class="more caveat">⚠ {esc(c)}</div>')
+    return "".join(out)
 
 
 def slide_url_breakdown(ctx):
@@ -744,6 +754,8 @@ def slide_url_breakdown(ctx):
     legend = "".join(f'<span class="lg"><i style="background:{src_color(s)}"></i>{esc(s["label"])}</span>' for s, _ in srcs)
     zero_note = (f'<span class="more">{zero} propert{"y" if zero == 1 else "ies"} with 0 {GA4_LABELS[bar_f].lower()} '
                  f'and 0 {ev_label.lower()} not shown</span>') if zero else ""
+    ol = ctx["data"].get(ctx["config"].get("url_tracking", {}).get("organic_links_key", "organic_links")) or {}
+    zero_note += capture_note(ol)
     return (f'<div class="legend lgs"><span class="lg-k">Bars = {esc(GA4_LABELS[bar_f])} by source · '
             f'colored pills = {esc(ev_label)} by source</span>{legend}</div>'
             f'<div class="pchart" style="grid-template-columns:repeat({len(names)},1fr)">{"".join(cols)}</div>{zero_note}')
@@ -813,14 +825,21 @@ def build(data_path: Path, config_path: Path):
             body = no_data()
         nd = body.count("N/A")
         log.append(f"slide {i} ({title}): ok" + (f" ({nd} 'N/A' cell(s))" if nd else ""))
+        # Each slide's header shows the dates ITS data actually covers.
         window = ""
+        wk, vs = data.get("week_label", ""), f'vs {data.get("prev_week_label", "last week")}'
         if fn is slide_gmb and data.get("gbp_window_label"):
-            window = f'GBP window {esc(data["gbp_window_label"])} vs {esc(data.get("gbp_prev_window_label", "—"))}'
+            wk, vs = data["gbp_window_label"], f'vs {data.get("gbp_prev_window_label", "—")}'
+            window = "Google Business data runs one week behind social (Google sync lag) — same window as the Detail Pack"
+        elif fn in (slide_url, slide_url_breakdown):
+            ol = data.get(config.get("url_tracking", {}).get("organic_links_key", "organic_links")) or {}
+            if ol.get("window_label"):
+                wk, vs = ol["window_label"], "Google Analytics export window"
         sections.append(
             f'<section class="slide" id="s{i}"><div class="frame">'
             f'<header><div><h1>{esc(title)}</h1><div class="sub">{sub_html}</div></div>'
-            f'<div class="meta"><div class="wk">{esc(data.get("week_label", ""))}</div>'
-            f'<div class="vs">vs {esc(data.get("prev_week_label", "last week"))}</div></div></header>'
+            f'<div class="meta"><div class="wk">{esc(wk)}</div>'
+            f'<div class="vs">{esc(vs)}</div></div></header>'
             f'<main>{body}</main>'
             f'<footer><span>Organic Brief · Carbon Residential</span><span>{window}</span><span>{i} / {total}</span></footer>'
             "</div></section>"
@@ -1024,6 +1043,7 @@ TEMPLATE = """<!doctype html>
   table.score .bar { height:.45cqw; background:var(--track); border-radius:.3cqw; margin:.35cqw 0 .45cqw auto; width:70%; overflow:hidden; }
   table.score .bar i { display:block; height:100%; background:var(--c); border-radius:.3cqw; }
   .more { font-size:1cqw; color:var(--mute); margin-top:.4cqw; }
+  .more.caveat { color:#a35b00; }
   @media print {
     @page { size: 13.333in 7.5in; margin:0; }
     body { height:auto; overflow:visible; }
