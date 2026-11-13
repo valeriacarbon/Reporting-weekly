@@ -206,10 +206,10 @@ For each property, using only the networks it has connected:
 
 ```
 followers        = FB.fbFollowers + IG.followers + TikTok.followers
-posts_channels   = { "Facebook": FB.postsCount + FB.storiesCount,
-                      "Instagram": IG.postsCount + IG.stories,
+posts_channels   = { "Facebook": <real Facebook PUBLISHED count, see below>,
+                      "Instagram": <real Instagram PUBLISHED count, see below>,
                       "TikTok": TikTok.videos,
-                      "Google Business": GBP.postsCount }
+                      "Google Business": <real GBP PUBLISHED count, see below> }
 posts            = sum of posts_channels values present for that property
 engagement       = FB.postsInteractions + IG.postsInteractions + TikTok.interactions
 views_channels   = { "Facebook": FB.postsImpressions + FB.reelsVideoViews,
@@ -231,6 +231,49 @@ followers concept, and GBP's engagement-equivalent, GBP action clicks, is
 added once at the portfolio `kpis.engagement` level, not per-property, see
 Step 6. `views` is the one metric where GBP now DOES get folded in, both
 per-property and portfolio-wide — the exception, not the rule.)
+
+### `posts_channels` MUST use `getScheduledPosts` ground truth for every network, not the evolution SUM fields (fixed 2026-11-13)
+
+**What went wrong:** this step used to compute `posts_channels["Facebook"]`
+and `["Instagram"]` from the evolution connector's `FBEV33+FBEV35` and
+`IGEV37+IGEV16` SUM fields (same source as `followers`/`engagement`).
+Cross-checking every property's posts against `getScheduledPosts` (the real
+publishing calendar) on the Nov 6-12, 2026 run found these evolution fields
+systematically overcount by roughly 1 extra phantom post/story per
+property, every property, that run — e.g. Lakeside/Lakeview's evolution
+fields summed to 3 Facebook posts that week, but only 2 real Facebook
+entries existed (a reel and a story); Claxton Pointe & Pecan Ridge and The
+Lamar Lofts were off by 3. This is the same category of unreliability
+already documented for GMEV17 (Google Business, see Step 1 above) — it
+just hadn't been checked for Facebook/Instagram until now. TikTok
+(`TKEV01`) matched `getScheduledPosts` exactly for every property on that
+same run and needs no correction.
+
+**The fix:** use `getScheduledPosts(brandId, fromDate, toDate, timezone,
+extendedRange=true)` — the same tool and the same per-property local
+timezone already used for Google Business posts (Step 1) — as the ground
+truth for **every** network's `posts_channels` count, not just Google
+Business. Count only entries whose `providers` array contains an entry
+with `status`/`detailedStatus` of `PUBLISHED` for that network, whose
+local-timezone `publicationDate` calendar date falls inside this run's own
+Step 1 window `[from_date, to_date]`. A single scheduled post commonly
+carries multiple providers (e.g. a Facebook+Instagram story posted at
+once) — count it once per network that has a `PUBLISHED` provider on it,
+same post can count toward both `posts_channels["Facebook"]` and
+`["Instagram"]`. Still only use the evolution connector fields
+(`FBEV17`/`IGEV01`/`TKEV07` for followers, `FBEV34`/`IGEV38`/`TKEV06` for
+engagement, `FBEV12`+`FBEV22`/`IGEV05`/`TKEV02` for views) — `posts_channels`
+is the only aggregate this applies to; don't extend it to followers,
+engagement, or views, which aren't known to have this problem.
+
+A retried post (failed `autoPublish`, then manually republished a day or
+more later) only counts on the date it actually succeeded — if that
+retried date falls outside this run's own window, it doesn't count for
+this run at all, even if the original failed attempt was inside the
+window. This already happened twice this session (Residences at the
+Overlook, Villa Siena) and resolved itself naturally under this rule — no
+special-casing needed, just read the real `publicationDate`/`status` off
+the successful entry.
 
 ### GBP is now folded into Views, using Reach as the GBP proxy (added 2026-10-09, per Val)
 
