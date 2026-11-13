@@ -982,7 +982,7 @@ If no new GA4 export arrived this week, the URL Tracking slides carry forward
 the most recent `organic_links` reading (and say so on the slide), the same
 carry-forward policy the Detail Pack uses.
 
-A 6-slide, 16:9, light-mode HTML deck (arrow keys to move, print to PDF at
+A 7-slide, 16:9, light-mode HTML deck (arrow keys to move, print to PDF at
 13.333×7.5in) saved at the repo root next to `index.html`, dated with the
 data file's week-end date. Built by `scripts/build_brief.py` from the same
 `data/week-*.json` file; "last week" is the previous dated `data/week-*.json`.
@@ -1058,6 +1058,14 @@ own rules (GBP window matching etc.) for the Detail Pack. Week-over-week only
 compares against the previous file's `organic_links`; if that's missing it's
 N/A. If no export arrived this week, leave the key out (slides fall back to
 the Detail Pack's FBGP/GMB sections).
+
+7. **Next steps** (last slide): only what Val decides for the week, written
+   in the data file as `next_steps` — a list of `{"channel", "title", "detail"}`.
+   Propose next steps to Val in chat from the week's data and wait for her to
+   pick them; never add your own to the deck. Respect her capacity rules:
+   social (TikTok/FB/IG) is 2 posts/month for established properties and 4 for
+   ramp-up — never propose posting more; GMB posts ~2x/week with off weeks, so
+   a GMB dip in one week is normal. If `next_steps` is missing, the slide shows N/A.
 
 **Tuning:** `config/organic_brief.json` — top-channel metrics, wins ranking
 (top properties, metric, denominator, min reach, 3→5 rule), GMB top-property
