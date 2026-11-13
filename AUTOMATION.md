@@ -997,8 +997,13 @@ It never modifies `index.html`.
    (social only), Posts and Engagement (count, Google Business included) —
    totals = Detail Pack `kpis`.
 3. **Social Scoreboard — views**: Views bars (Google Business included) with a
-   small "Top 3 brands in views" legend card (brand total + top channel, from
-   `properties[].views` / `views_channels`).
+   "Top brand & channel this week" card: the property with the most views and
+   its top channel (from `properties[].views` / `views_channels`), plus Val's
+   note on what the content was, from `top_content`
+   (`{"property", "channel", "type", "description", "thumbnail", "link"}`;
+   thumbnail = a frame saved under `assets/brief/<end-date>/`). Ask Val for the
+   content link each week; if `top_content` is missing or names a different
+   property, the card shows only the brand and channel.
 4. **GMB**: portfolio tiles (Views, Searches, Website clicks, Phone clicks,
    Direction clicks, Posts published) + top 3 GMB properties showing Reach and
    Clicks totals with their top source (2 when within `even_within_pct`).

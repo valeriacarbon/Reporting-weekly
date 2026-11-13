@@ -366,6 +366,33 @@ def top_brands_card(ctx, metric, title):
     return f'<div class="bcard"><div class="p-title">{esc(title)}</div>{"".join(items)}</div>'
 
 
+def top_brand_card(ctx, metric):
+    """Top brand + its top channel this week (from the data), plus Val's note on what the content was."""
+    rows = brand_rows(ctx, metric)
+    if not rows:
+        return '<div class="bcard"><div class="p-title">Top brand & channel this week</div><div class="p-nodata">N/A</div></div>'
+    name, total, chans = rows[0]
+    if chans:
+        best = max(chans.values())
+        ch = [c for c, v in chans.items() if v == best][0]
+        chan_html = f'<div class="tb-ch">{icon(ch)}<b>{esc(ch)}</b><span>{fmt(best)} {esc(metric)}</span></div>'
+    else:
+        ch, chan_html = None, ""
+    tc = ctx["data"].get("top_content") or {}
+    if tc and tc.get("property") not in (None, name):
+        tc = {}   # the note must describe this week's actual top brand
+    img = ""
+    if tc.get("thumbnail"):
+        img = f'<img class="tb-img" src="{esc(tc["thumbnail"])}" alt="">'
+        if tc.get("link"):
+            img = f'<a href="{esc(tc["link"])}" target="_blank" rel="noopener">{img}</a>'
+    desc = (f'<div class="tb-type">{esc(tc.get("type", ""))}</div>' if tc.get("type") else "") + (
+        f'<div class="tb-desc">{esc(tc["description"])}</div>' if tc.get("description") else "")
+    return (f'<div class="bcard tb"><div class="p-title">Top brand & channel this week</div>'
+            f'<div class="tb-name">{esc(name)}</div><div class="tb-tot">{fmt(total)} {esc(metric)} total</div>{chan_html}'
+            f'<div class="tb-content">{img}<div>{desc}</div></div></div>')
+
+
 SCORE_PANELS = {
     # key: (label, kpi key, list key, field, scope, kind, show WoW)
     "views": ("Views", "views", "views_by_channel", "current", "all", "int", True),
@@ -432,7 +459,7 @@ def score_panels(ctx, keys, cards=False):
     legend = "".join(f'<span class="lg">{icon(c)}{esc(c)}</span>' for c in used)
     if cards:
         rows = "".join(
-            f'<div class="prow">{panel}{top_brands_card(ctx, k, f"Top 3 brands in {SCORE_PANELS[k][0].lower()}")}</div>'
+            f'<div class="prow">{panel}{top_brand_card(ctx, k)}</div>'
             for panel, k in zip(panels, keys)
         )
         return f'<div class="legend">{legend}</div><div class="prows">{rows}</div>'
@@ -786,7 +813,7 @@ def slide_next_steps(ctx):
 SLIDES = [
     ("Top channels", top_channels_html, slide_overview),
     ("Social Scoreboard", "Followers gained, posts & engagement by channel · this week vs last week", slide_scoreboard),
-    ("Social Scoreboard — views", "Views by channel (GMB included) · top 3 brands", slide_scoreboard_reach),
+    ("Social Scoreboard — views", "Views by channel (GMB included) · top brand & channel this week", slide_scoreboard_reach),
     ("Google My Business", "Portfolio-wide + top properties", slide_gmb),
     ("Organic URL Tracking", "FB Groups · Google Business · Facebook · Instagram — Google Analytics", slide_url),
     ("Organic URL Tracking — by property", "Sessions and key events per property, by source", slide_url_breakdown),
@@ -934,6 +961,16 @@ TEMPLATE = """<!doctype html>
   .prows { display:flex; flex-direction:column; flex:1; min-height:0; }
   .prow { flex:1; display:grid; grid-template-columns:1fr 21cqw; gap:1.2cqw; align-items:end; min-height:0; }
   .prow .panel { height:100%; }
+  .prow:has(.tb) { grid-template-columns:1fr 24cqw; align-items:stretch; }
+  .tb { justify-content:flex-start; gap:.4cqw; padding:1.2cqw 1.4cqw; }
+  .tb-name { font-size:2cqw; font-weight:800; margin-top:.3cqw; }
+  .tb-tot { font-size:1cqw; color:var(--mute); }
+  .tb-ch { display:flex; align-items:center; gap:.5cqw; font-size:1.25cqw; margin-top:.4cqw; }
+  .tb-ch .ico { width:1.9cqw; height:1.9cqw; } .tb-ch span { color:var(--ink-2); }
+  .tb-content { display:grid; grid-template-columns:7.5cqw 1fr; gap:1cqw; margin-top:.9cqw; padding-top:.9cqw; border-top:1px solid var(--rule); align-items:start; }
+  .tb-img { width:100%; border-radius:.6cqw; display:block; }
+  .tb-type { font-size:.9cqw; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--mute); margin-bottom:.3cqw; }
+  .tb-desc { font-size:1.1cqw; line-height:1.4; color:var(--ink-2); }
   .bcard { background:var(--surface-2); border:1px solid var(--rule); border-radius:.8cqw; padding:.7cqw 1cqw; display:flex; flex-direction:column; gap:.1cqw; }
   .bcard .p-title { font-size:.9cqw; margin-bottom:.2cqw; }
   .bi { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:.6cqw; padding:.35cqw 0; border-top:1px solid var(--rule); }

@@ -1366,5 +1366,13 @@
       "title": "Continue FB Groups posting",
       "detail": "Monitor this week's actions (bitly links) for the next WWU."
     }
-  ]
+  ],
+  "top_content": {
+    "property": "Hills at Hoover",
+    "channel": "TikTok",
+    "type": "Reel · 10 sec",
+    "description": "Meme over the Hills gym: “Me when the tour mentions they pay for a gym membership so I tell them ours is free for residents.” Trending reaction clip + free gym as the punchline.",
+    "thumbnail": "assets/brief/2026-11-12/hills-at-hoover-tiktok.jpg",
+    "link": "https://drive.google.com/file/d/1THO_xCdbVTRS9kGFOWtoLYLnFk6XTlrt/view"
+  }
 }
