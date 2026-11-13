@@ -1,0 +1,111 @@
+{
+  "_readme": "Tuning knobs for the Organic Brief (scripts/build_brief.py). Edit and re-run; no code changes needed. Keys starting with _ are comments.",
+  "output": {
+    "_readme": "Brief is written next to the Detail Pack (index.html) at the repo root as <prefix><YYYY-MM-DD>.html, date = the data file's week-end date.",
+    "prefix": "organic-brief_"
+  },
+  "social_platforms": [
+    "TikTok",
+    "Facebook",
+    "Instagram"
+  ],
+  "channels": [
+    "TikTok",
+    "Facebook",
+    "Instagram",
+    "Google Business"
+  ],
+  "_neutral_readme": "Week-over-week drops up to this % show a blue (neutral) ▼ instead of red.",
+  "neutral_drop_pct": 2,
+  "scoreboard": {
+    "_readme": "Engagement rate = interactions / denominator. 'impressions' uses views_by_channel (always available); 'reach' uses the sum of social_posts[].reach per platform (only if the run wrote social_posts).",
+    "engagement_rate_denominator": "impressions"
+  },
+  "social_wins": {
+    "_readme": "Top posts of the week from social_posts. Candidates = posts from the top_properties properties ranked by property_rank_metric (0 = all). rate = sort_metric / denominator_metric; posts under min_denominator are skipped. Always top_n; up to max_n only if the extra post's rate is at least extra_if_rate_at_least_ratio_of_last x the last included post's rate.",
+    "top_n": 3,
+    "max_n": 5,
+    "extra_if_rate_at_least_ratio_of_last": 0.85,
+    "top_properties": 5,
+    "property_rank_metric": "engagement",
+    "sort_metric": "interactions",
+    "denominator_metric": "reach",
+    "fallback_denominator_metric": "views",
+    "min_denominator": 100,
+    "tiebreak_metric": "interactions"
+  },
+  "gmb_top_properties": {
+    "_readme": "Ranking score = sum(weight * metric) over gbp_by_property. Cards show Reach (search+maps) and Clicks (website+phone+directions) with their top source; a 2nd source is shown when within even_within_pct of the top one.",
+    "top_n": 3,
+    "weights": {
+      "website_clicks": 3,
+      "phone_clicks": 3,
+      "directions_clicks": 2,
+      "reach_search": 0.1,
+      "reach_maps": 0.1
+    },
+    "even_within_pct": 10
+  },
+  "url_tracking": {
+    "_readme": "Slides 5-6. Reads the GA4 'organic_links' block (one entry per source) and falls back to the Detail Pack's legacy url_tracking / gmb_url_tracking sections for older files. clicks_field / leads_field name the GA4 columns. Week-over-week only compares against a prior week's organic_links (a real GA4 reading); otherwise N/A.",
+    "organic_links_key": "organic_links",
+    "clicks_field": "sessions",
+    "leads_field": "key_events",
+    "sources": [
+      {
+        "key": "fbgp",
+        "label": "FB Groups",
+        "short": "FBGP",
+        "color": "#8a4fd6",
+        "legacy_section": "url_tracking",
+        "legacy_leads_field": "tours"
+      },
+      {
+        "key": "gmb",
+        "label": "Google Business",
+        "short": "GMB",
+        "color": "#eda100",
+        "legacy_section": "gmb_url_tracking",
+        "legacy_leads_field": "key_events"
+      },
+      {
+        "key": "facebook",
+        "label": "Facebook",
+        "short": "Facebook",
+        "icon": "Facebook"
+      },
+      {
+        "key": "instagram",
+        "label": "Instagram",
+        "short": "Instagram",
+        "icon": "Instagram"
+      }
+    ]
+  },
+  "top_channels": {
+    "_readme": "Slide 1 header. Each entry = [label, *_by_channel key, field (current|delta), scope (all = incl. Google Business | social)]. Equal values show as 'Even'.",
+    "categories": [
+      [
+        "Views",
+        "views_by_channel",
+        "current",
+        "all"
+      ],
+      [
+        "Engagement",
+        "engagement_by_channel",
+        "current",
+        "all"
+      ],
+      [
+        "Followers",
+        "followers_by_channel",
+        "delta",
+        "social"
+      ]
+    ]
+  },
+  "_top_brands_readme": "Social Scoreboard reach & engagement slide: top N brands by Views (properties[].views, top channel from views_channels) and by Engagement (properties[].engagement + that property's GMB clicks when brand_engagement_includes_gmb; top channel from properties[].engagement_channels).",
+  "top_brands_n": 3,
+  "brand_engagement_includes_gmb": true
+}

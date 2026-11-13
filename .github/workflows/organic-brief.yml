@@ -1,0 +1,75 @@
+# Builds the Organic Brief right after the Friday weekly update lands on main.
+#
+# Trigger: the Friday automation pushes data/week-YYYY-MM-DD.json + index.html
+# to main (Detail Pack done and populated). This workflow then builds
+# organic-brief_YYYY-MM-DD.html + .pdf from that same data file, appends to
+# logs/weekly-run.log and commits them back to main (served by GitHub Pages
+# next to index.html). Pushes made with GITHUB_TOKEN don't re-trigger
+# workflows, so this can't loop. Same-week corrections to the data file
+# rebuild the brief too. Can also be run by hand from the Actions tab.
+name: Organic Brief
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/week-*.json"
+  workflow_dispatch:
+    inputs:
+      data_file:
+        description: "Data file to build from (default: latest data/week-*.json)"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: organic-brief
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Pick data file
+        id: pick
+        run: |
+          f="${{ github.event.inputs.data_file }}"
+          if [ -z "$f" ]; then f=$(ls data/week-*.json | sort | tail -1); fi
+          d=$(basename "$f" .json); d=${d#week-}
+          echo "file=$f" >> "$GITHUB_OUTPUT"
+          echo "date=$d" >> "$GITHUB_OUTPUT"
+
+      - name: Build Organic Brief (HTML)
+        run: |
+          mkdir -p logs
+          stamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "$stamp === organic brief (GitHub Action, after weekly update): ${{ steps.pick.outputs.file }} ===" >> logs/weekly-run.log
+          python3 scripts/build_brief.py "${{ steps.pick.outputs.file }}" | tee -a /dev/stderr | sed "s/^/$stamp   /" >> logs/weekly-run.log
+
+      - name: Export PDF
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.48.2
+          npx playwright install --with-deps chromium
+          node scripts/export_brief_pdf.js "organic-brief_${{ steps.pick.outputs.date }}.html" "organic-brief_${{ steps.pick.outputs.date }}.pdf"
+          echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)   [brief] wrote organic-brief_${{ steps.pick.outputs.date }}.pdf" >> logs/weekly-run.log
+
+      - name: Commit brief
+        run: |
+          git config user.name "organic-brief-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "organic-brief_${{ steps.pick.outputs.date }}.html" "organic-brief_${{ steps.pick.outputs.date }}.pdf" logs/weekly-run.log
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "Organic Brief: ${{ steps.pick.outputs.date }}"
+          for i in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep 5; done
+          exit 1

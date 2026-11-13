@@ -948,14 +948,145 @@ structural template — same keys, same nesting). Set:
 ## Step 8 — Build, commit, push
 
 ```
-python3 scripts/build_report.py data/week-<end-date>.json
-git add data/week-<end-date>.json index.html
+python3 scripts/run_weekly_build.py data/week-<end-date>.json
+git add data/week-<end-date>.json index.html organic-brief_<end-date>.html logs/weekly-run.log assets/brief/<end-date>/
 git commit -m "Weekly update: <week_label>"
 git push origin main
 ```
 
+`run_weekly_build.py` runs `build_report.py` (the Detail Pack, `index.html`,
+unchanged) first, then `build_brief.py` (the Organic Brief, see below), and
+appends both steps' output to `logs/weekly-run.log`. Exit codes: `0` both
+OK, `1` Detail Pack failed (Brief skipped), `2` Detail Pack OK but the Brief
+failed — still commit and push the Detail Pack in that case and say so in
+the run summary.
+
 No PR, no approval step — push straight to `main` so GitHub Pages
 (`https://valeriacarbon.github.io/Reporting-weekly/`) picks it up.
+
+## Organic Brief (`organic-brief_YYYY-MM-DD.html`) — built every run, after the Detail Pack
+
+**How it triggers (automatic, no agent step needed):** the GitHub Action
+`.github/workflows/organic-brief.yml` runs on every push to `main` that adds
+or changes a `data/week-*.json` file — i.e. right after the Friday run (Step 8)
+has pushed the new data file + `index.html`. It builds
+`organic-brief_<end-date>.html` and `.pdf` from the latest data file, appends
+to `logs/weekly-run.log`, and commits them back to `main` (live next to the
+Detail Pack on GitHub Pages:
+`https://valeriacarbon.github.io/Reporting-weekly/organic-brief_<end-date>.html`).
+Same-week corrections to the data file rebuild it. It can also be run by hand
+from the repo's Actions tab ("Organic Brief" → Run workflow). Running
+`scripts/run_weekly_build.py` locally still works and produces the same files.
+
+If no new GA4 export arrived this week, the URL Tracking slides carry forward
+the most recent `organic_links` reading (and say so on the slide), the same
+carry-forward policy the Detail Pack uses.
+
+A 6-slide, 16:9, light-mode HTML deck (arrow keys to move, print to PDF at
+13.333×7.5in) saved at the repo root next to `index.html`, dated with the
+data file's week-end date. Built by `scripts/build_brief.py` from the same
+`data/week-*.json` file; "last week" is the previous dated `data/week-*.json`.
+It never modifies `index.html`.
+
+1. **Top channels**: header names the top channel in Views and Engagement
+   (Google Business included) and Followers gained (social only), "Even" on a
+   tie. Cards = the Detail Pack's four KPI tiles with the same numbers
+   (`kpis.*`), per-channel icon + value (Google Business on every card except
+   Followers). Posts has no WoW.
+2. **Social Scoreboard**: vertical bars per channel for Followers gained
+   (social only), Posts and Engagement (count, Google Business included) —
+   totals = Detail Pack `kpis`.
+3. **Social Scoreboard — views**: Views bars (Google Business included) with a
+   small "Top 3 brands in views" legend card (brand total + top channel, from
+   `properties[].views` / `views_channels`).
+4. **GMB**: portfolio tiles (Views, Searches, Website clicks, Phone clicks,
+   Direction clicks, Posts published) + top 3 GMB properties showing Reach and
+   Clicks totals with their top source (2 when within `even_within_pct`).
+5. **Organic URL Tracking**: clicks/leads per source + total organic leads (no
+   previous-week comparison).
+6. **Organic URL Tracking — by property**: stacked vertical bars of clicks by
+   source (FB Groups purple, GMB yellow, Facebook blue, Instagram pink) with
+   each source's number under the bar and leads as colored pills.
+
+Followers gained: green ▲ +N when followers were gained, red ▼ only when followers
+were lost (same as the Detail Pack) — never compared against last week's gain.
+
+WoW rule (other metrics): rises are green ▲; drops of up to `neutral_drop_pct` (2%) are blue
+▼ (neutral); bigger drops are red ▼.
+
+Anything unavailable shows **N/A**; a property the GA4 export lists as
+"No data" is recorded as **0**.
+
+### `organic_links` — GA4 "Organic Links Performance" export (slides 5–6)
+
+Val's weekly GA4 PDF has four sections — FB Groups (`fbgroups / organic`),
+GMB (`GMB / organic` or `GMB / GMB`), Facebook (`facebook / organic`),
+Instagram (`instagram / organic`) — each listing every property with Views,
+Sessions, Engaged sessions, Key events. Write it to the data file as:
+
+```json
+"organic_links": {
+  "window_label": "Oct 22 – 29, 2026",
+  "note": "...",
+  "sources": {
+    "fbgp":      {"views": 0, "sessions": 0, "engaged_sessions": 0, "key_events": 0,
+                  "by_property": [{"name": "Berry Falls", "views": 3, "sessions": 2,
+                                   "engaged_sessions": 2, "key_events": 0}, ...]},
+    "gmb": {...}, "facebook": {...}, "instagram": {...}
+  }
+}
+```
+
+Use dashboard property names, one row per property (a "No data" property is
+all zeros; "Aztec Villa" rows go to Capri Palms). This block is Brief-only:
+**do not** copy it into `url_tracking` / `gmb_url_tracking` — those keep their
+own rules (GBP window matching etc.) for the Detail Pack. Week-over-week only
+compares against the previous file's `organic_links`; if that's missing it's
+N/A. If no export arrived this week, leave the key out (slides fall back to
+the Detail Pack's FBGP/GMB sections).
+
+**Tuning:** `config/organic_brief.json` — top-channel metrics, wins ranking
+(top properties, metric, denominator, min reach, 3→5 rule), GMB top-property
+weights, engagement-rate denominator, GA4 clicks/leads fields.
+
+**Missing data never fails the build** — a missing key renders "No data".
+
+### `social_posts` — write this every run (feeds Reach on slide 2 and all of slide 3)
+
+Pull per property, per network, with `getAnalyticsDataByMetrics` (one
+connector per call, Step 1 window, drop rows dated outside it):
+
+| Source | fields |
+|---|---|
+| TikTok `posts` | `TKPO01` date, `TKPO03` url, `TKPO04` cover, `TKPO05` description, `TKPO07` views, `TKPO08`+`TKPO09`+`TKPO10` likes+comments+shares, `TKPO11` reach, `TKPO22` type |
+| Instagram `reels` | `IGRE01` date, `IGRE03` caption, `IGRE05` image, `IGRE06` url, `IGRE09` interactions, `IGRE11` reach, `IGRE23` views |
+| Instagram `posts` | `IGPO01` date, `IGPO03` caption, `IGPO05` image, `IGPO06` url, `IGPO07` type, `IGPO12` interactions, `IGPO14` reach, `IGPO28` views |
+| Facebook `posts` | `FBPO01` date, `FBPO03` text, `FBPO05` image, `FBPO06` link, `FBPO07` type, `FBPO13`+`FBPO08`+`FBPO14` reactions+comments+shares, `FBPO11` impressions (views), `FBPO12` reach |
+| Facebook `reels` | `FBRE01` date, `FBRE05` content, `FBRE04` thumbnail, `FBRE06` url, `FBRE07` actions (interactions), `FBRE10` views, `FBRE11` reach |
+
+Download each image into `assets/brief/<end-date>/` and store that
+repo-relative path as `thumbnail` (Instagram CDN links expire within days;
+the downloaded copy keeps the deck working). If a download fails, leave
+`thumbnail` empty — the slide shows the placeholder instead.
+
+For the posts that land on the Social Wins slide, also write two short
+fields: `context` (what the post is, so Val can spot it: e.g. "Reel: lake
+view walk-through, 1-bed from $900") and `why` (one sentence on why people
+likely engaged — hook, offer, format, CTA — based on the caption, type and
+numbers; it's an inference, keep it plain).
+
+```json
+"social_posts": [
+  {"property": "Lakeside/Lakeview", "platform": "TikTok", "type": "Video",
+   "date": "2026-10-28", "url": "https://...", "image_url": "https://...",
+   "thumbnail": "assets/brief/2026-10-29/tiktok-5481589-2026-10-28-1.jpg",
+   "caption": "...", "reach": 1092, "views": 1197, "interactions": 86,
+   "context": "...", "why": "..."}
+]
+```
+
+If every connector returns nothing, leave `social_posts` out — slide 3 and
+the Reach chart show "No data". Never invent values.
 
 ## Do NOT
 

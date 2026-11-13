@@ -1,0 +1,33 @@
+2026-11-13T16:30:48Z === weekly build start: data/week-2026-11-12.json ===
+2026-11-13T16:30:48Z [detail-pack] OK
+2026-11-13T16:30:48Z   [GBP_CURRENT] posts window:   2026-10-30 .. 2026-11-05
+2026-11-13T16:30:48Z   [GBP_CURRENT] metrics window: 2026-10-30 .. 2026-11-05
+2026-11-13T16:30:48Z   [GBP_PRIOR] posts window:   2026-10-23 .. 2026-10-29
+2026-11-13T16:30:48Z   [GBP_PRIOR] metrics window: 2026-10-23 .. 2026-10-29
+2026-11-13T16:30:48Z   wrote /home/user/Reporting-weekly/index.html
+2026-11-13T16:30:48Z [organic-brief] OK
+2026-11-13T16:30:48Z   [brief] this week: week-2026-11-12.json (Nov 5 – 12, 2026)
+2026-11-13T16:30:48Z   [brief] last week: week-2026-11-05.json
+2026-11-13T16:30:48Z   [brief] GBP property comparison file: week-2026-11-05.json
+2026-11-13T16:30:48Z   [brief] organic_links: none this week, carried forward from week-2026-11-05.json (Oct 22 – 29, 2026)
+2026-11-13T16:30:48Z   [brief] slide 1 (Top channels): ok
+2026-11-13T16:30:48Z   [brief] slide 2 (Social Scoreboard): ok
+2026-11-13T16:30:48Z   [brief] slide 3 (Social Scoreboard — views): ok
+2026-11-13T16:30:48Z   [brief] slide 4 (Google My Business): ok
+2026-11-13T16:30:48Z   [brief] slide 5 (Organic URL Tracking): ok
+2026-11-13T16:30:48Z   [brief] slide 6 (Organic URL Tracking — by property): ok
+2026-11-13T16:30:48Z   [brief] wrote organic-brief_2026-11-12.html
+2026-11-13T16:30:48Z === weekly build end: Detail Pack OK, Organic Brief OK ===
+2026-11-13T16:31:43Z === organic brief (GitHub Action, after weekly update): data/week-2026-11-12.json ===
+2026-11-13T16:31:43Z   [brief] this week: week-2026-11-12.json (Nov 5 – 12, 2026)
+2026-11-13T16:31:43Z   [brief] last week: week-2026-11-05.json
+2026-11-13T16:31:43Z   [brief] GBP property comparison file: week-2026-11-05.json
+2026-11-13T16:31:43Z   [brief] organic_links: none this week, carried forward from week-2026-11-05.json (Oct 22 – 29, 2026)
+2026-11-13T16:31:43Z   [brief] slide 1 (Top channels): ok
+2026-11-13T16:31:43Z   [brief] slide 2 (Social Scoreboard): ok
+2026-11-13T16:31:43Z   [brief] slide 3 (Social Scoreboard — views): ok
+2026-11-13T16:31:43Z   [brief] slide 4 (Google My Business): ok
+2026-11-13T16:31:43Z   [brief] slide 5 (Organic URL Tracking): ok
+2026-11-13T16:31:43Z   [brief] slide 6 (Organic URL Tracking — by property): ok
+2026-11-13T16:31:43Z   [brief] wrote organic-brief_2026-11-12.html
+2026-11-13T16:32:05Z   [brief] wrote organic-brief_2026-11-12.pdf
