@@ -1010,12 +1010,10 @@ It never modifies `index.html`.
    by source (FB Groups purple, GMB yellow, Facebook blue, Instagram pink) with
    each source's number under the bar, and Key events as colored pills.
 
-**Check every GMB section of the GA4 PDF for "1-2/2" (or similar) pagination**
-— it means a 2nd source row exists that the PDF export didn't show. Record the
-affected properties in `organic_links.sources.gmb.caveats` (a list of plain
-sentences); the brief prints them on slides 5–6 so nobody presents an
-understated number as complete. Do the same for any identical-looking rows
-between two properties.
+Ignore Looker Studio's row counter ("1 - 2 / 2" etc.) in the GA4 PDF (per Val,
+2026-11-13) — record the rows exactly as printed and do not flag them as cut
+off. Only real data oddities (e.g. two properties with identical rows) go in
+`organic_links.sources.gmb.caveats`, which the brief prints on slides 5–6.
 
 Each slide's date header shows the window its own data covers: social slides =
 `week_label`, GMB slide = `gbp_window_label`, URL Tracking = the GA4 export

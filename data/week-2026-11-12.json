@@ -922,7 +922,7 @@
   },
   "organic_links": {
     "window_label": "Nov 5 – 12, 2026",
-    "note": "GA4 'Organic Links Performance' export (Organic_Links_Performance_15.pdf) shared by Val 2026-11-13, window Nov 5 – 12, 2026. Used only by the Organic Brief; the Detail Pack's url_tracking / gmb_url_tracking are unchanged. Metric names are GA4's: Views, Sessions, Engaged sessions, Key events (key events are NOT leads). 'No data' in the export = 0. GA4's 'Aztec Villa' rows are NOT counted: Capri Palms only posts on TikTok (no FB Groups / Facebook / Instagram activity, per Val 2026-11-13), so those stray GA4 sessions are excluded rather than attributed to Capri Palms. Claxton Pecan and Lamar Lofts GMB rows are identical with '1-2/2' pagination in the export -- recorded as shown.",
+    "note": "GA4 'Organic Links Performance' export (Organic_Links_Performance_15.pdf) shared by Val 2026-11-13, window Nov 5 – 12, 2026. Used only by the Organic Brief; the Detail Pack's url_tracking / gmb_url_tracking are unchanged. Metric names are GA4's: Views, Sessions, Engaged sessions, Key events (key events are NOT leads). 'No data' in the export = 0. GA4's 'Aztec Villa' rows are NOT counted: Capri Palms only posts on TikTok (no FB Groups / Facebook / Instagram activity, per Val 2026-11-13), so those stray GA4 sessions are excluded rather than attributed to Capri Palms. Claxton Pecan and Lamar Lofts GMB rows are identical -- recorded as shown.",
     "sources": {
       "fbgp": {
         "ga4_source": "fbgroups / organic",
@@ -1138,7 +1138,6 @@
           }
         ],
         "caveats": [
-          "Google Business: the GA4 export only shows the first of 2 source rows for Claxton Pointe & Pecan Ridge, The Lamar Lofts, The Benton, Westminster Club, Hills at Hoover, Ingleside Terrace and Residences at the Overlook ('1-2/2' in the PDF) — their GMB numbers here may be understated.",
           "Claxton Pointe & Pecan Ridge and The Lamar Lofts show identical GMB rows in the export (91 / 41 / 28 / 0) — verify in GA4 before presenting."
         ]
       },

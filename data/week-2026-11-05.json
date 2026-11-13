@@ -1181,7 +1181,6 @@
           }
         ],
         "caveats": [
-          "Google Business: the GA4 export only shows the first of 2 source rows for Claxton Pointe & Pecan Ridge, The Lamar Lofts, The Benton, Hills at Hoover and Ingleside Terrace ('1-2/2' in the PDF) — their GMB numbers here may be understated.",
           "Claxton Pointe & Pecan Ridge and The Lamar Lofts show identical GMB rows in the export (68 / 27 / 21 / 0) — verify in GA4 before presenting."
         ]
       },
