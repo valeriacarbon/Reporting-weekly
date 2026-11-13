@@ -47,10 +47,8 @@
     "even_within_pct": 10
   },
   "url_tracking": {
-    "_readme": "Slides 5-6. Reads the GA4 'organic_links' block (one entry per source) and falls back to the Detail Pack's legacy url_tracking / gmb_url_tracking sections for older files. clicks_field / leads_field name the GA4 columns. Week-over-week only compares against a prior week's organic_links (a real GA4 reading); otherwise N/A.",
+    "_readme": "Slides 5-6 (Organic URL Tracking). Labels are the Detail Pack's GA4 names: Views, Sessions, Engaged sessions, Key events -- never 'leads' or 'clicks'. Reads the GA4 organic_links block (one entry per source); older files fall back to the Detail Pack's url_tracking / gmb_url_tracking. bar_field = the metric drawn as bars on slide 6; key events are the pills.",
     "organic_links_key": "organic_links",
-    "clicks_field": "sessions",
-    "leads_field": "key_events",
     "sources": [
       {
         "key": "fbgp",
@@ -58,7 +56,7 @@
         "short": "FBGP",
         "color": "#8a4fd6",
         "legacy_section": "url_tracking",
-        "legacy_leads_field": "tours"
+        "legacy_events_field": "tours"
       },
       {
         "key": "gmb",
@@ -66,7 +64,7 @@
         "short": "GMB",
         "color": "#eda100",
         "legacy_section": "gmb_url_tracking",
-        "legacy_leads_field": "key_events"
+        "legacy_events_field": "key_events"
       },
       {
         "key": "facebook",
@@ -80,7 +78,14 @@
         "short": "Instagram",
         "icon": "Instagram"
       }
-    ]
+    ],
+    "fields": [
+      "views",
+      "sessions",
+      "engaged_sessions",
+      "key_events"
+    ],
+    "bar_field": "sessions"
   },
   "top_channels": {
     "_readme": "Slide 1 header. Each entry = [label, *_by_channel key, field (current|delta), scope (all = incl. Google Business | social)]. Equal values show as 'Even'.",
