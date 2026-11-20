@@ -1,7 +1,7 @@
 # Builds the Organic Brief right after the Friday weekly update lands on main.
 #
 # Trigger: the Friday automation pushes data/week-YYYY-MM-DD.json + index.html
-# to main (Detail Pack done and populated). This workflow then builds
+# to main or the Pages branch (Detail Pack done and populated). This workflow then builds
 # organic-brief_YYYY-MM-DD.html + .pdf from that same data file, appends to
 # logs/weekly-run.log and commits them back to main (served by GitHub Pages
 # next to index.html). Pushes made with GITHUB_TOKEN don't re-trigger
@@ -11,7 +11,9 @@ name: Organic Brief
 
 on:
   push:
-    branches: [main]
+    # main + the branch GitHub Pages currently publishes from, so the live brief
+    # is rebuilt wherever the weekly data lands.
+    branches: [main, claude/carbon-dashboard-automation-yhewgl]
     paths:
       - "data/week-*.json"
   workflow_dispatch:
@@ -71,5 +73,6 @@ jobs:
           git add "organic-brief_${{ steps.pick.outputs.date }}.html" "organic-brief_${{ steps.pick.outputs.date }}.pdf" logs/weekly-run.log
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git commit -m "Organic Brief: ${{ steps.pick.outputs.date }}"
-          for i in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep 5; done
+          br="${{ github.ref_name }}"
+          for i in 1 2 3; do git pull --rebase origin "$br" && git push origin "HEAD:$br" && exit 0; sleep 5; done
           exit 1
