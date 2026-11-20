@@ -1359,5 +1359,16 @@
         ]
       }
     }
-  }
+  },
+  "next_steps": [
+    {
+      "channel": "Social media",
+      "title": "Consider top performing content of October to craft December content"
+    },
+    {
+      "channel": "FB Groups",
+      "title": "Next week is a YES FB Groups posting week",
+      "detail": "Posting on FB Groups using bitly links."
+    }
+  ]
 }
