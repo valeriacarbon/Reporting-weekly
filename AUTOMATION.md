@@ -1020,6 +1020,12 @@ Ignore Looker Studio's row counter ("1 - 2 / 2" etc.) in the GA4 PDF (per Val,
 off. Only real data oddities (e.g. two properties with identical rows) go in
 `organic_links.sources.gmb.caveats`, which the brief prints on slides 5–6.
 
+If a GA4 table shows "Data Studio has encountered a system error" instead of
+numbers, that property/source has NO data (not 0): write its `by_property` row
+as `{"name": ..., "error": true, "views": null, "sessions": null,
+"engaged_sessions": null, "key_events": null}` and leave it out of the source
+totals. The brief shows it as N/A and lists the errored tables on slides 5–6.
+
 Each slide's date header shows the window its own data covers: social slides =
 `week_label`, GMB slide = `gbp_window_label`, URL Tracking = the GA4 export
 window.
