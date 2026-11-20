@@ -1036,6 +1036,8 @@ NOT clicks.** Always use GA4's / the Detail Pack's metric names on these slides.
 Followers gained: green ▲ +N when followers were gained, red ▼ only when followers
 were lost (same as the Detail Pack) — never compared against last week's gain.
 
+A bar whose value is 0 shows no indicator (a "▼ 100%" reads as a -100% loss).
+
 WoW rule (other metrics): rises are green ▲; drops of up to `neutral_drop_pct` (2%) are blue
 ▼ (neutral); bigger drops are red ▼.
 
