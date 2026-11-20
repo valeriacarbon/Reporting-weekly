@@ -925,5 +925,442 @@
       "start": "2026-10-30",
       "end": "2026-11-05"
     }
+  },
+  "organic_links": {
+    "window_label": "Nov 12 – 19, 2026",
+    "note": "GA4 'Organic Links Performance' export (Organic_Links_Performance_16.pdf) shared by Val 2026-11-20, window Nov 12 – 19, 2026. Used only by the Organic Brief. Metric names are GA4's: Views, Sessions, Engaged sessions, Key events (key events are NOT leads). 'No data' = 0. Rows recorded exactly as printed (Looker row counter ignored, per Val). GA4 'Aztec Villa' rows are NOT counted (Capri Palms only posts on TikTok). Three tables returned 'Data Studio has encountered a system error' instead of data -- FB Groups: Villa Siena; GMB: Residences at the Overlook; Facebook: The Kenzie -- recorded as error (N/A), excluded from totals.",
+    "sources": {
+      "fbgp": {
+        "ga4_source": "fbgroups / organic",
+        "views": 175,
+        "sessions": 93,
+        "engaged_sessions": 56,
+        "key_events": 0,
+        "by_property": [
+          {
+            "name": "Lakeside/Lakeview",
+            "views": 7,
+            "sessions": 4,
+            "engaged_sessions": 3,
+            "key_events": 0
+          },
+          {
+            "name": "The Benton",
+            "views": 5,
+            "sessions": 5,
+            "engaged_sessions": 2,
+            "key_events": 0
+          },
+          {
+            "name": "The Lamar Lofts",
+            "views": 10,
+            "sessions": 2,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "The Landings at North Ingleside",
+            "views": 14,
+            "sessions": 11,
+            "engaged_sessions": 5,
+            "key_events": 0
+          },
+          {
+            "name": "The Kenzie",
+            "views": 8,
+            "sessions": 5,
+            "engaged_sessions": 4,
+            "key_events": 0
+          },
+          {
+            "name": "Westminster Club",
+            "views": 84,
+            "sessions": 36,
+            "engaged_sessions": 20,
+            "key_events": 0
+          },
+          {
+            "name": "Claxton Pointe & Pecan Ridge",
+            "views": 10,
+            "sessions": 2,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "Berry Falls",
+            "views": 8,
+            "sessions": 9,
+            "engaged_sessions": 4,
+            "key_events": 0
+          },
+          {
+            "name": "Ingleside Terrace",
+            "views": 11,
+            "sessions": 7,
+            "engaged_sessions": 6,
+            "key_events": 0
+          },
+          {
+            "name": "Hills at Hoover",
+            "views": 7,
+            "sessions": 5,
+            "engaged_sessions": 4,
+            "key_events": 0
+          },
+          {
+            "name": "Residences at the Overlook",
+            "views": 9,
+            "sessions": 6,
+            "engaged_sessions": 5,
+            "key_events": 0
+          },
+          {
+            "name": "Santa Fe",
+            "views": 2,
+            "sessions": 1,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "Villa Siena",
+            "error": true,
+            "views": null,
+            "sessions": null,
+            "engaged_sessions": null,
+            "key_events": null
+          },
+          {
+            "name": "Capri Palms",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          }
+        ]
+      },
+      "gmb": {
+        "ga4_source": "GMB / organic + GMB / GMB",
+        "views": 1508,
+        "sessions": 609,
+        "engaged_sessions": 416,
+        "key_events": 14,
+        "by_property": [
+          {
+            "name": "Lakeside/Lakeview",
+            "views": 8,
+            "sessions": 8,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "The Benton",
+            "views": 59,
+            "sessions": 25,
+            "engaged_sessions": 16,
+            "key_events": 0
+          },
+          {
+            "name": "The Lamar Lofts",
+            "views": 95,
+            "sessions": 41,
+            "engaged_sessions": 24,
+            "key_events": 2
+          },
+          {
+            "name": "The Landings at North Ingleside",
+            "views": 8,
+            "sessions": 8,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "The Kenzie",
+            "views": 8,
+            "sessions": 8,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "Westminster Club",
+            "views": 149,
+            "sessions": 51,
+            "engaged_sessions": 44,
+            "key_events": 2
+          },
+          {
+            "name": "Claxton Pointe & Pecan Ridge",
+            "views": 95,
+            "sessions": 41,
+            "engaged_sessions": 24,
+            "key_events": 2
+          },
+          {
+            "name": "Berry Falls",
+            "views": 167,
+            "sessions": 63,
+            "engaged_sessions": 49,
+            "key_events": 0
+          },
+          {
+            "name": "Ingleside Terrace",
+            "views": 224,
+            "sessions": 86,
+            "engaged_sessions": 61,
+            "key_events": 0
+          },
+          {
+            "name": "Hills at Hoover",
+            "views": 182,
+            "sessions": 70,
+            "engaged_sessions": 51,
+            "key_events": 2
+          },
+          {
+            "name": "Residences at the Overlook",
+            "error": true,
+            "views": null,
+            "sessions": null,
+            "engaged_sessions": null,
+            "key_events": null
+          },
+          {
+            "name": "Santa Fe",
+            "views": 158,
+            "sessions": 72,
+            "engaged_sessions": 45,
+            "key_events": 0
+          },
+          {
+            "name": "Villa Siena",
+            "views": 355,
+            "sessions": 136,
+            "engaged_sessions": 101,
+            "key_events": 6
+          },
+          {
+            "name": "Capri Palms",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          }
+        ]
+      },
+      "facebook": {
+        "ga4_source": "facebook / organic",
+        "views": 27,
+        "sessions": 18,
+        "engaged_sessions": 11,
+        "key_events": 0,
+        "by_property": [
+          {
+            "name": "Lakeside/Lakeview",
+            "views": 5,
+            "sessions": 5,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "The Benton",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "The Lamar Lofts",
+            "views": 4,
+            "sessions": 2,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "The Landings at North Ingleside",
+            "views": 1,
+            "sessions": 1,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "The Kenzie",
+            "error": true,
+            "views": null,
+            "sessions": null,
+            "engaged_sessions": null,
+            "key_events": null
+          },
+          {
+            "name": "Westminster Club",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "Claxton Pointe & Pecan Ridge",
+            "views": 4,
+            "sessions": 2,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "Berry Falls",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "Ingleside Terrace",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "Hills at Hoover",
+            "views": 10,
+            "sessions": 7,
+            "engaged_sessions": 6,
+            "key_events": 0
+          },
+          {
+            "name": "Residences at the Overlook",
+            "views": 3,
+            "sessions": 1,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "Santa Fe",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "Villa Siena",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "Capri Palms",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          }
+        ]
+      },
+      "instagram": {
+        "ga4_source": "instagram / organic",
+        "views": 42,
+        "sessions": 20,
+        "engaged_sessions": 14,
+        "key_events": 0,
+        "by_property": [
+          {
+            "name": "Lakeside/Lakeview",
+            "views": 1,
+            "sessions": 1,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "The Benton",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "The Lamar Lofts",
+            "views": 8,
+            "sessions": 3,
+            "engaged_sessions": 2,
+            "key_events": 0
+          },
+          {
+            "name": "The Landings at North Ingleside",
+            "views": 1,
+            "sessions": 1,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "The Kenzie",
+            "views": 12,
+            "sessions": 3,
+            "engaged_sessions": 3,
+            "key_events": 0
+          },
+          {
+            "name": "Westminster Club",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "Claxton Pointe & Pecan Ridge",
+            "views": 8,
+            "sessions": 3,
+            "engaged_sessions": 2,
+            "key_events": 0
+          },
+          {
+            "name": "Berry Falls",
+            "views": 3,
+            "sessions": 2,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "Ingleside Terrace",
+            "views": 7,
+            "sessions": 5,
+            "engaged_sessions": 3,
+            "key_events": 0
+          },
+          {
+            "name": "Hills at Hoover",
+            "views": 1,
+            "sessions": 1,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "Residences at the Overlook",
+            "views": 1,
+            "sessions": 1,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "Santa Fe",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "Villa Siena",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          },
+          {
+            "name": "Capri Palms",
+            "views": 0,
+            "sessions": 0,
+            "engaged_sessions": 0,
+            "key_events": 0
+          }
+        ]
+      }
+    }
   }
 }
