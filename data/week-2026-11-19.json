@@ -927,105 +927,105 @@
     }
   },
   "organic_links": {
-    "window_label": "Nov 5 – 12, 2026",
-    "note": "GA4 'Organic Links Performance' export (Organic_Links_Performance_15.pdf) shared by Val 2026-11-13, window Nov 5 – 12, 2026. Used only by the Organic Brief; the Detail Pack's url_tracking / gmb_url_tracking are unchanged. Metric names are GA4's: Views, Sessions, Engaged sessions, Key events (key events are NOT leads). 'No data' in the export = 0. GA4's 'Aztec Villa' rows are NOT counted: Capri Palms only posts on TikTok (no FB Groups / Facebook / Instagram activity, per Val 2026-11-13), so those stray GA4 sessions are excluded rather than attributed to Capri Palms. Claxton Pecan and Lamar Lofts GMB rows are identical -- recorded as shown.",
+    "window_label": "Nov 12 – 19, 2026",
+    "note": "GA4 'Organic Links Performance' export (Organic_Links_Performance_17.pdf, re-export of 16 with all tables loaded) shared by Val 2026-11-20, window Nov 12 – 19, 2026. Used only by the Organic Brief. Metric names are GA4's: Views, Sessions, Engaged sessions, Key events (key events are NOT leads). 'No data' = 0. Rows recorded exactly as printed (Looker row counter ignored, per Val). GA4 'Aztec Villa' rows are NOT counted (Capri Palms only posts on TikTok).",
     "sources": {
       "fbgp": {
         "ga4_source": "fbgroups / organic",
-        "views": 113,
-        "sessions": 59,
-        "engaged_sessions": 32,
+        "views": 185,
+        "sessions": 96,
+        "engaged_sessions": 58,
         "key_events": 0,
         "by_property": [
           {
             "name": "Lakeside/Lakeview",
-            "views": 4,
-            "sessions": 3,
-            "engaged_sessions": 2,
-            "key_events": 0
-          },
-          {
-            "name": "The Benton",
-            "views": 8,
-            "sessions": 4,
-            "engaged_sessions": 1,
-            "key_events": 0
-          },
-          {
-            "name": "The Lamar Lofts",
-            "views": 5,
-            "sessions": 3,
-            "engaged_sessions": 2,
-            "key_events": 0
-          },
-          {
-            "name": "The Landings at North Ingleside",
-            "views": 12,
-            "sessions": 9,
-            "engaged_sessions": 2,
-            "key_events": 0
-          },
-          {
-            "name": "The Kenzie",
             "views": 7,
             "sessions": 4,
             "engaged_sessions": 3,
             "key_events": 0
           },
           {
-            "name": "Westminster Club",
-            "views": 31,
-            "sessions": 8,
-            "engaged_sessions": 6,
-            "key_events": 0
-          },
-          {
-            "name": "Claxton Pointe & Pecan Ridge",
+            "name": "The Benton",
             "views": 5,
-            "sessions": 3,
+            "sessions": 5,
             "engaged_sessions": 2,
             "key_events": 0
           },
           {
+            "name": "The Lamar Lofts",
+            "views": 10,
+            "sessions": 2,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "The Landings at North Ingleside",
+            "views": 14,
+            "sessions": 11,
+            "engaged_sessions": 5,
+            "key_events": 0
+          },
+          {
+            "name": "The Kenzie",
+            "views": 8,
+            "sessions": 5,
+            "engaged_sessions": 4,
+            "key_events": 0
+          },
+          {
+            "name": "Westminster Club",
+            "views": 84,
+            "sessions": 36,
+            "engaged_sessions": 20,
+            "key_events": 0
+          },
+          {
+            "name": "Claxton Pointe & Pecan Ridge",
+            "views": 10,
+            "sessions": 2,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
             "name": "Berry Falls",
-            "views": 5,
-            "sessions": 4,
-            "engaged_sessions": 3,
+            "views": 8,
+            "sessions": 9,
+            "engaged_sessions": 4,
             "key_events": 0
           },
           {
             "name": "Ingleside Terrace",
-            "views": 6,
-            "sessions": 5,
-            "engaged_sessions": 3,
+            "views": 11,
+            "sessions": 7,
+            "engaged_sessions": 6,
             "key_events": 0
           },
           {
             "name": "Hills at Hoover",
-            "views": 15,
-            "sessions": 7,
+            "views": 7,
+            "sessions": 5,
             "engaged_sessions": 4,
             "key_events": 0
           },
           {
             "name": "Residences at the Overlook",
             "views": 9,
-            "sessions": 4,
-            "engaged_sessions": 3,
+            "sessions": 6,
+            "engaged_sessions": 5,
             "key_events": 0
           },
           {
             "name": "Santa Fe",
             "views": 2,
-            "sessions": 2,
-            "engaged_sessions": 0,
+            "sessions": 1,
+            "engaged_sessions": 1,
             "key_events": 0
           },
           {
             "name": "Villa Siena",
-            "views": 4,
+            "views": 10,
             "sessions": 3,
-            "engaged_sessions": 1,
+            "engaged_sessions": 2,
             "key_events": 0
           },
           {
@@ -1039,101 +1039,101 @@
       },
       "gmb": {
         "ga4_source": "GMB / organic + GMB / GMB",
-        "views": 1441,
-        "sessions": 585,
-        "engaged_sessions": 407,
-        "key_events": 22,
+        "views": 1698,
+        "sessions": 665,
+        "engaged_sessions": 465,
+        "key_events": 14,
         "by_property": [
           {
             "name": "Lakeside/Lakeview",
-            "views": 7,
-            "sessions": 7,
-            "engaged_sessions": 0,
+            "views": 8,
+            "sessions": 8,
+            "engaged_sessions": 1,
             "key_events": 0
           },
           {
             "name": "The Benton",
-            "views": 51,
-            "sessions": 24,
+            "views": 59,
+            "sessions": 25,
             "engaged_sessions": 16,
             "key_events": 0
           },
           {
             "name": "The Lamar Lofts",
-            "views": 91,
+            "views": 95,
             "sessions": 41,
-            "engaged_sessions": 28,
-            "key_events": 0
+            "engaged_sessions": 24,
+            "key_events": 2
           },
           {
             "name": "The Landings at North Ingleside",
             "views": 8,
-            "sessions": 7,
-            "engaged_sessions": 1,
+            "sessions": 8,
+            "engaged_sessions": 0,
             "key_events": 0
           },
           {
             "name": "The Kenzie",
-            "views": 9,
-            "sessions": 7,
-            "engaged_sessions": 1,
+            "views": 8,
+            "sessions": 8,
+            "engaged_sessions": 0,
             "key_events": 0
           },
           {
             "name": "Westminster Club",
-            "views": 31,
-            "sessions": 10,
-            "engaged_sessions": 9,
-            "key_events": 0
-          },
-          {
-            "name": "Claxton Pointe & Pecan Ridge",
-            "views": 91,
-            "sessions": 41,
-            "engaged_sessions": 28,
-            "key_events": 0
-          },
-          {
-            "name": "Berry Falls",
-            "views": 239,
-            "sessions": 87,
-            "engaged_sessions": 61,
+            "views": 149,
+            "sessions": 51,
+            "engaged_sessions": 44,
             "key_events": 2
           },
           {
+            "name": "Claxton Pointe & Pecan Ridge",
+            "views": 95,
+            "sessions": 41,
+            "engaged_sessions": 24,
+            "key_events": 2
+          },
+          {
+            "name": "Berry Falls",
+            "views": 167,
+            "sessions": 63,
+            "engaged_sessions": 49,
+            "key_events": 0
+          },
+          {
             "name": "Ingleside Terrace",
-            "views": 128,
-            "sessions": 45,
-            "engaged_sessions": 39,
-            "key_events": 4
+            "views": 224,
+            "sessions": 86,
+            "engaged_sessions": 61,
+            "key_events": 0
           },
           {
             "name": "Hills at Hoover",
-            "views": 184,
-            "sessions": 83,
-            "engaged_sessions": 58,
-            "key_events": 8
+            "views": 182,
+            "sessions": 70,
+            "engaged_sessions": 51,
+            "key_events": 2
           },
           {
             "name": "Residences at the Overlook",
-            "views": 39,
-            "sessions": 14,
-            "engaged_sessions": 10,
+            "views": 181,
+            "sessions": 56,
+            "engaged_sessions": 48,
             "key_events": 0
           },
           {
             "name": "Santa Fe",
-            "views": 154,
-            "sessions": 75,
-            "engaged_sessions": 47,
-            "key_events": 4
+            "views": 167,
+            "sessions": 72,
+            "engaged_sessions": 46,
+            "key_events": 0
           },
           {
             "name": "Villa Siena",
-            "views": 409,
-            "sessions": 144,
-            "engaged_sessions": 109,
-            "key_events": 4
+            "views": 355,
+            "sessions": 136,
+            "engaged_sessions": 101,
+            "key_events": 6
           },
           {
             "name": "Capri Palms",
@@ -1142,20 +1142,19 @@
             "engaged_sessions": 0,
             "key_events": 0
           }
-        ],
-        "caveats": []
+        ]
       },
       "facebook": {
         "ga4_source": "facebook / organic",
-        "views": 27,
-        "sessions": 13,
-        "engaged_sessions": 5,
+        "views": 30,
+        "sessions": 19,
+        "engaged_sessions": 12,
         "key_events": 0,
         "by_property": [
           {
             "name": "Lakeside/Lakeview",
-            "views": 3,
-            "sessions": 3,
+            "views": 5,
+            "sessions": 5,
             "engaged_sessions": 1,
             "key_events": 0
           },
@@ -1175,16 +1174,16 @@
           },
           {
             "name": "The Landings at North Ingleside",
-            "views": 10,
-            "sessions": 2,
+            "views": 1,
+            "sessions": 1,
             "engaged_sessions": 1,
             "key_events": 0
           },
           {
             "name": "The Kenzie",
-            "views": 0,
-            "sessions": 0,
-            "engaged_sessions": 0,
+            "views": 3,
+            "sessions": 1,
+            "engaged_sessions": 1,
             "key_events": 0
           },
           {
@@ -1203,8 +1202,8 @@
           },
           {
             "name": "Berry Falls",
-            "views": 1,
-            "sessions": 1,
+            "views": 0,
+            "sessions": 0,
             "engaged_sessions": 0,
             "key_events": 0
           },
@@ -1217,9 +1216,9 @@
           },
           {
             "name": "Hills at Hoover",
-            "views": 2,
-            "sessions": 2,
-            "engaged_sessions": 0,
+            "views": 10,
+            "sessions": 7,
+            "engaged_sessions": 6,
             "key_events": 0
           },
           {
@@ -1254,16 +1253,16 @@
       },
       "instagram": {
         "ga4_source": "instagram / organic",
-        "views": 43,
-        "sessions": 15,
-        "engaged_sessions": 9,
+        "views": 42,
+        "sessions": 20,
+        "engaged_sessions": 14,
         "key_events": 0,
         "by_property": [
           {
             "name": "Lakeside/Lakeview",
-            "views": 0,
-            "sessions": 0,
-            "engaged_sessions": 0,
+            "views": 1,
+            "sessions": 1,
+            "engaged_sessions": 1,
             "key_events": 0
           },
           {
@@ -1275,23 +1274,23 @@
           },
           {
             "name": "The Lamar Lofts",
-            "views": 0,
-            "sessions": 0,
-            "engaged_sessions": 0,
+            "views": 8,
+            "sessions": 3,
+            "engaged_sessions": 2,
             "key_events": 0
           },
           {
             "name": "The Landings at North Ingleside",
-            "views": 0,
-            "sessions": 0,
+            "views": 1,
+            "sessions": 1,
             "engaged_sessions": 0,
             "key_events": 0
           },
           {
             "name": "The Kenzie",
-            "views": 15,
-            "sessions": 4,
-            "engaged_sessions": 4,
+            "views": 12,
+            "sessions": 3,
+            "engaged_sessions": 3,
             "key_events": 0
           },
           {
@@ -1303,50 +1302,50 @@
           },
           {
             "name": "Claxton Pointe & Pecan Ridge",
+            "views": 8,
+            "sessions": 3,
+            "engaged_sessions": 2,
+            "key_events": 0
+          },
+          {
+            "name": "Berry Falls",
+            "views": 3,
+            "sessions": 2,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "Ingleside Terrace",
+            "views": 7,
+            "sessions": 5,
+            "engaged_sessions": 3,
+            "key_events": 0
+          },
+          {
+            "name": "Hills at Hoover",
+            "views": 1,
+            "sessions": 1,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "Residences at the Overlook",
+            "views": 1,
+            "sessions": 1,
+            "engaged_sessions": 1,
+            "key_events": 0
+          },
+          {
+            "name": "Santa Fe",
             "views": 0,
             "sessions": 0,
             "engaged_sessions": 0,
             "key_events": 0
           },
           {
-            "name": "Berry Falls",
-            "views": 1,
-            "sessions": 1,
-            "engaged_sessions": 0,
-            "key_events": 0
-          },
-          {
-            "name": "Ingleside Terrace",
-            "views": 4,
-            "sessions": 1,
-            "engaged_sessions": 1,
-            "key_events": 0
-          },
-          {
-            "name": "Hills at Hoover",
-            "views": 19,
-            "sessions": 5,
-            "engaged_sessions": 4,
-            "key_events": 0
-          },
-          {
-            "name": "Residences at the Overlook",
-            "views": 2,
-            "sessions": 2,
-            "engaged_sessions": 0,
-            "key_events": 0
-          },
-          {
-            "name": "Santa Fe",
-            "views": 1,
-            "sessions": 1,
-            "engaged_sessions": 0,
-            "key_events": 0
-          },
-          {
             "name": "Villa Siena",
-            "views": 1,
-            "sessions": 1,
+            "views": 0,
+            "sessions": 0,
             "engaged_sessions": 0,
             "key_events": 0
           },
@@ -1363,27 +1362,13 @@
   },
   "next_steps": [
     {
-      "channel": "TikTok",
-      "title": "Hills at Hoover's TikTok worked very well — replicate that format in December's content creation",
-      "detail": "1,980 TikTok views this week. Balance it with the other format: text + B-roll in the back."
+      "channel": "Social media",
+      "title": "Consider top performing content of October to craft December content"
     },
     {
       "channel": "FB Groups",
-      "title": "Continue FB Groups posting",
-      "detail": "Monitor this week's actions (bitly links) for the next WWU."
-    },
-    {
-      "channel": "Social media",
-      "title": "Start tracking the top performers across the portfolio from November content",
-      "detail": "So we can implement them in December content (social media organization)."
+      "title": "Next week is a YES FB Groups posting week",
+      "detail": "Posting on FB Groups using bitly links."
     }
-  ],
-  "top_content": {
-    "property": "Hills at Hoover",
-    "channel": "TikTok",
-    "type": "Reel · 10 sec",
-    "description": "Meme over the Hills gym: “Me when the tour mentions they pay for a gym membership so I tell them ours is free for residents.” Trending reaction clip + free gym as the punchline.",
-    "thumbnail": "assets/brief/2026-11-12/hills-at-hoover-tiktok.jpg",
-    "link": "https://drive.google.com/file/d/1THO_xCdbVTRS9kGFOWtoLYLnFk6XTlrt/view"
-  }
+  ]
 }

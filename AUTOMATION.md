@@ -1020,6 +1020,12 @@ Ignore Looker Studio's row counter ("1 - 2 / 2" etc.) in the GA4 PDF (per Val,
 off. Only real data oddities (e.g. two properties with identical rows) go in
 `organic_links.sources.gmb.caveats`, which the brief prints on slides 5–6.
 
+If a GA4 table shows "Data Studio has encountered a system error" instead of
+numbers, that property/source has NO data (not 0): write its `by_property` row
+as `{"name": ..., "error": true, "views": null, "sessions": null,
+"engaged_sessions": null, "key_events": null}` and leave it out of the source
+totals. The brief shows it as N/A and lists the errored tables on slides 5–6.
+
 Each slide's date header shows the window its own data covers: social slides =
 `week_label`, GMB slide = `gbp_window_label`, URL Tracking = the GA4 export
 window.
@@ -1029,6 +1035,8 @@ NOT clicks.** Always use GA4's / the Detail Pack's metric names on these slides.
 
 Followers gained: green ▲ +N when followers were gained, red ▼ only when followers
 were lost (same as the Detail Pack) — never compared against last week's gain.
+
+A bar whose value is 0 shows no indicator (a "▼ 100%" reads as a -100% loss).
 
 WoW rule (other metrics): rises are green ▲; drops of up to `neutral_drop_pct` (2%) are blue
 ▼ (neutral); bigger drops are red ▼.
@@ -1063,6 +1071,13 @@ own rules (GBP window matching etc.) for the Detail Pack. Week-over-week only
 compares against the previous file's `organic_links`; if that's missing it's
 N/A. If no export arrived this week, leave the key out (slides fall back to
 the Detail Pack's FBGP/GMB sections).
+
+**Never copy `next_steps`, `top_content` or `organic_links` from last week's
+data file into the new one.** They are per-week inputs from Val (her picks, her
+top-content note, her GA4 export). Copying them forward shows last week's
+decisions and numbers as if they were this week's. When no new GA4 export
+arrives, leave `organic_links` out — the brief carries the last reading forward
+on its own and labels it as carried forward.
 
 7. **Next steps** (last slide): only what Val decides for the week, written
    in the data file as `next_steps` — a list of `{"channel", "title", "detail"}`.

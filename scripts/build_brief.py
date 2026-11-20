@@ -440,7 +440,8 @@ def score_panels(ctx, keys, cards=False):
             if field == "delta":   # Followers gained: arrow = did we gain or lose followers (same as the Detail Pack)
                 chip = gain_chip(v)
             else:
-                chip = wow(v, p) if (show_wow and v is not None) else ""
+                # a bar at 0 gets no indicator: "▼ 100%" reads as a -100% loss (per Val)
+                chip = wow(v, p) if (show_wow and v not in (None, 0)) else ""
             bars.append(
                 f'<div class="col" style="--c:{CHANNEL_COLORS[c]}">'
                 f'<div class="val">{fmt(v, kind) if v is not None else "N/A"}</div>'
@@ -652,7 +653,10 @@ def link_source(data, src, ucfg):
     ol = ((data.get(ucfg.get("organic_links_key", "organic_links")) or {}).get("sources") or {}).get(src["key"])
     if isinstance(ol, dict):
         return {"metrics": {f: num(ol.get(f)) for f in fields},
-                "rows": {r.get("name"): {f: num(r.get(f)) or 0 for f in fields} for r in ol.get("by_property", [])},
+                # a row the GA4 report failed to load ("error": true) stays None -> shown as N/A, never 0
+                "rows": {r.get("name"): ({f: None for f in fields} if r.get("error") else
+                                         {f: num(r.get(f)) or 0 for f in fields}) for r in ol.get("by_property", [])},
+                "errors": [r.get("name") for r in ol.get("by_property", []) if r.get("error")],
                 "fields": fields, "origin": "organic_links"}
     sec = data.get(src.get("legacy_section") or "")
     if not isinstance(sec, dict):
@@ -715,14 +719,20 @@ def slide_url(ctx):
     window = ol.get("window_label")
     carried = " — no new GA4 export this week, carried forward (same as the Detail Pack)" if ol.get("carried_from") else ""
     note = f'<div class="more">GA4 window: {esc(window)}{carried}</div>' if window else ""
-    note += capture_note(ol)
+    note += capture_note(ol, ctx["config"].get("url_tracking", {}))
     return (f'<div class="lcards">{"".join(cards)}</div>'
             f'<div class="ltots">{tot_tiles}</div><div class="ga4-defs">{legend}</div>{note}')
 
 
-def capture_note(ol):
-    """Data caveats recorded with the GA4 export (e.g. rows the PDF export cut off)."""
+def capture_note(ol, cfg=None):
+    """Data caveats recorded with the GA4 export, plus any tables the GA4 report failed to load."""
     out = []
+    labels = {s["key"]: s["label"] for s in (cfg or {}).get("sources", [])}
+    errs = [f'{labels.get(k, k)} – {r.get("name")}' for k, src in (ol.get("sources") or {}).items()
+            for r in src.get("by_property", []) if r.get("error")]
+    if errs:
+        out.append(f'<div class="more caveat">⚠ The GA4 report returned a system error (no data) for: {esc("; ".join(errs))}. '
+                   f'Shown as N/A and not included in the totals.</div>')
     for key, src in (ol.get("sources") or {}).items():
         for c in src.get("caveats", []) or []:
             out.append(f'<div class="more caveat">⚠ {esc(c)}</div>')
@@ -742,16 +752,19 @@ def slide_url_breakdown(ctx):
         names += [n for n in cur["rows"] if n not in names]
 
     def bar_v(cur, n):
-        return (cur["rows"].get(n) or {}).get(bar_f, 0)
+        return (cur["rows"].get(n) or {}).get(bar_f, 0) or 0
 
     def ev_v(cur, n):
-        return (cur["rows"].get(n) or {}).get(events_field(cur), 0)
+        return (cur["rows"].get(n) or {}).get(events_field(cur), 0) or 0
+
+    def is_err(cur, n):
+        return n in cur.get("errors", [])
 
     def totals(n):
         return sum(ev_v(c, n) for _, c in srcs), sum(bar_v(c, n) for _, c in srcs)
 
     all_names = list(names)
-    names = [n for n in names if totals(n) != (0, 0)]
+    names = [n for n in names if totals(n) != (0, 0) or any(is_err(c, n) for _, c in srcs)]
     names.sort(key=totals, reverse=True)
     zero = len(set(all_names)) - len(names)
     peak = max([totals(n)[1] for n in names] + [1])
@@ -764,8 +777,8 @@ def slide_url_breakdown(ctx):
             for s, c in reversed(srcs) if bar_v(c, n)
         )
         nums = "".join(
-            f'<span class="cn" style="--c:{src_color(s)}"><i></i>{fmt(bar_v(c, n))}</span>'
-            for s, c in srcs if bar_v(c, n)
+            f'<span class="cn" style="--c:{src_color(s)}"><i></i>{"N/A" if is_err(c, n) else fmt(bar_v(c, n))}</span>'
+            for s, c in srcs if bar_v(c, n) or is_err(c, n)
         )
         pills = "".join(
             f'<span class="lp" style="background:{src_color(s)}">{fmt(ev_v(c, n))}</span>'
@@ -782,7 +795,7 @@ def slide_url_breakdown(ctx):
     zero_note = (f'<span class="more">{zero} propert{"y" if zero == 1 else "ies"} with 0 {GA4_LABELS[bar_f].lower()} '
                  f'and 0 {ev_label.lower()} not shown</span>') if zero else ""
     ol = ctx["data"].get(ctx["config"].get("url_tracking", {}).get("organic_links_key", "organic_links")) or {}
-    zero_note += capture_note(ol)
+    zero_note += capture_note(ol, ctx["config"].get("url_tracking", {}))
     return (f'<div class="legend lgs"><span class="lg-k">Bars = {esc(GA4_LABELS[bar_f])} by source · '
             f'colored pills = {esc(ev_label)} by source</span>{legend}</div>'
             f'<div class="pchart" style="grid-template-columns:repeat({len(names)},1fr)">{"".join(cols)}</div>{zero_note}')
