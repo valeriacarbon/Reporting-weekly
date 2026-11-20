@@ -1064,6 +1064,13 @@ compares against the previous file's `organic_links`; if that's missing it's
 N/A. If no export arrived this week, leave the key out (slides fall back to
 the Detail Pack's FBGP/GMB sections).
 
+**Never copy `next_steps`, `top_content` or `organic_links` from last week's
+data file into the new one.** They are per-week inputs from Val (her picks, her
+top-content note, her GA4 export). Copying them forward shows last week's
+decisions and numbers as if they were this week's. When no new GA4 export
+arrives, leave `organic_links` out — the brief carries the last reading forward
+on its own and labels it as carried forward.
+
 7. **Next steps** (last slide): only what Val decides for the week, written
    in the data file as `next_steps` — a list of `{"channel", "title", "detail"}`.
    Propose next steps to Val in chat from the week's data and wait for her to
