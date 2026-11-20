@@ -440,7 +440,8 @@ def score_panels(ctx, keys, cards=False):
             if field == "delta":   # Followers gained: arrow = did we gain or lose followers (same as the Detail Pack)
                 chip = gain_chip(v)
             else:
-                chip = wow(v, p) if (show_wow and v is not None) else ""
+                # a bar at 0 gets no indicator: "▼ 100%" reads as a -100% loss (per Val)
+                chip = wow(v, p) if (show_wow and v not in (None, 0)) else ""
             bars.append(
                 f'<div class="col" style="--c:{CHANNEL_COLORS[c]}">'
                 f'<div class="val">{fmt(v, kind) if v is not None else "N/A"}</div>'
