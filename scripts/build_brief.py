@@ -776,6 +776,7 @@ def slide_url_breakdown(ctx):
     names.sort(key=totals, reverse=True)
     zero = len(set(all_names)) - len(names)
     peak = max([totals(n)[1] for n in names] + [1])
+    short = {k: v for k, v in ctx["config"].get("short_names", {}).items() if not k.startswith("_")}
     cols = []
     for n in names:
         ev, bars = totals(n)
@@ -795,7 +796,7 @@ def slide_url_breakdown(ctx):
         cols.append(
             f'<div class="pc"><div class="pc-tot">{fmt(bars)}</div>'
             f'<div class="pc-bar">{segs}</div>'
-            f'<div class="pc-name">{esc(n)}</div>'
+            f'<div class="pc-name" title="{esc(n)}">{esc(short.get(n, n))}</div>'
             f'<div class="pc-clicks">{nums}</div>'
             f'<div class="pc-leads"><span class="pc-ll">{esc(ev_label)}</span>{pills}</div></div>'
         )
