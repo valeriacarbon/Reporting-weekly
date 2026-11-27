@@ -367,31 +367,38 @@ def top_brands_card(ctx, metric, title):
 
 
 def top_brand_card(ctx, metric):
-    """Top brand + its top channel this week (from the data), plus Val's note on what the content was."""
+    """Top performer this week: the single post with the most views + interactions across the whole
+    portfolio (data key top_content, filled from Metricool's posts connectors every run), plus the
+    top brand by total views as a one-line reference. Falls back to the top brand alone."""
     rows = brand_rows(ctx, metric)
-    if not rows:
-        return '<div class="bcard"><div class="p-title">Top brand & channel this week</div><div class="p-nodata">N/A</div></div>'
-    name, total, chans = rows[0]
-    if chans:
-        best = max(chans.values())
-        ch = [c for c, v in chans.items() if v == best][0]
-        chan_html = f'<div class="tb-ch">{icon(ch)}<b>{esc(ch)}</b><span>{fmt(best)} {esc(metric)}</span></div>'
-    else:
-        ch, chan_html = None, ""
     tc = ctx["data"].get("top_content") or {}
-    if tc and tc.get("property") not in (None, name):
-        tc = {}   # the note must describe this week's actual top brand
+    brand_line = ""
+    if rows:
+        name, total, _ = rows[0]
+        brand_line = f'<div class="tb-tot">Top brand by total {esc(metric)}: <b>{esc(name)}</b> ({fmt(total)})</div>'
+    if not tc.get("property"):
+        if not rows:
+            return '<div class="bcard"><div class="p-title">Top performer this week</div><div class="p-nodata">N/A</div></div>'
+        name, total, chans = rows[0]
+        ch_html = ""
+        if chans:
+            best = max(chans.values()); ch = [c for c, v in chans.items() if v == best][0]
+            ch_html = f'<div class="tb-ch">{icon(ch)}<b>{esc(ch)}</b><span>{fmt(best)} {esc(metric)}</span></div>'
+        return (f'<div class="bcard tb"><div class="p-title">Top brand & channel this week</div>'
+                f'<div class="tb-name">{esc(name)}</div><div class="tb-tot">{fmt(total)} {esc(metric)} total</div>{ch_html}</div>')
     img = ""
     if tc.get("thumbnail"):
         img = f'<img class="tb-img" src="{esc(tc["thumbnail"])}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">'
         if tc.get("link"):
             img = f'<a href="{esc(tc["link"])}" target="_blank" rel="noopener">{img}</a>'
-    desc = (f'<div class="tb-type">{esc(tc.get("type", ""))}</div>' if tc.get("type") else "") + (
-        f'<div class="tb-desc">{esc(tc["description"])}</div>' if tc.get("description") else "") + (
+    ch = tc.get("channel")
+    ch_html = f'<div class="tb-ch">{icon(ch)}<b>{esc(ch)}</b><span>{esc(tc.get("type", ""))}</span></div>' if ch else ""
+    desc = (f'<div class="tb-desc">{esc(tc["description"])}</div>' if tc.get("description") else "") + (
         f'<div class="tb-stats">{esc(tc["stats"])}</div>' if tc.get("stats") else "")
-    return (f'<div class="bcard tb"><div class="p-title">Top brand & channel this week</div>'
-            f'<div class="tb-name">{esc(name)}</div><div class="tb-tot">{fmt(total)} {esc(metric)} total</div>{chan_html}'
-            f'<div class="tb-content">{img}<div>{desc}</div></div></div>')
+    return (f'<div class="bcard tb"><div class="p-title">Top performer this week</div>'
+            f'<div class="tb-name">{esc(tc["property"])}</div>{ch_html}'
+            f'<div class="tb-content">{img}<div>{desc}</div></div>'
+            f'<div class="tb-foot">{brand_line}</div></div>')
 
 
 SCORE_PANELS = {
@@ -827,7 +834,7 @@ def slide_next_steps(ctx):
 SLIDES = [
     ("Top channels", top_channels_html, slide_overview),
     ("Social Scoreboard", "Followers gained, posts & engagement by channel · this week vs last week", slide_scoreboard),
-    ("Social Scoreboard — views", "Views by channel (GMB included) · top brand & channel this week", slide_scoreboard_reach),
+    ("Social Scoreboard — views", "Views by channel (GMB included) · top performer this week", slide_scoreboard_reach),
     ("Google My Business", "Portfolio-wide + top properties", slide_gmb),
     ("Organic URL Tracking", "FB Groups · Google Business · Facebook · Instagram — Google Analytics", slide_url),
     ("Organic URL Tracking — by property", "Sessions and key events per property, by source", slide_url_breakdown),
@@ -986,7 +993,8 @@ TEMPLATE = """<!doctype html>
   .tb-content a { flex-shrink:0; }
   .tb-type { font-size:.9cqw; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--mute); margin-bottom:.3cqw; }
   .tb-desc { font-size:1.1cqw; line-height:1.4; color:var(--ink-2); }
-  .tb-stats { font-size:.95cqw; color:var(--mute); margin-top:.4cqw; }
+  .tb-stats { font-size:1.05cqw; color:var(--ink); font-weight:700; margin-top:.5cqw; }
+  .tb-foot { margin-top:auto; padding-top:.8cqw; border-top:1px solid var(--rule); }
   .bcard { background:var(--surface-2); border:1px solid var(--rule); border-radius:.8cqw; padding:.7cqw 1cqw; display:flex; flex-direction:column; gap:.1cqw; }
   .bcard .p-title { font-size:.9cqw; margin-bottom:.2cqw; }
   .bi { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:.6cqw; padding:.35cqw 0; border-top:1px solid var(--rule); }

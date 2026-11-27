@@ -997,18 +997,21 @@ It never modifies `index.html`.
    (social only), Posts and Engagement (count, Google Business included) —
    totals = Detail Pack `kpis`.
 3. **Social Scoreboard — views**: Views bars (Google Business included) with a
-   "Top brand & channel this week" card: the property with the most views and
-   its top channel (from `properties[].views` / `views_channels`), plus the top
-   performing post. **Fill `top_content` yourself every run — do not wait for
-   Val's link (per Val, 2026-11-27):** pull that property's posts for that
-   channel in the week window from Metricool's posts connector (TikTok: TKPO01
-   date, TKPO03 url, TKPO04 cover, TKPO05 caption, TKPO06 duration, TKPO07
-   views, TKPO08/09/10 likes/comments/shares; Instagram: IGRE*/IGPO*; Facebook:
-   FBPO*/FBRE* — see the `social_posts` table), take the post with the most
-   views, and write `{"property", "channel", "type", "description", "stats",
-   "thumbnail", "link"}` — `type` = format · duration · date, `description` =
-   one plain line on what the post is from its caption, `stats` = its views and
-   interactions, `thumbnail` = the cover/image URL, `link` = the post URL.
+   "Top performer this week" card = the single post with the most **views +
+   interactions across the whole portfolio** (all properties, TikTok /
+   Instagram / Facebook), with the top brand by total views as a one-line
+   reference. **Fill `top_content` yourself every run — no link from Val
+   needed:** pull every property's posts in the week window from Metricool's
+   posts connectors (see the `social_posts` table), score = views +
+   interactions, take the highest, and write `{"property", "channel", "type",
+   "description", "stats", "views", "interactions", "thumbnail", "link"}`.
+
+**Post counts: the planner (getScheduledPosts) misses posts published outside
+Metricool's planner** (native TikTok uploads, manual GMB posts) — found
+2026-11-27: 5 TikToks + 3 GMB posts missing in one week. Always count
+`posts_channels` from the posts connectors too (TikTok TKPO01, IG IGRE01 /
+IGPO01, FB FBPO01 / FBRE01, GMB GMEV17 daily postsCount) and use the union
+with the planner; stories only appear in the planner, so keep those from it.
 4. **GMB**: portfolio tiles (Views, Searches, Website clicks, Phone clicks,
    Direction clicks, Posts published) + top 3 GMB properties showing Reach and
    Clicks totals with their top source (2 when within `even_within_pct`).
