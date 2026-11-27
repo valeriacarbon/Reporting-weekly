@@ -1371,5 +1371,17 @@
     "thumbnail": "https://static.metricool.com/tkvideocovers/202611/6587008-7710364951830957343.jpg",
     "link": "https://www.tiktok.com/@capripalmsapts/video/7710364951830957343",
     "source": "Metricool posts connectors, all 14 properties, Nov 20-26: post with the most views + interactions across the portfolio (pulled 2026-11-27)"
-  }
+  },
+  "next_steps": [
+    {
+      "channel": "TikTok",
+      "title": "Test the leasing listing format on TikTok",
+      "detail": "Simple graphics: strong photos of the space + a good listing copy. These posts are performing well for other leasing accounts; we'll test it in our content."
+    },
+    {
+      "channel": "Social media",
+      "title": "Year-in-review recap for December 31",
+      "detail": "Ask the ACMs to share photos from this year's events, resident activities and giveaways, to build an end-of-year recap — real, human community moments that add organic credibility."
+    }
+  ]
 }
