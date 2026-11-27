@@ -383,11 +383,12 @@ def top_brand_card(ctx, metric):
         tc = {}   # the note must describe this week's actual top brand
     img = ""
     if tc.get("thumbnail"):
-        img = f'<img class="tb-img" src="{esc(tc["thumbnail"])}" alt="">'
+        img = f'<img class="tb-img" src="{esc(tc["thumbnail"])}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">'
         if tc.get("link"):
             img = f'<a href="{esc(tc["link"])}" target="_blank" rel="noopener">{img}</a>'
     desc = (f'<div class="tb-type">{esc(tc.get("type", ""))}</div>' if tc.get("type") else "") + (
-        f'<div class="tb-desc">{esc(tc["description"])}</div>' if tc.get("description") else "")
+        f'<div class="tb-desc">{esc(tc["description"])}</div>' if tc.get("description") else "") + (
+        f'<div class="tb-stats">{esc(tc["stats"])}</div>' if tc.get("stats") else "")
     return (f'<div class="bcard tb"><div class="p-title">Top brand & channel this week</div>'
             f'<div class="tb-name">{esc(name)}</div><div class="tb-tot">{fmt(total)} {esc(metric)} total</div>{chan_html}'
             f'<div class="tb-content">{img}<div>{desc}</div></div></div>')
@@ -980,10 +981,12 @@ TEMPLATE = """<!doctype html>
   .tb-tot { font-size:1cqw; color:var(--mute); }
   .tb-ch { display:flex; align-items:center; gap:.5cqw; font-size:1.25cqw; margin-top:.4cqw; }
   .tb-ch .ico { width:1.9cqw; height:1.9cqw; } .tb-ch span { color:var(--ink-2); }
-  .tb-content { display:grid; grid-template-columns:7.5cqw 1fr; gap:1cqw; margin-top:.9cqw; padding-top:.9cqw; border-top:1px solid var(--rule); align-items:start; }
-  .tb-img { width:100%; border-radius:.6cqw; display:block; }
+  .tb-content { display:flex; gap:1cqw; margin-top:.9cqw; padding-top:.9cqw; border-top:1px solid var(--rule); align-items:start; }
+  .tb-img { width:7.5cqw; flex-shrink:0; border-radius:.6cqw; display:block; }
+  .tb-content a { flex-shrink:0; }
   .tb-type { font-size:.9cqw; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--mute); margin-bottom:.3cqw; }
   .tb-desc { font-size:1.1cqw; line-height:1.4; color:var(--ink-2); }
+  .tb-stats { font-size:.95cqw; color:var(--mute); margin-top:.4cqw; }
   .bcard { background:var(--surface-2); border:1px solid var(--rule); border-radius:.8cqw; padding:.7cqw 1cqw; display:flex; flex-direction:column; gap:.1cqw; }
   .bcard .p-title { font-size:.9cqw; margin-bottom:.2cqw; }
   .bi { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:.6cqw; padding:.35cqw 0; border-top:1px solid var(--rule); }
