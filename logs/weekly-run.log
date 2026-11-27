@@ -211,29 +211,43 @@
 2026-11-27T13:14:07Z   [brief] slide 7 (Next steps): ok (1 'N/A' cell(s))
 2026-11-27T13:14:07Z   [brief] wrote organic-brief_2026-11-26.html
 2026-11-27T13:14:37Z   [brief] wrote organic-brief_2026-11-26.pdf
-2026-11-27T13:45:38Z === organic brief (GitHub Action, after weekly update): data/week-2026-11-26.json ===
-2026-11-27T13:45:38Z   [brief] this week: week-2026-11-26.json (Nov 19 – 26, 2026)
-2026-11-27T13:45:38Z   [brief] last week: week-2026-11-19.json
-2026-11-27T13:45:38Z   [brief] GBP property comparison file: week-2026-11-19.json
-2026-11-27T13:45:38Z   [brief] slide 1 (Top channels): ok
-2026-11-27T13:45:38Z   [brief] slide 2 (Social Scoreboard): ok
-2026-11-27T13:45:38Z   [brief] slide 3 (Social Scoreboard — views): ok
-2026-11-27T13:45:38Z   [brief] slide 4 (Google My Business): ok
-2026-11-27T13:45:38Z   [brief] slide 5 (Organic URL Tracking): ok
-2026-11-27T13:45:38Z   [brief] slide 6 (Organic URL Tracking — by property): ok
-2026-11-27T13:45:38Z   [brief] slide 7 (Next steps): ok (1 'N/A' cell(s))
-2026-11-27T13:45:38Z   [brief] wrote organic-brief_2026-11-26.html
-2026-11-27T13:46:07Z   [brief] wrote organic-brief_2026-11-26.pdf
-2026-11-27T13:58:38Z === organic brief (GitHub Action, after weekly update): data/week-2026-11-26.json ===
-2026-11-27T13:58:38Z   [brief] this week: week-2026-11-26.json (Nov 19 – 26, 2026)
-2026-11-27T13:58:38Z   [brief] last week: week-2026-11-19.json
-2026-11-27T13:58:38Z   [brief] GBP property comparison file: week-2026-11-19.json
-2026-11-27T13:58:38Z   [brief] slide 1 (Top channels): ok
-2026-11-27T13:58:38Z   [brief] slide 2 (Social Scoreboard): ok
-2026-11-27T13:58:38Z   [brief] slide 3 (Social Scoreboard — views): ok
-2026-11-27T13:58:38Z   [brief] slide 4 (Google My Business): ok
-2026-11-27T13:58:38Z   [brief] slide 5 (Organic URL Tracking): ok
-2026-11-27T13:58:38Z   [brief] slide 6 (Organic URL Tracking — by property): ok
-2026-11-27T13:58:38Z   [brief] slide 7 (Next steps): ok (1 'N/A' cell(s))
-2026-11-27T13:58:38Z   [brief] wrote organic-brief_2026-11-26.html
-2026-11-27T13:58:56Z   [brief] wrote organic-brief_2026-11-26.pdf
+2026-11-27T13:14:51Z === organic brief (GitHub Action, after weekly update): data/week-2026-11-26.json ===
+2026-11-27T13:14:51Z   [brief] this week: week-2026-11-26.json (Nov 19 – 26, 2026)
+2026-11-27T13:14:51Z   [brief] last week: week-2026-11-19.json
+2026-11-27T13:14:51Z   [brief] GBP property comparison file: week-2026-11-12.json
+2026-11-27T13:14:51Z   [brief] organic_links: none this week, carried forward from week-2026-11-19.json (Nov 12 – 19, 2026)
+2026-11-27T13:14:51Z   [brief] slide 1 (Top channels): ok
+2026-11-27T13:14:51Z   [brief] slide 2 (Social Scoreboard): ok
+2026-11-27T13:14:51Z   [brief] slide 3 (Social Scoreboard — views): ok
+2026-11-27T13:14:51Z   [brief] slide 4 (Google My Business): ok
+2026-11-27T13:14:51Z   [brief] slide 5 (Organic URL Tracking): ok
+2026-11-27T13:14:51Z   [brief] slide 6 (Organic URL Tracking — by property): ok
+2026-11-27T13:14:51Z   [brief] slide 7 (Next steps): ok (1 'N/A' cell(s))
+2026-11-27T13:14:51Z   [brief] wrote organic-brief_2026-11-26.html
+2026-11-27T13:15:08Z   [brief] wrote organic-brief_2026-11-26.pdf
+2026-11-27T13:46:28Z === organic brief (GitHub Action, after weekly update): data/week-2026-11-26.json ===
+2026-11-27T13:46:28Z   [brief] this week: week-2026-11-26.json (Nov 19 – 26, 2026)
+2026-11-27T13:46:28Z   [brief] last week: week-2026-11-19.json
+2026-11-27T13:46:28Z   [brief] GBP property comparison file: week-2026-11-19.json
+2026-11-27T13:46:28Z   [brief] slide 1 (Top channels): ok
+2026-11-27T13:46:28Z   [brief] slide 2 (Social Scoreboard): ok
+2026-11-27T13:46:28Z   [brief] slide 3 (Social Scoreboard — views): ok
+2026-11-27T13:46:28Z   [brief] slide 4 (Google My Business): ok
+2026-11-27T13:46:28Z   [brief] slide 5 (Organic URL Tracking): ok
+2026-11-27T13:46:28Z   [brief] slide 6 (Organic URL Tracking — by property): ok
+2026-11-27T13:46:28Z   [brief] slide 7 (Next steps): ok (1 'N/A' cell(s))
+2026-11-27T13:46:28Z   [brief] wrote organic-brief_2026-11-26.html
+2026-11-27T13:47:09Z   [brief] wrote organic-brief_2026-11-26.pdf
+2026-11-27T13:59:15Z === organic brief (GitHub Action, after weekly update): data/week-2026-11-26.json ===
+2026-11-27T13:59:15Z   [brief] this week: week-2026-11-26.json (Nov 19 – 26, 2026)
+2026-11-27T13:59:15Z   [brief] last week: week-2026-11-19.json
+2026-11-27T13:59:15Z   [brief] GBP property comparison file: week-2026-11-19.json
+2026-11-27T13:59:15Z   [brief] slide 1 (Top channels): ok
+2026-11-27T13:59:15Z   [brief] slide 2 (Social Scoreboard): ok
+2026-11-27T13:59:15Z   [brief] slide 3 (Social Scoreboard — views): ok
+2026-11-27T13:59:15Z   [brief] slide 4 (Google My Business): ok
+2026-11-27T13:59:15Z   [brief] slide 5 (Organic URL Tracking): ok
+2026-11-27T13:59:15Z   [brief] slide 6 (Organic URL Tracking — by property): ok
+2026-11-27T13:59:15Z   [brief] slide 7 (Next steps): ok (1 'N/A' cell(s))
+2026-11-27T13:59:15Z   [brief] wrote organic-brief_2026-11-26.html
+2026-11-27T13:59:34Z   [brief] wrote organic-brief_2026-11-26.pdf
